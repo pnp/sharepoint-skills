@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-metadata-completeness-auditor",
+    "source": "pnp",
+    "title": "Metadata Completeness Auditor",
+    "shortDescription": "Audits a SharePoint library's metadata quality: flags missing, blank, and placeholder values against the required columns and saves a self-contained HTML gap-report dashboard. Strictly read-only.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/metadata-completeness-auditor",
+    "longDescription": [
+      "Missing or inconsistent metadata is the most common reason SharePoint search, filtering, views, and retention stop working. This skill measures the metadata quality of a document library or list without any Power Automate or custom code. It reads the list schema, decides the required set of columns to audit, pages through every item, and flags each value that is missing, blank, or a placeholder such as 'N/A', 'TBD', '-', or 'Choose an option'.",
+      "For each item it computes a completeness score and a verdict of Complete, Partial, or Empty, and it tracks a fill rate for every audited column and a rollup by last editor. It then saves a color-coded, self-contained HTML dashboard (summary band, per-column fill-rate bars, item table, owner breakdown, and a prioritized remediation list) to a Metadata Reports folder. The skill is strictly read-only \u2014 it never creates columns, changes items, or modifies the list; the only thing it writes is the HTML report. Trigger phrases include 'metadata audit', 'metadata completeness', 'missing metadata', 'metadata health', and 'metadata gap report'."
+    ],
+    "creationDateTime": "2026-07-03",
+    "updateDateTime": "2026-07-03",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/metadata-completeness-auditor/assets/preview.png",
+        "alt": "Metadata Completeness Auditor skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "lovyjain",
+        "pictureUrl": "https://github.com/lovyjain.png",
+        "name": "Lovy Jain"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
