@@ -1,0 +1,31 @@
+Title,Owner,Contract Type,Effective Date,Review Date,Department
+MSA-Acme-2025,Avery Nash,MSA,1/15/2025,1/15/2026,Legal
+NDA-Contoso,Jordan Lee,NDA,3/2/2025,,
+SOW-Northwind-Q3,Priya Raman,SOW,7/1/2025,,Delivery
+Renewal-Fabrikam,,,,, Operations
+Amendment-2-Tailspin,Sam Ortiz,Amendment,5/20/2025,TBD,
+MSA-Litware-2026,Avery Nash,MSA,2/1/2026,2/1/2027,Legal
+Draft-Untitled-copy,,,,,
+License-Adventure-Works,N/A,License,4/10/2025,4/10/2026,Procurement
+Lease-Wingtip,Dana Ko,Lease,6/1/2025,6/1/2028,Facilities
+Services-Proseware,Chris Vale,Services,8/12/2025,,Choose an option
+NDA-Woodgrove,Priya Raman,NDA,,9/30/2026,Legal
+MSA-Coho,Dana Ko,MSA,1/5/2025,1/5/2026,Sales
+Purchase-Agreement-Graphic-Design,,Purchase,10/3/2025,-,Marketing
+Retainer-Alpine-Ski,Sam Ortiz,Retainer,2/18/2025,2/18/2026,Legal
+Amendment-1-Trey,Jordan Lee,,11/9/2025,11/9/2026,
+Consulting-Blue-Yonder,TBD,Consulting,9/1/2025,pending,Strategy
+MSA-Fourth-Coffee,Avery Nash,MSA,3/12/2025,3/12/2026,Legal
+NDA-Southridge,,NDA,4/1/2025,4/1/2026,Legal
+SOW-Margie-Travel,Priya Raman,SOW,,,Delivery
+Lease-Contoso-Pharma,Dana Ko,Lease,2/2/2025,2/2/2030,Facilities
+Amendment-3-Humongous,Sam Ortiz,Amendment,6/15/2025,TBD,
+License-Fabrikam-Cloud,Chris Vale,License,,7/20/2026,Procurement
+Services-Tailspin-Toys,,Services,8/1/2025,,N/A
+Retainer-Woodgrove-Bank,Dana Ko,Retainer,1/9/2025,1/9/2026,Legal
+Consulting-Coho-Vineyard,Jordan Lee,Consulting,9/5/2025,-,
+Purchase-Wide-World,Avery Nash,Purchase,10/10/2025,10/10/2026,Procurement
+NDA-Alpine-House,pending,NDA,11/1/2025,,Sales
+MSA-Blue-Yonder-Air,Priya Raman,MSA,12/1/2025,12/1/2026,Legal
+Draft-New-Vendor,,,,,Choose an option
+Amendment-4-Trey,Sam Ortiz,,5/5/2025,5/5/2026,Delivery
