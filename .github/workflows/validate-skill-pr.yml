@@ -1,0 +1,173 @@
+name: Validate Skill PR
+
+on:
+  pull_request:
+    paths:
+      - 'Skills/**'
+      - '!Skills/README.md'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed skill folders
+        id: changed
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- Skills/ \
+            | grep -E '^Skills/[^/]+/' \
+            | sed -E 's|^Skills/([^/]+)/.*|\1|' \
+            | sort -u)
+          echo "folders=$(echo "$CHANGED" | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> "$GITHUB_OUTPUT"
+          echo "count=$(echo "$CHANGED" | grep -c . || true)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate each skill
+        if: steps.changed.outputs.count > 0
+        run: |
+          ERRORS=0
+          echo '${{ steps.changed.outputs.folders }}' | jq -c '.[]' | while read -r FOLDER; do
+            # Strip quotes
+            SKILL=$(echo "$FOLDER" | tr -d '"')
+            echo "--- Validating: $SKILL ---"
+            BASE="Skills/$SKILL"
+
+            # 1. Folder name is kebab-case
+            if ! echo "$SKILL" | grep -qE '^[a-z][a-z0-9-]*[a-z0-9]$'; then
+              echo "❌ Folder name '$SKILL' is not kebab-case"
+              ERRORS=$((ERRORS+1))
+            fi
+
+            # 2. Inner package folder exists
+            if [ ! -d "$BASE/$SKILL" ]; then
+              echo "❌ Missing inner package folder: $BASE/$SKILL/"
+              ERRORS=$((ERRORS+1))
+            fi
+
+            # 3. SKILL.md exists with frontmatter
+            SKILL_MD="$BASE/$SKILL/SKILL.md"
+            if [ ! -f "$SKILL_MD" ]; then
+              echo "❌ Missing SKILL.md at $SKILL_MD"
+              ERRORS=$((ERRORS+1))
+            else
+              # Check frontmatter has name
+              if ! grep -q '^name:' "$SKILL_MD"; then
+                echo "❌ SKILL.md missing 'name' in frontmatter"
+                ERRORS=$((ERRORS+1))
+              fi
+              # Check frontmatter has description
+              if ! grep -q '^description:' "$SKILL_MD"; then
+                echo "❌ SKILL.md missing 'description' in frontmatter"
+                ERRORS=$((ERRORS+1))
+              fi
+            fi
+
+            # 4. README.md exists
+            if [ ! -f "$BASE/README.md" ]; then
+              echo "❌ Missing README.md at $BASE/README.md"
+              ERRORS=$((ERRORS+1))
+            fi
+
+            # 5. assets/sample.json exists and is valid
+            SAMPLE="$BASE/assets/sample.json"
+            if [ ! -f "$SAMPLE" ]; then
+              echo "❌ Missing assets/sample.json at $SAMPLE"
+              ERRORS=$((ERRORS+1))
+            else
+              if ! jq empty "$SAMPLE" 2>/dev/null; then
+                echo "❌ assets/sample.json is not valid JSON"
+                ERRORS=$((ERRORS+1))
+              else
+                # Validate required fields
+                NAME=$(jq -r '.[0].name' "$SAMPLE" 2>/dev/null)
+                if [ "$NAME" != "pnp-sharepoint-skills-$SKILL" ]; then
+                  echo "❌ sample.json name expected 'pnp-sharepoint-skills-$SKILL', got '$NAME'"
+                  ERRORS=$((ERRORS+1))
+                fi
+                URL=$(jq -r '.[0].url' "$SAMPLE" 2>/dev/null)
+                EXPECTED_URL="https://github.com/pnp/sharepoint-skills/tree/main/Skills/$SKILL"
+                if [ "$URL" != "$EXPECTED_URL" ]; then
+                  echo "❌ sample.json url expected '$EXPECTED_URL', got '$URL'"
+                  ERRORS=$((ERRORS+1))
+                fi
+                THUMB=$(jq -r '.[0].thumbnails[0].url' "$SAMPLE" 2>/dev/null)
+                EXPECTED_THUMB="https://github.com/pnp/sharepoint-skills/raw/main/Skills/$SKILL/assets/preview.png"
+                if [ "$THUMB" != "$EXPECTED_THUMB" ]; then
+                  echo "❌ sample.json thumbnail url expected '$EXPECTED_THUMB', got '$THUMB'"
+                  ERRORS=$((ERRORS+1))
+                fi
+                # Check authors
+                GH_ACCOUNT=$(jq -r '.[0].authors[0].gitHubAccount' "$SAMPLE" 2>/dev/null)
+                if [ "$GH_ACCOUNT" = "your-handle" ] || [ -z "$GH_ACCOUNT" ]; then
+                  echo "❌ sample.json author gitHubAccount is placeholder or empty"
+                  ERRORS=$((ERRORS+1))
+                fi
+                PICTURE=$(jq -r '.[0].authors[0].pictureUrl' "$SAMPLE" 2>/dev/null)
+                EXPECTED_PIC="https://github.com/$GH_ACCOUNT.png"
+                if [ "$PICTURE" != "$EXPECTED_PIC" ]; then
+                  echo "❌ sample.json author pictureUrl should be '$EXPECTED_PIC', got '$PICTURE'"
+                  ERRORS=$((ERRORS+1))
+                fi
+                # Check required references
+                HAS_SPEC=$(jq '.[0].references | map(select(.url == "https://agentskills.io/specification")) | length > 0' "$SAMPLE" 2>/dev/null)
+                if [ "$HAS_SPEC" != "true" ]; then
+                  echo "❌ sample.json missing agentskills.io specification reference"
+                  ERRORS=$((ERRORS+1))
+                fi
+                # Check SAMPLE-TYPE metadata
+                HAS_TYPE=$(jq '.[0].metadata | map(select(.key == "SAMPLE-TYPE" and .value == "SharePoint-AI-Skill")) | length > 0' "$SAMPLE" 2>/dev/null)
+                if [ "$HAS_TYPE" != "true" ]; then
+                  echo "❌ sample.json missing SAMPLE-TYPE = SharePoint-AI-Skill metadata"
+                  ERRORS=$((ERRORS+1))
+                fi
+              fi
+            fi
+
+            # 6. assets/preview.png exists
+            if [ ! -f "$BASE/assets/preview.png" ]; then
+              echo "❌ Missing assets/preview.png at $BASE/assets/preview.png"
+              ERRORS=$((ERRORS+1))
+            fi
+
+            echo ""
+          done
+
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "### ❌ $ERRORS validation errors found" >> "$GITHUB_STEP_SUMMARY"
+            echo "Total: $ERRORS errors" > /tmp/validate_exit
+          else
+            echo "### ✅ All skills pass validation" >> "$GITHUB_STEP_SUMMARY"
+            echo "Total: 0 errors" > /tmp/validate_exit
+          fi
+
+      - name: Comment result on PR
+        if: steps.changed.outputs.count > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('/tmp/validate_exit', 'utf8').trim();
+            const hasErrors = summary.includes('errors found');
+            const body = hasErrors
+              ? '### ❌ Skill validation failed\n\n' + summary + '\n\nPlease fix the errors above. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the required structure.'
+              : '### ✅ Skill validation passed\n\n' + summary;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Fail on errors
+        run: |
+          if grep -q 'errors found' /tmp/validate_exit 2>/dev/null; then
+            echo "Validation failed — check the PR comment for details."
+            exit 1
+          fi
