@@ -1,0 +1,45 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-content-lifecycle",
+    "source": "pnp",
+    "title": "Content Lifecycle Management",
+    "shortDescription": "Manages SharePoint document retention, archiving, version cleanup, and expiry review through Copilot.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/content-lifecycle",
+    "longDescription": [
+      "Helps Copilot manage the full content lifecycle for SharePoint documents: apply and view retention labels, identify and archive old content, reduce excessive version history counts, and review expired content.",
+      "Safe by design — always previews before acting, double-confirms deletions, and guides users to the settings UI for irreversible operations like version deletion."
+    ],
+    "creationDateTime": "2026-07-11",
+    "updateDateTime": "2026-07-11",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Content Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/content-lifecycle/assets/preview.png",
+        "alt": "Content Lifecycle Management skill overview"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "vystartasv",
+        "pictureUrl": "https://github.com/vystartasv.png",
+        "name": "Vilius Vystartas"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
