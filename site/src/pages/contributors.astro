@@ -24,9 +24,31 @@ const contributors = [...catalog.skills.reduce((map, skill) => {
 	<header class="page-heading container">
 		<p class="eyebrow">Community</p>
 		<h1>Contributors</h1>
-		<p>{contributors.length} people have shared skills with the community.</p>
+		<p>{contributors.length} people have shared their expertise. Sharing is caring.</p>
 	</header>
 	<div class="directory-page container">
+		<section class="badge-callout" aria-labelledby="badge-heading">
+			<img
+				src={sitePath('/images/sharepoint-skills-badge.png')}
+				alt="SharePoint Skills 2026 community contributor badge"
+				width="220"
+				height="220"
+			/>
+			<div>
+				<p class="eyebrow">Contributor recognition</p>
+				<h2 id="badge-heading">Share your skill. Earn the badge.</h2>
+				<p>
+					Every contributor with an accepted SharePoint Skill can receive the SharePoint Skills
+					Credly badge after registering once for the Community Recognition Program.
+				</p>
+				<div class="action-row">
+					<a class="button" href="https://aka.ms/community/recognition">Register for recognition</a>
+					<a class="button button--secondary" href="https://www.credly.com/org/m365pnp/badge/sharepoint-skills-microsoft-365-power-platform-comm">
+						View the badge <ExternalLink size={16} aria-hidden="true" />
+					</a>
+				</div>
+			</div>
+		</section>
 		<div class="contributor-grid">
 			{contributors.map((contributor) => (
 				<article class="contributor-card">

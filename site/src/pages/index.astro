@@ -1,8 +1,8 @@
 ---
-import { Search, SlidersHorizontal, X } from '@lucide/astro';
+import { ArrowRight, CalendarDays, Search, SlidersHorizontal, X } from '@lucide/astro';
 import SkillCard from '../components/SkillCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { catalog } from '../lib/catalog';
+import { catalog, sitePath } from '../lib/catalog';
 
 const contributors = [...new Map(
 	catalog.skills.flatMap((skill) => skill.authors).map((author) => [author.gitHubAccount.toLowerCase(), author]),
@@ -14,18 +14,53 @@ const newestSkills = [...catalog.skills].sort((left, right) =>
 
 <BaseLayout>
 	<section class="catalog-intro container">
-		<div>
-			<p class="eyebrow">Microsoft 365 & Power Platform Community</p>
-			<h1>SharePoint Skills</h1>
-			<p class="catalog-intro__copy">
-				Community-built skills that give Copilot in SharePoint focused, reusable capabilities.
-			</p>
+		<div class="catalog-intro__identity">
+			<img src={sitePath('/images/SharePoint_512.png')} alt="" width="112" height="112" />
+			<div>
+				<p class="eyebrow">Microsoft 365 & Power Platform Community</p>
+				<h1>SharePoint Skills</h1>
+				<p class="catalog-intro__copy">
+					Community-built skills that give Copilot in SharePoint focused, reusable capabilities.
+				</p>
+			</div>
 		</div>
 		<div class="catalog-stat" aria-label={`${catalog.skills.length} community skills`}>
 			<strong>{catalog.skills.length}</strong>
 			<span>community skills</span>
 		</div>
 	</section>
+
+	<section class="copilot-story" aria-labelledby="copilot-story-heading">
+		<div class="copilot-story__inner container">
+			<img class="copilot-story__mark" src={sitePath('/images/copilot.png')} alt="" width="136" height="136" />
+			<div class="copilot-story__copy">
+				<p class="eyebrow">Copilot in SharePoint</p>
+				<h2 id="copilot-story-heading">Turn shared expertise into repeatable help</h2>
+				<p>
+					SharePoint Skills give Copilot in SharePoint focused instructions for everyday work.
+					Install a skill once, then invoke that capability in the flow of work.
+				</p>
+				<div class="action-row">
+					<a class="button button--light" href={sitePath('/getting-started/')}>
+						Get started <ArrowRight size={17} aria-hidden="true" />
+					</a>
+					<a class="copilot-story__link" href="https://aka.ms/community/samples">Explore all community samples</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<aside class="community-ribbon" aria-label="Community calls">
+		<div class="community-ribbon__inner container">
+				<CalendarDays size={25} aria-hidden="true" />
+				<p>
+					<strong>Sharing is caring.</strong>{' '}
+					<span class="community-ribbon__full">Join the weekly community calls to learn what is new and meet the people building it.</span>
+					<span class="community-ribbon__short">Join weekly community calls and stay up to date.</span>
+				</p>
+				<a href="https://aka.ms/community/home">Visit Community Home</a>
+		</div>
+	</aside>
 
 	<section class="catalog-shell container" aria-labelledby="catalog-heading">
 		<h2 id="catalog-heading" class="sr-only">Browse skills</h2>

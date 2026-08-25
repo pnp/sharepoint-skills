@@ -12,7 +12,7 @@ interface Props {
 const {
 	title = 'SharePoint Skills',
 	description = 'Community-built skills for Microsoft 365 Copilot in SharePoint.',
-	image = '/images/keyart-bg.webp',
+	image = '/images/SharePoint_512.png',
 } = Astro.props;
 const pageTitle = title === 'SharePoint Skills' ? title : `${title} | SharePoint Skills`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
@@ -41,8 +41,8 @@ const isCurrent = (href: string) =>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="theme-color" content="#ffffff" />
-		<link rel="icon" href={sitePath('/images/pnp.svg')} type="image/svg+xml" />
+		<meta name="theme-color" content="#008272" />
+		<link rel="icon" href={sitePath('/images/SharePoint_512.png')} type="image/png" />
 		<link rel="canonical" href={canonicalUrl} />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={pageTitle} />
@@ -51,11 +51,6 @@ const isCurrent = (href: string) =>
 		<meta property="og:image" content={imageUrl} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<title>{pageTitle}</title>
-		<style define:vars={{
-			'keyart-image': `url(${sitePath('/images/keyart-bg.webp')})`,
-			'side-left-image': `url(${sitePath('/images/side-bg-left.webp')})`,
-			'side-right-image': `url(${sitePath('/images/side-bg-right.webp')})`,
-		}}></style>
 	</head>
 	<body>
 		<a class="skip-link" href="#main-content">Skip to content</a>
@@ -63,7 +58,7 @@ const isCurrent = (href: string) =>
 			<div class="spectrum" aria-hidden="true"></div>
 			<div class="site-header__inner container">
 				<a class="brand" href={sitePath('/')} aria-label="SharePoint Skills home">
-					<img src={sitePath('/images/pnp.svg')} alt="" width="32" height="32" />
+					<img src={sitePath('/images/SharePoint_512.png')} alt="" width="38" height="38" />
 					<span>SharePoint <strong>Skills</strong></span>
 				</a>
 				<nav class="desktop-nav" aria-label="Primary navigation">
@@ -95,6 +90,8 @@ const isCurrent = (href: string) =>
 					<p>Sharing is caring. Built by the community, for the community.</p>
 				</div>
 				<nav aria-label="Footer navigation">
+					<a href="https://aka.ms/community/home">Community home</a>
+					<a href="https://aka.ms/community/samples">Community samples</a>
 					<a href={sitePath('/whats-new/')}>What's new</a>
 					<a href={sitePath('/categories/')}>Categories</a>
 					<a href={sitePath('/catalog.json')}>Catalog JSON</a>

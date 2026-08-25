@@ -34,6 +34,26 @@ test('renders a generated skill page, package, and public catalog', async ({ pag
 	expect(catalog.skills).toHaveLength(47);
 });
 
+test('presents the SharePoint product story and contributor recognition', async ({ page }) => {
+	await page.goto('./');
+	await expect(page.locator('.brand img')).toHaveAttribute('src', '/sharepoint-skills/images/SharePoint_512.png');
+	await expect(page.locator('.copilot-story__mark')).toHaveAttribute('src', '/sharepoint-skills/images/copilot.png');
+	await expect(page.getByRole('heading', { name: 'Turn shared expertise into repeatable help' })).toBeVisible();
+	await expect(page.getByRole('link', { name: 'Explore all community samples' })).toHaveAttribute('href', 'https://aka.ms/community/samples');
+	await expect(page.getByRole('link', { name: 'Visit Community Home' })).toHaveAttribute('href', 'https://aka.ms/community/home');
+
+	await page.goto('contributors/');
+	await expect(page.getByRole('heading', { name: 'Share your skill. Earn the badge.' })).toBeVisible();
+	await expect(page.getByAltText('SharePoint Skills 2026 community contributor badge')).toHaveAttribute(
+		'src',
+		'/sharepoint-skills/images/sharepoint-skills-badge.png',
+	);
+	await expect(page.getByRole('link', { name: 'Register for recognition' })).toHaveAttribute(
+		'href',
+		'https://aka.ms/community/recognition',
+	);
+});
+
 test('has no automatically detectable accessibility violations', async ({ page }) => {
 	await page.goto('./');
 	const homeResults = await new AxeBuilder({ page }).analyze();

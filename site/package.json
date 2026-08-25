@@ -31,7 +31,7 @@
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
     "@types/sanitize-html": "^2.16.1",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "vitest": "^5.0.0-rc.2"
   }
 }
