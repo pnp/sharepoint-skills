@@ -18,7 +18,7 @@ Creates a polished, interactive explainer dashboard for any business, technical,
 
 | Solution | Author(s) |
 | --- | --- |
-| topic-explainer | Anand &#124; [GitHub](https://github.com/anandVragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
+| topic-explainer | Anand Ragavan &#124; [GitHub](https://github.com/anandragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
 
 ## Version history
 

@@ -21,7 +21,7 @@ Creates an interactive HTML learning dashboard from a source file (PowerPoint, P
 
 | Solution | Author(s) |
 | --- | --- |
-| flashcards-dashboard | Anand &#124; [GitHub](https://github.com/anandVragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
+| flashcards-dashboard | Anand Ragavan &#124; [GitHub](https://github.com/anandragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
 
 ## Version history
 

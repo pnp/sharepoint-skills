@@ -30,12 +30,14 @@ A curated library of AI skills for the latest AI features in Microsoft 365 Share
 
 A SharePoint skill packages reusable instructions that help Copilot perform a focused, repeatable task on a site.
 
-1. **Browse the catalog:** Open [`Skills/`](./Skills/) and choose a skill for the task you want to complete.
+1. **Start with the gallery:** Browse the **[SharePoint Skills gallery](https://pnp.github.io/sharepoint-skills/)** for the easiest way to see what is available and choose a skill for your task.
 2. **Review the skill:** Open its outer `README.md` to see what it does, what it produces, and any setup or demo guidance.
 3. **Install it:** Upload the skill's same-name inner package folder, containing `SKILL.md`, to the **Skills** folder in your site's **Agent Assets** library.
 4. **Run it:** Open Copilot in SharePoint and ask for the task in your own words, or invoke the skill by name. Look for the skill indicator in chat to confirm that it loaded.
 
 See [Installing a Skill](./Skills/README.md#installing-a-skill) for detailed steps, or use the [troubleshooting guide](./Skills/TROUBLESHOOTING.md) if Copilot does not recognize the skill.
+
+For broader rollout planning, see the [Copilot in SharePoint adoption guidance](https://aka.ms/CopilotinSP).
 
 ---
 

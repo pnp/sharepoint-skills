@@ -27,7 +27,7 @@ Creates a professional live-linked document browser dashboard for a SharePoint d
 
 | Solution | Author(s) |
 | --- | --- |
-| document-browser | Anand &#124; [GitHub](https://github.com/anandVragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
+| document-browser | Anand Ragavan &#124; [GitHub](https://github.com/anandragav) &#124; [LinkedIn](https://www.linkedin.com/in/anand-vijayaragavan-89443012/) |
 
 ## Version history
 
