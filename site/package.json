@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "@lucide/astro": "^1.32.0",
+    "@lucide/astro": "^1.33.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "astro": "^7.1.6",
