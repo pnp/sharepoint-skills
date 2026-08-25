@@ -39,7 +39,7 @@ test('presents the SharePoint product story and contributor recognition', async 
 	await expect(page.locator('.brand img')).toHaveAttribute('src', '/sharepoint-skills/images/SharePoint_512.png');
 	await expect(page.locator('.copilot-story__mark')).toHaveAttribute('src', '/sharepoint-skills/images/copilot.png');
 	await expect(page.getByRole('heading', { name: 'Turn shared expertise into repeatable help' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Explore all community samples' })).toHaveAttribute('href', 'https://aka.ms/community/samples');
+	await expect(page.getByRole('link', { name: 'Copilot adoption guidance' })).toHaveAttribute('href', 'https://aka.ms/CopilotinSP');
 	await expect(page.getByRole('link', { name: 'Visit Community Home' })).toHaveAttribute('href', 'https://aka.ms/community/home');
 
 	await page.goto('contributors/');
