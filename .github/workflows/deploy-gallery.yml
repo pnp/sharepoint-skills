@@ -68,7 +68,9 @@ jobs:
         run: |
           {
             echo "## Gallery artifact"
+            echo "- Catalog entries: $(node -p "require('./site/dist/catalog.json').skills.length")"
             echo "- Pages: $(find site/dist -name index.html -o -name 404.html | wc -l)"
+            echo "- Optimized previews: $(find site/dist/generated/previews -name '*.webp' | wc -l)"
             echo "- Site size: $(du -sh site/dist | cut -f1)"
             echo "- Packages: $(find site/dist/downloads -name '*.zip' | wc -l)"
             echo "- Package size: $(du -sh site/dist/downloads | cut -f1)"

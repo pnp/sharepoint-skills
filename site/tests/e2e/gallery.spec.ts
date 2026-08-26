@@ -31,7 +31,28 @@ test('renders a generated skill page, package, and public catalog', async ({ pag
 	expect(catalogResponse.ok()).toBeTruthy();
 	const catalog = await catalogResponse.json();
 	expect(catalog.version).toBe(1);
-	expect(catalog.skills).toHaveLength(47);
+
+	await page.goto('./');
+	await expect(page.locator('.catalog-stat strong')).toHaveText(String(catalog.skills.length));
+	await expect(page.locator('[data-skill-card]')).toHaveCount(catalog.skills.length);
+
+	const contributionCounts = new Map<string, number>();
+	for (const skill of catalog.skills) {
+		for (const author of skill.authors) {
+			const account = author.gitHubAccount.toLocaleLowerCase('en-US');
+			contributionCounts.set(account, (contributionCounts.get(account) ?? 0) + 1);
+		}
+	}
+
+	await page.goto('contributors/');
+	await expect(page.locator('.page-heading')).toContainText(`${contributionCounts.size} people`);
+	await expect(page.locator('.contributor-card')).toHaveCount(contributionCounts.size);
+	for (const [account, count] of contributionCounts) {
+		const contributor = page.locator('.contributor-card').filter({
+			has: page.getByRole('link', { name: `@${account}`, exact: false }),
+		});
+		await expect(contributor.locator('.contribution-count')).toHaveText(`${count} ${count === 1 ? 'skill' : 'skills'}`);
+	}
 });
 
 test('presents the SharePoint product story and contributor recognition', async ({ page }) => {
