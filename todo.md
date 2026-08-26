@@ -1,8 +1,14 @@
 # SharePoint Skills gallery and publishing plan
 
 Status: Baseline implemented; launch approvals and hardening remain  
-Last updated: 2026-08-25  
+Last updated: 2026-08-26  
 Target: `https://pnp.github.io/sharepoint-skills/`
+
+## Publishing verification follow-ups
+
+- [ ] Automate the temporary skill lifecycle test (add, update, and delete) so catalog totals, contributor counts, routes, previews, and downloads are checked without retaining a fixture. The 2026-08-26 manual smoke test passed for 47 -> 48 -> 47 skills with `VesaJuvonen` attribution.
+- [ ] Add a build-artifact consistency gate that requires catalog entries, detail pages, ZIP packages, and preview pairs to have matching totals before upload.
+- [ ] Extend the post-deploy smoke test to compare the live catalog total with the rendered home total and verify the contributor directory, instead of checking only one known skill.
 
 ## Outcome
 
