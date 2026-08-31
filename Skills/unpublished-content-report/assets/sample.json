@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-unpublished-content-report",
+    "source": "pnp",
+    "title": "Unpublished Content Report",
+    "shortDescription": "Creates a report of documents and pages on a site that are not in a published state",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/unpublished-content-report",
+    "longDescription": [
+      "This skill generates a HTML report in a specific library (default: Reports) showing documents and pages that are in an unpublished or checked out state and has been so for 14 (default) days.",
+      "At top of report it shows a short summary of the findings. Below follows a detailed list of documents and pages with their current state and the number of days since the item was last edited. The list is ordered by 'days since edit' in descending order (default)",
+      "Ideal for content administrators to get an easy overview of content that authors or approvers forgot to publish or has been checked out by mistake and blocking other users from editing."
+    ],
+    "creationDateTime": "2026-08-27",
+    "updateDateTime": "2026-08-28",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Document Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/unpublished-content-report/assets/preview.png",
+        "alt": "Unpublished Content Report showing content that is checked out or unpublished and inactive."
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "MortenPedersenDK",
+        "pictureUrl": "https://github.com/MortenPedersenDK.png",
+        "name": "Morten Pedersen"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
