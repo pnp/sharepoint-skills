@@ -56,6 +56,12 @@ jobs:
         working-directory: site
         run: npm run check && npm run build
 
+      - name: Record deployment identity
+        working-directory: site
+        env:
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
+        run: npm run deployment:mark
+
       - name: Install Chromium
         working-directory: site
         run: npx playwright install --with-deps chromium
@@ -87,6 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
@@ -98,12 +105,17 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
-      - name: Smoke test deployment
+      - name: Checkout deployment verifier
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.19.0"
+
+      - name: Verify live deployment
+        working-directory: site
         env:
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: |
-          curl --fail --retry 4 --retry-delay 3 "${SITE_URL}"
-          curl --fail --retry 4 --retry-delay 3 "${SITE_URL}catalog.json"
-          curl --fail --retry 4 --retry-delay 3 "${SITE_URL}skills/analyze-document-library/"
-          curl --fail --retry 4 --retry-delay 3 "${SITE_URL}generated/previews/analyze-document-library-640.webp" --output /dev/null
-          curl --fail --retry 4 --retry-delay 3 "${SITE_URL}downloads/analyze-document-library.zip" --output /dev/null
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
+        run: npm run deployment:verify

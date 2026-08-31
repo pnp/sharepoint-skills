@@ -31,22 +31,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
+
+      - name: Merge current base for validation
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          git fetch --no-tags origin "+refs/heads/${BASE_REF}:refs/remotes/origin/${BASE_REF}"
+          git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            merge --no-edit "refs/remotes/origin/${BASE_REF}"
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-
-      - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "22.19.0"
-          cache: npm
-          cache-dependency-path: site/package-lock.json
-
-      - name: Install gallery dependencies
-        working-directory: site
-        run: npm ci
 
       - name: Validate all skills
         id: validate
@@ -58,7 +60,24 @@ jobs:
 
       - name: Publish validation summary
         if: always()
-        run: cat "$RUNNER_TEMP/skill-validation.md" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          if [ -f "$RUNNER_TEMP/skill-validation.md" ]; then
+            cat "$RUNNER_TEMP/skill-validation.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Skill validation" >> "$GITHUB_STEP_SUMMARY"
+            echo "The validator did not produce a report." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.19.0"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install gallery dependencies
+        working-directory: site
+        run: npm ci
 
       - name: Test gallery model
         id: unit
@@ -77,6 +96,11 @@ jobs:
         continue-on-error: true
         working-directory: site
         run: npm run build
+
+      - name: Record deployment identity
+        if: steps.build.outcome == 'success'
+        working-directory: site
+        run: EXPECTED_COMMIT_SHA="$(git rev-parse HEAD)" npm run deployment:mark
 
       - name: Install Chromium
         if: steps.build.outcome == 'success'
@@ -108,7 +132,10 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update pull request validation comment
-        if: always() && github.event_name == 'pull_request'
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
         continue-on-error: true
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:

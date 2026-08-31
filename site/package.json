@@ -11,6 +11,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:all": "npm run test && npm run check && npm run build && npm run test:e2e",
+    "deployment:mark": "node scripts/deployment-verification.mjs create",
+    "deployment:verify": "node scripts/deployment-verification.mjs verify",
     "preview": "astro preview",
     "astro": "astro"
   },

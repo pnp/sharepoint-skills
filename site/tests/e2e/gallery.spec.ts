@@ -1,7 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-test('filters the catalog and preserves the query in the URL', async ({ page }) => {
+test('filters the catalog and preserves the query in the URL', async ({ page, request }) => {
+	const catalogResponse = await request.get('catalog.json');
+	expect(catalogResponse.ok()).toBeTruthy();
+	const catalog = (await catalogResponse.json()) as { skills: Array<{ category: string }> };
+	const documentManagementCount = catalog.skills.filter(
+		(skill) => skill.category === 'Document Management',
+	).length;
+
 	await page.goto('./');
 	await expect(page.getByRole('heading', { level: 1, name: 'SharePoint Skills' })).toBeVisible();
 	await expect(page.locator('[data-skill-card]:visible')).toHaveCount(18);
@@ -17,7 +24,7 @@ test('filters the catalog and preserves the query in the URL', async ({ page }) 
 
 	await page.getByRole('button', { name: 'Clear all' }).click();
 	await page.locator('#category-filter').selectOption('Document Management');
-	await expect(page.locator('#result-count')).toContainText('12 matching skills');
+	await expect(page.locator('#result-count')).toContainText(`${documentManagementCount} matching skills`);
 });
 
 test('renders a generated skill page, package, and public catalog', async ({ page, request }) => {
