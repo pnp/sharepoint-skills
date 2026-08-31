@@ -28,7 +28,7 @@ Report contains a summary first and then a list of documents/pages found that ar
 
 | Solution | Author(s) |
 | --- | --- |
-| unpublished-content-report | Morten Bundgaard Pedersen &#124; [GitHub](https://github.com/MortenPedersenDK) &#124; [LinkedIn](www.linkedin.com/in/mortenbpedersen) |
+| unpublished-content-report | Morten Bundgaard Pedersen &#124; [GitHub](https://github.com/MortenPedersenDK) &#124; [LinkedIn](https://www.linkedin.com/in/mortenbpedersen) |
 
 ## Version history
 
