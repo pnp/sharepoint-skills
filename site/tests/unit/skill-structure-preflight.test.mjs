@@ -118,6 +118,19 @@ describe('skill structure inspection', () => {
 	});
 });
 
+describe('skill structure guidance', () => {
+	test('renders file names and the example tree without stripped placeholders', () => {
+		const comment = formatStructureComment([
+			{ path: 'Skills/example-skill/assets/sample.json', message: 'required sample.json is missing' },
+		]);
+
+		expect(comment).toContain('required sample.json is missing');
+		expect(comment).not.toContain('sample\\.json');
+		expect(comment).toContain('Skills/skill-name/');
+		expect(comment).toContain('`-- skill-name/');
+	});
+});
+
 describe('pull request resolution', () => {
 	test('resolves a fork pull request after its validation workflow completes', async () => {
 		const github = githubMock({ tree: [], manifest: '' });

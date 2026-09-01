@@ -93,8 +93,9 @@ function inlineCode(value) {
 
 function escapeMarkdown(value) {
 	return String(value)
-		.replace(/\\/g, '\\\\')
-		.replace(/([`*_{}[\]<>#+.!|])/g, '\\$1')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
 		.replace(/@/g, '@<!-- -->');
 }
 
@@ -124,12 +125,12 @@ function formatStructureComment(errors, managesLabel = false) {
 		'The required structure is:',
 		'',
 		'```text',
-		'Skills/<skill-name>/',
+		'Skills/skill-name/',
 		'|-- README.md',
 		'|-- assets/',
 		'|   |-- sample.json',
 		'|   `-- preview.png',
-		'`-- <skill-name>/',
+		'`-- skill-name/',
 		'    `-- SKILL.md',
 		'```',
 		'',
