@@ -1,6 +1,9 @@
 const COMMENT_MARKER = '<!-- skill-structure-preflight -->';
-const MANAGED_LABEL_MARKER = '<!-- skill-structure-preflight-label:managed -->';
-const NEEDS_CHANGES_LABEL = 'Needs: Changes';
+const MANAGED_LABEL_MARKER = '<!-- skill-structure-preflight-label:author-feedback -->';
+const LEGACY_MANAGED_LABEL_MARKER = '<!-- skill-structure-preflight-label:managed -->';
+const AUTHOR_FEEDBACK_LABEL = 'Needs: Author Feedback';
+const LEGACY_NEEDS_CHANGES_LABEL = 'Needs: Changes';
+const TRIAGE_LABEL = 'Needs: Triage :mag:';
 const CONTRIBUTING_URL = 'https://github.com/pnp/sharepoint-skills/blob/main/CONTRIBUTING.md';
 const MAX_REPORTED_ERRORS = 40;
 
@@ -197,6 +200,18 @@ async function upsertComment(github, context, pullRequestNumber, existingComment
 	});
 }
 
+async function removeLabel(github, context, pullRequestNumber, name) {
+	try {
+		await github.rest.issues.removeLabel({
+			...context.repo,
+			issue_number: pullRequestNumber,
+			name,
+		});
+	} catch (error) {
+		if (error.status !== 404) throw error;
+	}
+}
+
 async function runStructurePreflight({ github, context }) {
 	const pullRequest = await resolvePullRequest(github, context);
 	if (!pullRequest) return { errors: [], slugs: [], skipped: true };
@@ -241,16 +256,24 @@ async function runStructurePreflight({ github, context }) {
 
 	const labels = new Set((pullRequest.labels || []).map((label) => label.name || label));
 	const previouslyManagedLabel = existingComment?.body?.includes(MANAGED_LABEL_MARKER) || false;
+	const previouslyManagedLegacyLabel =
+		existingComment?.body?.includes(LEGACY_MANAGED_LABEL_MARKER) || false;
 	let managesLabel = previouslyManagedLabel;
 
 	if (errors.length > 0) {
-		if (!labels.has(NEEDS_CHANGES_LABEL)) {
+		if (!labels.has(AUTHOR_FEEDBACK_LABEL)) {
 			await github.rest.issues.addLabels({
 				...context.repo,
 				issue_number: pullRequest.number,
-				labels: [NEEDS_CHANGES_LABEL],
+				labels: [AUTHOR_FEEDBACK_LABEL],
 			});
 			managesLabel = true;
+		}
+		if (labels.has(TRIAGE_LABEL)) {
+			await removeLabel(github, context, pullRequest.number, TRIAGE_LABEL);
+		}
+		if (previouslyManagedLegacyLabel && labels.has(LEGACY_NEEDS_CHANGES_LABEL)) {
+			await removeLabel(github, context, pullRequest.number, LEGACY_NEEDS_CHANGES_LABEL);
 		}
 		await upsertComment(
 			github,
@@ -260,16 +283,11 @@ async function runStructurePreflight({ github, context }) {
 			formatStructureComment(errors, managesLabel),
 		);
 	} else if (existingComment) {
-		if (previouslyManagedLabel && labels.has(NEEDS_CHANGES_LABEL)) {
-			try {
-				await github.rest.issues.removeLabel({
-					...context.repo,
-					issue_number: pullRequest.number,
-					name: NEEDS_CHANGES_LABEL,
-				});
-			} catch (error) {
-				if (error.status !== 404) throw error;
-			}
+		if (previouslyManagedLabel && labels.has(AUTHOR_FEEDBACK_LABEL)) {
+			await removeLabel(github, context, pullRequest.number, AUTHOR_FEEDBACK_LABEL);
+		}
+		if (previouslyManagedLegacyLabel && labels.has(LEGACY_NEEDS_CHANGES_LABEL)) {
+			await removeLabel(github, context, pullRequest.number, LEGACY_NEEDS_CHANGES_LABEL);
 		}
 		await upsertComment(github, context, pullRequest.number, existingComment, formatStructureComment([]));
 	}
@@ -278,9 +296,12 @@ async function runStructurePreflight({ github, context }) {
 }
 
 module.exports = {
+	AUTHOR_FEEDBACK_LABEL,
 	COMMENT_MARKER,
+	LEGACY_MANAGED_LABEL_MARKER,
+	LEGACY_NEEDS_CHANGES_LABEL,
 	MANAGED_LABEL_MARKER,
-	NEEDS_CHANGES_LABEL,
+	TRIAGE_LABEL,
 	changedSkillSlugs,
 	formatStructureComment,
 	inspectSkillStructure,

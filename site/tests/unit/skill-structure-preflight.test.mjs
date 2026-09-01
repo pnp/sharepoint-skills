@@ -2,8 +2,12 @@ import { describe, expect, test, vi } from 'vitest';
 import preflight from '../../../.github/scripts/skill_structure_preflight.cjs';
 
 const {
+	AUTHOR_FEEDBACK_LABEL,
 	COMMENT_MARKER,
+	LEGACY_MANAGED_LABEL_MARKER,
+	LEGACY_NEEDS_CHANGES_LABEL,
 	MANAGED_LABEL_MARKER,
+	TRIAGE_LABEL,
 	formatStructureComment,
 	inspectSkillStructure,
 	resolvePullRequest,
@@ -202,7 +206,7 @@ describe('pull request resolution', () => {
 });
 
 describe('skill structure pull request feedback', () => {
-	test('adds Needs: Changes and posts actionable guidance for an invalid layout', async () => {
+	test('requests author feedback, removes triage, and posts guidance for an invalid layout', async () => {
 		const tree = validTree().filter(({ path }) =>
 			path !== 'Skills/example-skill/example-skill' &&
 			path !== 'Skills/example-skill/example-skill/SKILL.md' &&
@@ -213,11 +217,17 @@ describe('skill structure pull request feedback', () => {
 			manifest: '---\nname: other-name\ndescription: Example\n---',
 		});
 
-		const result = await runStructurePreflight({ github, context: context() });
+		const result = await runStructurePreflight({
+			github,
+			context: context([{ name: TRIAGE_LABEL }]),
+		});
 
 		expect(result.errors.length).toBeGreaterThan(0);
 		expect(github.rest.issues.addLabels).toHaveBeenCalledWith(expect.objectContaining({
-			labels: ['Needs: Changes'],
+			labels: [AUTHOR_FEEDBACK_LABEL],
+		}));
+		expect(github.rest.issues.removeLabel).toHaveBeenCalledWith(expect.objectContaining({
+			name: TRIAGE_LABEL,
 		}));
 		expect(github.rest.issues.createComment).toHaveBeenCalledWith(expect.objectContaining({
 			body: expect.stringContaining('The required structure is:'),
@@ -225,7 +235,43 @@ describe('skill structure pull request feedback', () => {
 		expect(github.rest.issues.createComment.mock.calls[0][0].body).toContain(MANAGED_LABEL_MARKER);
 	});
 
-	test('removes a bot-managed label after the structure is corrected', async () => {
+	test('migrates the legacy bot-managed label while requesting author feedback', async () => {
+		const tree = validTree().filter(({ path }) => path !== 'Skills/example-skill/assets/sample.json');
+		const comments = [{
+			id: 123,
+			body: `${COMMENT_MARKER}\n${LEGACY_MANAGED_LABEL_MARKER}\nPrevious errors`,
+			user: { login: 'github-actions[bot]' },
+		}];
+		const github = githubMock({
+			tree,
+			manifest: '---\nname: example-skill\ndescription: Example\n---',
+			comments,
+		});
+
+		await runStructurePreflight({
+			github,
+			context: context([
+				{ name: LEGACY_NEEDS_CHANGES_LABEL },
+				{ name: TRIAGE_LABEL },
+			]),
+		});
+
+		expect(github.rest.issues.addLabels).toHaveBeenCalledWith(expect.objectContaining({
+			labels: [AUTHOR_FEEDBACK_LABEL],
+		}));
+		expect(github.rest.issues.removeLabel).toHaveBeenCalledWith(expect.objectContaining({
+			name: LEGACY_NEEDS_CHANGES_LABEL,
+		}));
+		expect(github.rest.issues.removeLabel).toHaveBeenCalledWith(expect.objectContaining({
+			name: TRIAGE_LABEL,
+		}));
+		expect(github.rest.issues.updateComment.mock.calls[0][0].body).toContain(MANAGED_LABEL_MARKER);
+		expect(github.rest.issues.updateComment.mock.calls[0][0].body).not.toContain(
+			LEGACY_MANAGED_LABEL_MARKER,
+		);
+	});
+
+	test('removes a bot-managed author feedback label after the structure is corrected', async () => {
 		const comments = [{
 			id: 123,
 			body: `${COMMENT_MARKER}\n${MANAGED_LABEL_MARKER}\nPrevious errors`,
@@ -239,11 +285,11 @@ describe('skill structure pull request feedback', () => {
 
 		await runStructurePreflight({
 			github,
-			context: context([{ name: 'Needs: Changes' }]),
+			context: context([{ name: AUTHOR_FEEDBACK_LABEL }]),
 		});
 
 		expect(github.rest.issues.removeLabel).toHaveBeenCalledWith(expect.objectContaining({
-			name: 'Needs: Changes',
+			name: AUTHOR_FEEDBACK_LABEL,
 		}));
 		expect(github.rest.issues.updateComment).toHaveBeenCalledWith(expect.objectContaining({
 			body: formatStructureComment([]),
