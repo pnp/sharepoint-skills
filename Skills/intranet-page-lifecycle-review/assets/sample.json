@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-intranet-page-lifecycle-review",
+    "source": "pnp",
+    "title": "SharePoint Page Governance",
+    "shortDescription": "Audits a SharePoint Site Pages library and creates a read-only lifecycle report for stale, draft, unpublished, and checked-out pages.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/intranet-page-lifecycle-review",
+    "longDescription": [
+      "Reviews the current SharePoint site's Site Pages library and identifies pages that are stale, still in draft, never published, changed after publication, or checked out.",
+      "Creates a self-contained HTML report with lifecycle classifications, page links, ownership details, recommended follow-up actions, and explicit limitations without changing pages or library items."
+    ],
+    "creationDateTime": "2026-08-26",
+    "updateDateTime": "2026-08-26",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Site Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/intranet-page-lifecycle-review/assets/preview.png",
+        "alt": "SharePoint Page Governance lifecycle report"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "harshdamaniahd",
+        "pictureUrl": "https://github.com/harshdamaniahd.png",
+        "name": "Harsh Damania"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

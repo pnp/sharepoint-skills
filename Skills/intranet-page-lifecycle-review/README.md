@@ -26,7 +26,7 @@ Analyzes a SharePoint Site Pages library and creates a structured HTML report co
 
 | Solution | Author(s) |
 | --- | --- |
-| sharepoint-page-governance | — |
+| intranet-page-lifecycle-review | Harsh Damania &#124; [GitHub](https://github.com/harshdamaniahd) |
 
 ## Version history
 
@@ -38,4 +38,5 @@ Analyzes a SharePoint Site Pages library and creates a structured HTML report co
 
 **THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
+<img src="https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/skills/intranet-page-lifecycle-review" />
 
