@@ -6,6 +6,7 @@ const {
 	MANAGED_LABEL_MARKER,
 	formatStructureComment,
 	inspectSkillStructure,
+	resolvePullRequest,
 	runStructurePreflight,
 } = preflight;
 
@@ -23,7 +24,11 @@ function validTree(slug = 'example-skill') {
 
 function githubMock({ tree, manifest, comments = [] }) {
 	const rest = {
-		pulls: { listFiles: vi.fn() },
+		pulls: {
+			get: vi.fn().mockResolvedValue({ data: context().payload.pull_request }),
+			list: vi.fn(),
+			listFiles: vi.fn(),
+		},
 		git: {
 			getTree: vi.fn().mockResolvedValue({ data: { tree, truncated: false } }),
 			getBlob: vi.fn().mockResolvedValue({
@@ -44,6 +49,9 @@ function githubMock({ tree, manifest, comments = [] }) {
 			if (endpoint === rest.pulls.listFiles) {
 				return [{ filename: 'Skills/example-skill/README.md' }];
 			}
+			if (endpoint === rest.pulls.list) {
+				return [context().payload.pull_request];
+			}
 			return comments;
 		}),
 	};
@@ -56,6 +64,7 @@ function context(labels = []) {
 			pull_request: {
 				number: 52,
 				labels,
+				base: { repo: { full_name: 'pnp/sharepoint-skills' } },
 				head: {
 					sha: '0123456789abcdef',
 					repo: { name: 'sharepoint-skills', owner: { login: 'contributor' } },
@@ -106,6 +115,76 @@ describe('skill structure inspection', () => {
 		});
 
 		expect(result.errors).toEqual([]);
+	});
+});
+
+describe('pull request resolution', () => {
+	test('resolves a fork pull request after its validation workflow completes', async () => {
+		const github = githubMock({ tree: [], manifest: '' });
+		const workflowContext = {
+			repo: { owner: 'pnp', repo: 'sharepoint-skills' },
+			payload: {
+				workflow_run: {
+					event: 'pull_request',
+					head_branch: 'main',
+					head_repository: { owner: { login: 'contributor' } },
+					head_sha: '0123456789abcdef',
+					pull_requests: [],
+				},
+			},
+		};
+
+		const pullRequest = await resolvePullRequest(github, workflowContext);
+
+		expect(github.paginate).toHaveBeenCalledWith(github.rest.pulls.list, expect.objectContaining({
+			head: 'contributor:main',
+			state: 'open',
+		}));
+		expect(github.rest.pulls.get).toHaveBeenCalledWith(expect.objectContaining({
+			pull_number: 52,
+		}));
+		expect(pullRequest.number).toBe(52);
+	});
+
+	test('posts feedback using the resolved workflow-run pull request number', async () => {
+		const tree = validTree().filter(({ path }) => path !== 'Skills/example-skill/assets/sample.json');
+		const github = githubMock({
+			tree,
+			manifest: '---\nname: example-skill\ndescription: Example\n---',
+		});
+		const workflowContext = {
+			repo: { owner: 'pnp', repo: 'sharepoint-skills' },
+			payload: {
+				workflow_run: {
+					event: 'pull_request',
+					head_branch: 'main',
+					head_repository: { owner: { login: 'contributor' } },
+					head_sha: '0123456789abcdef',
+					pull_requests: [],
+				},
+			},
+		};
+
+		await runStructurePreflight({ github, context: workflowContext });
+
+		expect(github.rest.issues.createComment).toHaveBeenCalledWith(expect.objectContaining({
+			issue_number: 52,
+		}));
+	});
+
+	test('resolves a manually dispatched pull request number', async () => {
+		const github = githubMock({ tree: [], manifest: '' });
+		const dispatchContext = {
+			repo: { owner: 'pnp', repo: 'sharepoint-skills' },
+			payload: { inputs: { pull_request_number: '52' } },
+		};
+
+		const pullRequest = await resolvePullRequest(github, dispatchContext);
+
+		expect(github.rest.pulls.get).toHaveBeenCalledWith(expect.objectContaining({
+			pull_number: 52,
+		}));
+		expect(pullRequest.number).toBe(52);
 	});
 });
 

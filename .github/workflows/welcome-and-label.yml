@@ -9,6 +9,17 @@ on:
       - opened
       - reopened
       - synchronize
+  workflow_run:
+    workflows:
+      - Validate skills
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: Pull request number to check
+        required: true
+        type: number
 
 permissions:
   contents: read
@@ -92,7 +103,10 @@ jobs:
             });
 
   skill-structure:
-    if: github.event_name == 'pull_request_target'
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request')
     name: Check skill structure
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -101,7 +115,7 @@ jobs:
       - name: Checkout trusted preflight
         uses: actions/checkout@3d3c42e5aac5ba805825a76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.base.sha || github.sha }}
           persist-credentials: false
           sparse-checkout: .github/scripts/skill_structure_preflight.cjs
           sparse-checkout-cone-mode: false
@@ -119,6 +133,10 @@ jobs:
             );
             const { runStructurePreflight } = require(preflightPath);
             const result = await runStructurePreflight({ github, context });
-            if (result.errors.length > 0) {
+            if (result.errors.length > 0 && context.eventName === "pull_request_target") {
               core.setFailed(`Found ${result.errors.length} skill structure issue(s).`);
+            } else if (result.errors.length > 0) {
+              core.notice(`Reported ${result.errors.length} skill structure issue(s) on the pull request.`);
+            } else if (result.skipped) {
+              core.notice("No pull request was associated with this workflow run.");
             }
