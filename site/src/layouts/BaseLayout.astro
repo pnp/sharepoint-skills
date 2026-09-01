@@ -1,5 +1,5 @@
 ---
-import { GitFork, Menu } from '@lucide/astro';
+import { GitFork, Menu, Moon, Sun } from '@lucide/astro';
 import '../styles/global.css';
 import { sitePath } from '../lib/catalog';
 
@@ -41,7 +41,21 @@ const isCurrent = (href: string) =>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="theme-color" content="#008272" />
+		<meta id="theme-color" name="theme-color" content="#f1f9f8" />
+		<script is:inline>
+			(() => {
+				const storageKey = 'sharepoint-skills-theme';
+				let storedTheme = null;
+				try {
+					storedTheme = localStorage.getItem(storageKey);
+				} catch {}
+				const theme = storedTheme === 'light' || storedTheme === 'dark'
+					? storedTheme
+					: 'light';
+				document.documentElement.dataset.theme = theme;
+				document.documentElement.style.colorScheme = theme;
+			})();
+		</script>
 		<link rel="icon" href={sitePath('/images/SharePoint_512.png')} type="image/png" />
 		<link rel="canonical" href={canonicalUrl} />
 		<meta property="og:type" content="website" />
@@ -61,23 +75,39 @@ const isCurrent = (href: string) =>
 					<img src={sitePath('/images/SharePoint_512.png')} alt="" width="38" height="38" />
 					<span>SharePoint <strong>Skills</strong></span>
 				</a>
-				<nav class="desktop-nav" aria-label="Primary navigation">
-					{navigation.map((item) => (
-						<a href={sitePath(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-							{item.label}
+				<div class="site-header__actions">
+					<nav class="desktop-nav" aria-label="Primary navigation">
+						{navigation.map((item) => (
+							<a href={sitePath(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+								{item.label}
+							</a>
+						))}
+						<a class="nav-github" href="https://github.com/pnp/sharepoint-skills">
+							<GitFork size={18} aria-hidden="true" /> GitHub
 						</a>
-					))}
-					<a class="nav-github" href="https://github.com/pnp/sharepoint-skills">
-						<GitFork size={18} aria-hidden="true" /> GitHub
-					</a>
-				</nav>
-				<details class="mobile-nav">
-					<summary title="Open navigation" aria-label="Open navigation"><Menu size={22} /></summary>
-					<nav aria-label="Mobile navigation">
-						{navigation.map((item) => <a href={sitePath(item.href)}>{item.label}</a>)}
-						<a href="https://github.com/pnp/sharepoint-skills">GitHub</a>
 					</nav>
-				</details>
+					<button
+						class="theme-toggle"
+						id="theme-toggle"
+						type="button"
+						role="switch"
+						aria-checked="false"
+						aria-label="Switch to dark mode"
+						title="Switch to dark mode"
+					>
+						<span class="theme-toggle__icons" aria-hidden="true">
+							<Sun class="theme-toggle__sun" size={16} />
+							<Moon class="theme-toggle__moon" size={15} />
+						</span>
+					</button>
+					<details class="mobile-nav">
+						<summary title="Open navigation" aria-label="Open navigation"><Menu size={22} /></summary>
+						<nav aria-label="Mobile navigation">
+							{navigation.map((item) => <a href={sitePath(item.href)}>{item.label}</a>)}
+							<a href="https://github.com/pnp/sharepoint-skills">GitHub</a>
+						</nav>
+					</details>
+				</div>
 			</div>
 		</header>
 		<main id="main-content">
@@ -102,5 +132,36 @@ const isCurrent = (href: string) =>
 				</nav>
 			</div>
 		</footer>
+		<script>
+			const storageKey = 'sharepoint-skills-theme';
+			const root = document.documentElement;
+			const toggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
+			const themeColor = document.querySelector<HTMLMetaElement>('#theme-color');
+
+			function applyTheme(theme: 'light' | 'dark', persist = false) {
+				root.dataset.theme = theme;
+				root.style.colorScheme = theme;
+				if (toggle) {
+					const isDark = theme === 'dark';
+					const label = `Switch to ${isDark ? 'light' : 'dark'} mode`;
+					toggle.setAttribute('aria-checked', String(isDark));
+					toggle.setAttribute('aria-label', label);
+					toggle.title = label;
+				}
+				if (themeColor) themeColor.content = theme === 'dark' ? '#081715' : '#f1f9f8';
+				if (persist) {
+					try {
+						localStorage.setItem(storageKey, theme);
+					} catch {}
+				}
+			}
+
+			applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
+			toggle?.addEventListener('click', () => {
+				root.classList.add('theme-transition');
+				applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+				window.setTimeout(() => root.classList.remove('theme-transition'), 420);
+			});
+		</script>
 	</body>
 </html>

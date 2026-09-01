@@ -82,10 +82,33 @@ test('presents the SharePoint product story and contributor recognition', async 
 	);
 });
 
+test('defaults to light, switches themes accessibly, and persists the preference', async ({ page }) => {
+	await page.emulateMedia({ colorScheme: 'dark' });
+	await page.goto('./');
+
+	const toggle = page.getByRole('switch', { name: 'Switch to dark mode' });
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+	await expect(toggle).toHaveAttribute('aria-checked', 'false');
+
+	await toggle.click();
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+	await expect(page.getByRole('switch', { name: 'Switch to light mode' })).toHaveAttribute('aria-checked', 'true');
+	await expect.poll(() => page.evaluate(() => localStorage.getItem('sharepoint-skills-theme'))).toBe('dark');
+
+	await page.reload();
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+	await expect(page.getByRole('switch', { name: 'Switch to light mode' })).toHaveAttribute('aria-checked', 'true');
+});
+
 test('has no automatically detectable accessibility violations', async ({ page }) => {
+	await page.addInitScript(() => localStorage.setItem('sharepoint-skills-theme', 'light'));
 	await page.goto('./');
 	const homeResults = await new AxeBuilder({ page }).analyze();
 	expect(homeResults.violations).toEqual([]);
+
+	await page.getByRole('switch', { name: 'Switch to dark mode' }).click();
+	const darkHomeResults = await new AxeBuilder({ page }).analyze();
+	expect(darkHomeResults.violations).toEqual([]);
 
 	await page.goto('skills/analyze-document-library/');
 	const detailResults = await new AxeBuilder({ page }).analyze();
