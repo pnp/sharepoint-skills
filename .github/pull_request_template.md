@@ -21,4 +21,4 @@
 - [ ] I listed the affected skill folders or marked the change as repository-wide.
 - [ ] I described how the change was reproduced or verified.
 - [ ] I included screenshots for visual changes, or marked them N/A.
-- [ ] I ran `python .github/scripts/validate_skills.py --root .` for skill changes, or marked it N/A.
+- [ ] I reviewed skill changes against the contribution guide, or marked this N/A.

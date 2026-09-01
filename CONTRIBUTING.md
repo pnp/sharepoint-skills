@@ -154,13 +154,7 @@ Short description of what the skill does and when to use it.
 
 ## Pre-submission checklist
 
-Run the repository validator before opening a pull request:
-
-```powershell
-python .github/scripts/validate_skills.py --root .
-```
-
-The pull request workflow runs the same command and reports package, metadata, README, demo, and preview-image findings.
+When you open or update a pull request, the `Validate skills` workflow automatically checks package structure, metadata, README content, demo content, and preview images. Review and address any findings reported by that check; no local validator setup is required.
 
 Before opening your pull request, verify:
 

@@ -7,6 +7,8 @@ on:
   pull_request_target:
     types:
       - opened
+      - reopened
+      - synchronize
 
 permissions:
   contents: read
@@ -15,13 +17,14 @@ permissions:
 
 jobs:
   welcome:
+    if: github.event_name == 'issues' || github.event.action == 'opened'
     name: Add welcome message and default label
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
       - name: Welcome and label contribution
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const isIssue = context.eventName === "issues";
@@ -87,3 +90,35 @@ jobs:
               issue_number: itemNumber,
               body: settings.message
             });
+
+  skill-structure:
+    if: github.event_name == 'pull_request_target'
+    name: Check skill structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout trusted preflight
+        uses: actions/checkout@3d3c42e5aac5ba805825a76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+          sparse-checkout: .github/scripts/skill_structure_preflight.cjs
+          sparse-checkout-cone-mode: false
+
+      - name: Check changed skill folders
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const path = require("path");
+            const preflightPath = path.join(
+              process.env.GITHUB_WORKSPACE,
+              ".github",
+              "scripts",
+              "skill_structure_preflight.cjs"
+            );
+            const { runStructurePreflight } = require(preflightPath);
+            const result = await runStructurePreflight({ github, context });
+            if (result.errors.length > 0) {
+              core.setFailed(`Found ${result.errors.length} skill structure issue(s).`);
+            }
