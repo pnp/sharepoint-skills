@@ -1803,7 +1803,6 @@ select {
 .theme-transition body,
 .theme-transition .site-header,
 .theme-transition .site-footer,
-.theme-transition .skill-card,
 .theme-transition .filters,
 .theme-transition .detail-hero,
 .theme-transition .detail-sidebar,
@@ -1812,6 +1811,10 @@ select {
 .theme-transition input,
 .theme-transition select {
 	transition: background-color 320ms ease, background 320ms ease, border-color 320ms ease, color 220ms ease, box-shadow 320ms ease;
+}
+
+.theme-transition .skill-card {
+	transition: border-color 320ms ease, box-shadow 320ms ease;
 }
 
 @keyframes card-in {
