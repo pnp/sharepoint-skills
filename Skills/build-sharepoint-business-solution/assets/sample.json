@@ -1,0 +1,54 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-build-sharepoint-business-solution",
+    "source": "pnp",
+    "title": "Build SharePoint Business Solution",
+    "shortDescription": "Turns a functional brief into a deployed SharePoint solution: lists and libraries, native approvals, workflows, labelled demo data, and a live HTML dashboard in the Reports library, with end-to-end deployment verification.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/build-sharepoint-business-solution",
+    "longDescription": [
+      "Takes a feature or business-process brief and builds an executable SharePoint solution rather than returning architecture advice. The skill first interprets the brief into a solution map of actors, transactions, child records, reference data, audit trails, external sources, and reporting needs, then inventories the existing site so that compatible lists and libraries are reused by exact title and purpose instead of duplicated.",
+      "It designs a normalized, form-friendly data model spanning a primary transaction list, child/detail records, approval rules, an approval and audit log, reference lists, an integration status list, and an optional assistant history list. Artifacts are created in dependency order with the built-in Title renamed to a business identifier, stable alphanumeric internal names, purpose descriptions, and practical default views.",
+      "Automation is configured only from verified state: native SharePoint approvals are preferred for formal approve and reject decisions without duplicating the built-in approval status field, and workflows are built from live triggers, tasks, and parameter options retrieved from the tenant so that approvers, mailboxes, Teams destinations, and connection IDs are never guessed.",
+      "Optional starter data covers draft, pending, approved, closed, and exception scenarios, prefixed DEMO- with sample approval rules left inactive and external connectors marked Not Configured until a live connection is verified. A live HTML dashboard is generated into the Reports document library with KPI cards, grouped breakdowns, an operational queue table, an integration-health panel, and a visible refresh control.",
+      "Before declaring completion the skill rediscovers the site to check for duplicates, retrieves primary and child schemas, confirms approval state and demo item counts, verifies that the dashboard file exists, and records real limitations such as unresolved approvers, inactive rules, skipped formatting, and unconfigured connectors."
+    ],
+    "creationDateTime": "2026-09-04",
+    "updateDateTime": "2026-09-04",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Business Process"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/build-sharepoint-business-solution/assets/preview.png",
+        "alt": "Build SharePoint Business Solution skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Ms-fernandes",
+        "pictureUrl": "https://github.com/Ms-fernandes.png",
+        "name": "Priya Fernandes"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
