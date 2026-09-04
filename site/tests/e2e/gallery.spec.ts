@@ -1,6 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+	await page.route('https://m365-visitor-stats.azurewebsites.net/**', (route) => route.abort());
+});
+
 test('filters the catalog and preserves the query in the URL', async ({ page, request }) => {
 	const catalogResponse = await request.get('catalog.json');
 	expect(catalogResponse.ok()).toBeTruthy();
@@ -60,6 +64,28 @@ test('renders a generated skill page, package, and public catalog', async ({ pag
 		});
 		await expect(contributor.locator('.contribution-count')).toHaveText(`${count} ${count === 1 ? 'skill' : 'skills'}`);
 	}
+});
+
+test('tracks visits using the current site route', async ({ page }) => {
+	const tracker = page.locator('img[data-visitor-stats]');
+
+	await page.goto('./');
+	await expect(tracker).toHaveAttribute(
+		'src',
+		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/',
+	);
+
+	await page.goto('contributors/');
+	await expect(tracker).toHaveAttribute(
+		'src',
+		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/contributors',
+	);
+
+	await page.goto('skills/analyze-document-library/');
+	await expect(tracker).toHaveAttribute(
+		'src',
+		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/skills/analyze-document-library',
+	);
 });
 
 test('presents the SharePoint product story and contributor recognition', async ({ page }) => {

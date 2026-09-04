@@ -18,6 +18,14 @@ const pageTitle = title === 'SharePoint Skills' ? title : `${title} | SharePoint
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(sitePath(image), Astro.site);
 const currentPath = Astro.url.pathname;
+const visitorStatsBaseUrl = 'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills';
+const siteBasePath = sitePath('').replace(/\/$/, '');
+const visitorStatsPath = currentPath
+	.slice(currentPath.startsWith(siteBasePath) ? siteBasePath.length : 0)
+	.replace(/^\/+|\/+$/g, '');
+const visitorStatsUrl = visitorStatsPath
+	? `${visitorStatsBaseUrl}/${visitorStatsPath}`
+	: `${visitorStatsBaseUrl}/`;
 const navigation = [
 	{ label: 'Skills', href: '/' },
 	{ label: 'Getting started', href: '/getting-started/' },
@@ -163,5 +171,14 @@ const isCurrent = (href: string) =>
 				window.setTimeout(() => root.classList.remove('theme-transition'), 420);
 			});
 		</script>
+		<img
+			class="sr-only"
+			data-visitor-stats
+			src={visitorStatsUrl}
+			alt=""
+			width="1"
+			height="1"
+			aria-hidden="true"
+		/>
 	</body>
 </html>
