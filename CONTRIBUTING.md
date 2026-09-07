@@ -38,7 +38,7 @@ A skill is a folder containing docs, samples, and an upload-ready inner package.
 | `<skill-name>/SKILL.md` | Skill instructions with `name` and `description` frontmatter (inside the upload-ready inner package) |
 | `README.md` | Description, preview image, "What you get", SharePoint Skill credits, version history, and disclaimer |
 | `assets/sample.json` | Metadata for the [community samples gallery](https://aka.ms/community/home) |
-| `assets/preview.png` | Screenshot of the skill's output for the readme and samples gallery (1280×720, 16:9, PNG) |
+| `assets/preview.png` | PNG screenshot of the skill's output for the readme and samples gallery (at least 640×360; 1280×720 and 16:9 recommended) |
 
 If your skill needs extra runtime files (for example, persona reference documents), keep those files beside `SKILL.md` inside the inner package folder.
 
@@ -164,7 +164,7 @@ Before opening your pull request, verify:
 - [ ] `SKILL.md` has `name` and `description` in the frontmatter and is in the inner package folder
 - [ ] `README.md` follows the template (description, preview image, "What you get", `SharePoint Skill` credits table, `Version history`, `Disclaimer`, and visitor-stats image)
 - [ ] `assets/sample.json` exists with the `url` and `thumbnails[0].url` pointing to your skill's actual path
-- [ ] `assets/preview.png` is a 1280×720 PNG and shows the skill's actual output (not a logo or placeholder)
+- [ ] `assets/preview.png` is a PNG of at least 640×360 and shows the skill's actual output (not a logo or placeholder); 1280×720 and 16:9 are recommended
 - [ ] Skills work best when they are **focused** (one capability), **self-contained** (no external dependencies), and **discoverable** (clear `description` with trigger phrases)
 
 ---

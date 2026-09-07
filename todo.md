@@ -39,7 +39,7 @@ The experience should combine:
 
 - [x] Every current skill has an outer `README.md`, `assets/sample.json`, `assets/preview.png`, and a same-name inner skill package.
 - [x] The 47 current `sample.json` files provide title, short and long descriptions, created/updated dates, products, category metadata, thumbnails, authors, and references.
-- [x] `.github/scripts/validate_skills.py` validates structure, names, dates, metadata, authors, references, README conventions, local links, and 1280x720 PNG previews.
+- [x] `.github/scripts/validate_skills.py` validates structure, names, dates, metadata, authors, references, README conventions, local links, and PNG previews of at least 640x360.
 - [x] `.github/workflows/validate-skill-pr.yml` validates every skill and maintains one pull-request summary comment.
 - [x] The baseline now includes the Astro application, catalog artifact, Pages workflow, downloadable packages, and browser-level quality suite.
 

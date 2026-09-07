@@ -35,6 +35,8 @@ REQUIRED_SAMPLE_FIELDS = {
     "references",
 }
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+MIN_PREVIEW_WIDTH = 640
+MIN_PREVIEW_HEIGHT = 360
 
 
 class Validator:
@@ -385,8 +387,12 @@ class Validator:
             self.error(preview_path, "preview must be a valid PNG")
             return
         width, height = struct.unpack(">II", data[16:24])
-        if (width, height) != (1280, 720):
-            self.error(preview_path, f"preview must be 1280x720, found {width}x{height}")
+        if width < MIN_PREVIEW_WIDTH or height < MIN_PREVIEW_HEIGHT:
+            self.error(
+                preview_path,
+                f"preview must be at least {MIN_PREVIEW_WIDTH}x{MIN_PREVIEW_HEIGHT}, "
+                f"found {width}x{height}",
+            )
         if len(data) < 10_000:
             self.error(preview_path, "preview is suspiciously small; verify it shows actual output")
 
