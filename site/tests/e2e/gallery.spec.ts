@@ -68,24 +68,22 @@ test('renders a generated skill page, package, and public catalog', async ({ pag
 
 test('tracks visits using the current site route', async ({ page }) => {
 	const tracker = page.locator('img[data-visitor-stats]');
+	const trackerBaseUrl = 'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills';
+	const routes = [
+		['./', '/'],
+		['categories/', '/categories'],
+		['contributing/', '/contributing'],
+		['contributors/', '/contributors'],
+		['getting-started/', '/getting-started'],
+		['whats-new/', '/whats-new'],
+		['skills/analyze-document-library/', '/skills/analyze-document-library'],
+	];
 
-	await page.goto('./');
-	await expect(tracker).toHaveAttribute(
-		'src',
-		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/',
-	);
-
-	await page.goto('contributors/');
-	await expect(tracker).toHaveAttribute(
-		'src',
-		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/contributors',
-	);
-
-	await page.goto('skills/analyze-document-library/');
-	await expect(tracker).toHaveAttribute(
-		'src',
-		'https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/skills/analyze-document-library',
-	);
+	for (const [route, trackerPath] of routes) {
+		await page.goto(route);
+		await expect(tracker).toHaveCount(1);
+		await expect(tracker).toHaveAttribute('src', `${trackerBaseUrl}${trackerPath}`);
+	}
 });
 
 test('presents the SharePoint product story and contributor recognition', async ({ page }) => {
