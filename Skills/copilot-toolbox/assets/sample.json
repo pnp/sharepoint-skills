@@ -1,0 +1,52 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-copilot-toolbox",
+    "source": "pnp",
+    "title": "Copilot Toolbox",
+    "shortDescription": "Creates and maintains a SharePoint-based toolbox for discovering, documenting, reviewing, and synchronizing Copilot tools.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/copilot-toolbox",
+    "longDescription": [
+      "Copilot Toolbox creates a SharePoint list that acts as a local handbook for the tools available to Copilot in SharePoint.",
+      "The skill discovers the current tool catalog, enriches each tool with usage guidance and parameters, tracks new and removed tools, supports a review workflow, and safely synchronizes existing records.",
+      "It also creates a Toolbox.aspx page and can publish an English HTML Toolbook as a standalone reference."
+    ],
+    "creationDateTime": "2026-09-10",
+    "updateDateTime": "2026-09-10",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Knowledge Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/copilot-toolbox/assets/preview.png",
+        "alt": "Copilot Toolbox in SharePoint"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "mysharepoint",
+        "pictureUrl": "https://github.com/mysharepoint.png",
+        "name": "Michael Greth"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
