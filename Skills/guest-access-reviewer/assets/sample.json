@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-guest-access-reviewer",
+    "source": "pnp",
+    "title": "Guest Access Reviewer",
+    "shortDescription": "Audits all guest and external user access on a SharePoint site, classifies accounts as Active, Stale, or Unknown, and saves a prioritized HTML remediation report.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/guest-access-reviewer",
+    "longDescription": [
+      "External collaborators accumulate on SharePoint sites over time — vendors, contractors, and clients who finished their engagement but were never removed. The Guest Access Reviewer enumerates every guest and external user who has any form of access to the current site, whether through SharePoint groups, direct role assignments, or sharing links.",
+      "Each guest is classified as Active (activity within 90 days), Stale (no activity in 90+ days), or Unknown (no activity data available), and the skill highlights accounts that pose the greatest governance risk. A domain breakdown shows which external organizations have the most representation on the site, and a prioritized recommendations section calls out elevated-permission guests and long-inactive accounts.",
+      "The output is a fully self-contained HTML report — no scripts, no external assets — saved to a Guest Access Reports folder on the site with a timestamped filename. The skill is strictly read-only: it never removes users, modifies permissions, or alters any content."
+    ],
+    "creationDateTime": "2026-09-11",
+    "updateDateTime": "2026-09-11",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Governance" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/guest-access-reviewer/assets/preview.png",
+        "alt": "Guest Access Reviewer HTML report showing guest users classified by Active, Stale, and Unknown status"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "nirav-raval",
+        "pictureUrl": "https://github.com/nirav-raval.png",
+        "name": "Nirav Raval"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "External sharing overview — SharePoint in Microsoft 365",
+        "description": "Microsoft documentation on managing external sharing and guest access in SharePoint Online.",
+        "url": "https://learn.microsoft.com/en-us/sharepoint/external-sharing-overview"
+      }
+    ]
+  }
+]
