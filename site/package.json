@@ -18,12 +18,12 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
-    "@lucide/astro": "^1.41.0",
+    "@lucide/astro": "^1.47.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "astro": "^7.3.1",
-    "jszip": "^3.10.1",
-    "marked": "^18.0.11",
+    "astro": "^7.3.3",
+    "jszip": "^3.10.2",
+    "marked": "^18.0.13",
     "sanitize-html": "^2.17.7",
     "sharp": "^0.35.3"
   },
@@ -31,9 +31,9 @@
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.2",
     "@types/sanitize-html": "^2.16.1",
-    "typescript": "^6.0.3",
-    "vitest": "^5.0.0-rc.4"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
   }
 }
