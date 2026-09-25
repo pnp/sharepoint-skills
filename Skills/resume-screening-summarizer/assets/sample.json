@@ -1,0 +1,47 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-resume-screening-summarizer",
+    "source": "pnp",
+    "title": "Resume Screening Summarizer",
+    "shortDescription": "Screens a library of resumes against a job description's must-have and nice-to-have criteria and produces a ranked, color-coded HTML shortlist report.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/resume-screening-summarizer",
+    "longDescription": [
+      "Hiring teams often collect dozens of resumes for an open role in a SharePoint library, then manually re-read each one against the job description. The Resume Screening Summarizer reads the job description and every resume or application in a specified library, extracts each candidate's relevant qualifications, and scores them against the stated must-have and nice-to-have criteria.",
+      "Each candidate is placed into a fit tier — Strong match, Possible match, Weak match, or Not scored (unreadable file) — with the must-haves and nice-to-haves met, and a one-line rationale grounded in the candidate's actual resume text. The exact scoring criteria are included in the report so reviewers can audit every result.",
+      "The output is a fully self-contained HTML report — no scripts, no external assets — saved to a Resume Screening Reports folder with a timestamped filename. The skill is strictly read-only: it never contacts candidates, modifies resumes, or alters any content beyond the saved report.",
+      "Tested against a batch of 20+ synthetic resumes screened against an Amazon-style job description, covering edge cases such as alternate frameworks (Vue/Angular accepted alongside React), ambiguous degree fields, resumes where total job tenure doesn't match the relevant experience described, and image-only PDFs with no extractable text."
+    ],
+    "creationDateTime": "2026-09-25",
+    "updateDateTime": "2026-09-25",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "HR & Recruiting" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/resume-screening-summarizer/assets/preview.png",
+        "alt": "Resume Screening Summarizer HTML report showing candidates ranked by fit tier"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Bharath-spd",
+        "pictureUrl": "https://github.com/Bharath-spd.png",
+        "name": "Bharath R"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
