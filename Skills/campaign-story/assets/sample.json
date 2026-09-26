@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-campaign-story",
+    "source": "pnp",
+    "title": "Campaign Story",
+    "shortDescription": "Creates a self-contained animated HTML campaign story for a product, customer case, launch, or operational transformation, with narrated scenes and playback controls.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/campaign-story",
+    "longDescription": [
+      "Turns a source brief or SharePoint file into a one-minute campaign story with a tight 5–6 scene arc: pain point, three improvement moments, a measurable outcome, and a payoff with CTA.",
+      "Outputs a single self-contained HTML file in the NexusFlow premium B2B application design. The file includes scene progress, motion-driven action cards, checkmarks, a count-up result scene, and a confetti finale, with no external images, fonts, or libraries.",
+      "Narration uses the viewer’s installed browser voices. Playback includes play/pause, previous, next, restart, narration toggle, voice picker, and speed. If a real source is supplied, the skill does not invent names, quotes, or metrics."
+    ],
+    "creationDateTime": "2026-09-26",
+    "updateDateTime": "2026-09-26",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Knowledge Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/campaign-story/assets/preview.png",
+        "alt": "Campaign Story skill showing a NexusFlow narrated scene with action cards and playback controls"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Ragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
