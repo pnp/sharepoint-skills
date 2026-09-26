@@ -1,0 +1,1 @@
+Placeholder demo file. The % character is legacy-hostile in URLs (rule R1).

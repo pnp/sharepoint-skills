@@ -1,13 +1,13 @@
 ---
 name: sharepoint-safe-html
 description: >
-  Creates single-file HTML artifacts that render reliably in SharePoint, OneDrive,
-  Teams, File Viewer, and embedded iframe preview surfaces. Use this skill whenever
-  the user asks for SharePoint-safe HTML, an HTML report, dashboard, deck, artifact,
-  visual page, one-pager, or embeddable HTML file for Microsoft 365 preview surfaces.
-  Enforces inline CSS, no external dependencies, no runtime network calls, responsive
-  iframe-friendly layout, optional live-linked CSV/XLSX data files, accessibility,
-  and privacy-safe escaping.
+  Creates accessible, single-file HTML artifacts that render reliably in SharePoint, OneDrive,
+  Teams, File Viewer, and embedded iframe preview surfaces. Use this skill whenever the user
+  asks for SharePoint-safe HTML, an HTML report, dashboard, deck, artifact, visual page,
+  one-pager, or embeddable HTML file for Microsoft 365 preview surfaces. Enforces inline CSS,
+  no external dependencies, no runtime network calls, responsive iframe-friendly layout,
+  optional live-linked CSV/XLSX data files, WCAG 2.2 AA-oriented accessibility, and
+  privacy-safe escaping.
 metadata:
   author: zrosenfield
 ---
@@ -16,7 +16,7 @@ metadata:
 
 Generate a single self-contained `.html` file that works reliably when hosted in SharePoint or OneDrive and opened through preview, File Viewer, Teams, or an embedded iframe.
 
-If a narrower installed skill matches the artifact type (for example, an executive report, dossier, scorecard, or roadmap), use that skill for content structure and apply this skill's safety contract to the final HTML.
+If a narrower installed skill matches the artifact type (for example, an executive report, dossier, scorecard, or roadmap), use that skill for content structure and apply this skill's safety and accessibility contract to the final HTML.
 
 ---
 
@@ -30,6 +30,7 @@ Create exactly one `.html` file that works with:
 - No privileged browser APIs.
 - No secrets or tokens.
 - No dependency on local filesystem paths.
+- Semantic, accessible HTML that targets WCAG 2.2 AA unless the user explicitly asks for a different standard.
 
 Assume SharePoint and OneDrive render the file inside a restricted sandboxed iframe. If it works locally but relies on anything outside the file, it is not SharePoint-safe.
 
@@ -43,6 +44,8 @@ Prefer static, self-contained, CSS-driven HTML.
 
 Use JavaScript only when the user explicitly needs interactivity and accepts that SharePoint/OneDrive sandbox behavior may vary. If JavaScript is used, it must be inline, dependency-free, non-networked, and progressive enhancement only. The artifact must remain useful if scripts are blocked.
 
+Accessibility is not a final polish step. It must shape the content model, visual design, render logic, and validation pass.
+
 ---
 
 ## Workflow
@@ -55,6 +58,7 @@ Identify the requested output type and audience:
 - Intended SharePoint/OneDrive location if provided.
 - Whether interactivity is truly required.
 - Source/freshness notes needed for any data shown.
+- Accessibility needs implied by the artifact, including charts, tables, status messages, and keyboard interaction.
 
 Do not ask for information the user already provided. If the request can be completed from the prompt or attached data, proceed.
 
@@ -68,6 +72,15 @@ For private M365, email, Teams, SharePoint, CRM, or customer data:
 - Do not hide raw source data in comments, scripts, attributes, or unused markup.
 - Do not embed full source transcripts unless explicitly requested.
 - Do not include tokens, cookies, connection strings, debug logs, or internal-only URLs that should not be shared.
+
+For accessibility, define the semantic purpose of each section before rendering it:
+
+- Page introduction.
+- Summary metrics.
+- Charts or visual summaries.
+- Data tables.
+- Notes, caveats, source, and freshness information.
+- Empty, loading, and error states.
 
 If the user wants the artifact to auto-update from source files, use live-linked `.csv` or `.xlsx` data files instead of embedding stale snapshots. Follow the live-linked data rules below before generating the final HTML.
 
@@ -136,7 +149,7 @@ The expected result for state 6 is a visible error message such as: `Live data f
 
 Use semantic HTML and inline CSS:
 
-- Use `main`, `section`, `article`, `header`, `footer`, `h1`-`h6`, `p`, `ul`, `ol`, `table`, `figure`, and `figcaption`.
+- Use `main`, `section`, `article`, `header`, `footer`, `h1`-`h6`, `p`, `ul`, `ol`, `dl`, `table`, `figure`, and `figcaption` where appropriate.
 - Use exactly one `h1` and maintain accessible heading order.
 - Inline all CSS in a `<style>` block.
 - Scope page styles under a root wrapper such as `.sp-html-artifact`.
@@ -145,6 +158,7 @@ Use semantic HTML and inline CSS:
 - Use responsive layouts from about 360px wide to desktop.
 - Make charts readable without hover-only interactions.
 - Include source and freshness notes when presenting data.
+- Ensure the artifact remains readable at 200% browser zoom.
 
 Use this base pattern unless the requested design requires a different layout:
 
@@ -172,17 +186,40 @@ Use this base pattern unless the requested design requires a different layout:
       margin: 0 auto;
       padding: 24px;
     }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    :focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: 3px;
+    }
     @media (max-width: 640px) {
       .sp-html-artifact { padding: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="sp-html-artifact">
-    <section aria-labelledby="page-title">
+  <main class="sp-html-artifact" id="main-content">
+    <header aria-labelledby="page-title">
       <h1 id="page-title">Artifact title</h1>
       <p>Lead with the most important message.</p>
-    </section>
+    </header>
   </main>
 </body>
 </html>
@@ -229,19 +266,34 @@ Never render raw untrusted HTML.
 
 ### Step 6: Validate before handoff
 
-Before handing the file to the user, verify the source and layout:
+Before handing the file to the user, verify the source, layout, and accessibility:
 
 1. Search the source for banned patterns listed in the validation checklist.
 2. Confirm all CSS is inline.
 3. Confirm no external dependencies are referenced.
-4. Confirm the page is readable at 360px, 768px, and desktop widths.
+4. Confirm the page is readable at 360px, 768px, and desktop widths, and at 200% browser zoom.
 5. Confirm there is no horizontal scrolling.
 6. Confirm all meaningful images have alt text and decorative images use `alt=""`.
-7. Confirm charts and tables are readable without hover.
-8. Confirm private data is intentional and appropriate for the SharePoint location.
-9. Confirm there are no unresolved placeholders, leaked JavaScript values, or accidental mock rows.
-10. If possible, upload to SharePoint or OneDrive and open through preview or File Viewer.
-11. If embedded on a SharePoint page, verify the actual web part/container size.
+7. Confirm charts and tables are readable without hover, and every chart has a text, list, or table equivalent.
+8. Confirm KPI cards and status indicators expose label/value relationships and don't rely on color alone.
+9. Confirm dynamic loading, refresh, success, and error states are announced through `role="status"`/`role="alert"` live regions.
+10. Confirm visible focus is present and keyboard users can operate every interactive control.
+11. Confirm private data is intentional and appropriate for the SharePoint location.
+12. Confirm there are no unresolved placeholders, leaked JavaScript values, or accidental mock rows.
+13. If possible, upload to SharePoint or OneDrive and open through preview or File Viewer.
+14. If embedded on a SharePoint page, verify the actual web part/container size.
+
+Run the full [Validation Checklist](#validation-checklist) and [Accessibility validation checklist](#accessibility-validation-checklist) below before handoff.
+
+---
+
+## Accessibility Implementation Contract
+
+Target WCAG 2.2 AA unless the user explicitly asks for a different standard.
+
+The artifact must be perceivable, operable, understandable, and robust. Build accessibility into the content model and rendering approach rather than treating it as a final checklist.
+
+This skill's [Accessibility Rules](#accessibility-rules) and [Accessibility validation checklist](#accessibility-validation-checklist) below cover the rules to apply and verify on every artifact. For the full implementation patterns behind those rules — semantic page structure, live-region markup for dynamic content, accessible KPI card and table markup, accessible chart patterns, color/contrast, keyboard/focus, reduced motion, responsive/zoom behavior, image/SVG alt handling, link/button text, and plain-language guidance, each with runnable HTML/CSS examples — see [references/accessibility.md](references/accessibility.md). Read it before building any section that involves dynamic status, charts, tables, or KPI cards.
 
 ---
 
@@ -253,11 +305,13 @@ Use these freely:
 - CSS variables.
 - Flexbox and CSS Grid.
 - Media queries.
-- CSS-only charts, bars, badges, status strips, cards, timelines, and tables.
+- CSS-only charts, bars, badges, status strips, cards, timelines, matrix cells, inline SVG, and tables.
 - Print styles when useful.
 - `details` and `summary` for progressive disclosure.
 - Inline SVG created by the agent if it contains no scripts, external references, or unsafe content.
 - Small `data:image/svg+xml` or `data:image/png;base64` assets only when necessary and size-safe.
+- Native HTML controls for interaction.
+- Screen-reader-only CSS for essential accessible labels or summaries when visible text would be duplicative.
 
 Prefer CSS-only visuals over external chart libraries. For example, use horizontal bars, status chips, sparklines, timelines, matrix cells, inline SVG, or semantic tables.
 
@@ -278,8 +332,12 @@ Do not use:
 - Iframes that load external sites.
 - Browser APIs that require permissions or privileged context: clipboard write, microphone, camera, geolocation, notifications, service workers, web workers, storage persistence, IndexedDB as a requirement, or downloads as the primary workflow.
 - Hover as the only way to see data.
+- Color as the only way to understand status, category, or priority.
 - Fixed-width layouts that clip inside SharePoint.
 - Huge base64 assets that make preview slow or unreliable.
+- Focus outlines removed with `outline: none` unless an equally visible replacement is applied.
+- Visual-only charts with no text, list, or table equivalent.
+- Anonymous KPI cards that do not expose label and value relationships.
 
 ---
 
@@ -302,23 +360,39 @@ Acceptable JavaScript use cases include local tab switching, expand/collapse, so
 
 Prefer `details`/`summary`, anchor links, static tables/charts, and CSS bars/sparklines when they satisfy the need.
 
+When JavaScript changes visible content:
+
+- Update an appropriate `role="status"` live region for meaningful state changes.
+- Use `role="alert"` for blocking errors.
+- Keep focus management simple and predictable.
+- Do not move focus unless the interaction requires it.
+
 ---
 
 ## Accessibility Rules
 
+Use these rules for every artifact:
+
+- Target WCAG 2.2 AA unless another standard is requested.
 - Use one `h1`.
 - Use headings in order.
-- Make text readable at normal zoom.
+- Include a `main` landmark.
+- Use semantic sections for major content groups.
+- Make text readable at normal zoom and 200% zoom.
 - Use sufficient contrast.
 - Do not encode meaning only by color.
 - Provide visible labels for status chips and charts.
 - Add `alt` text for meaningful images.
-- Mark decorative images `alt=""`.
+- Mark decorative images with `alt=""` or `aria-hidden="true"` as appropriate.
 - Use table headers for data tables.
-- Use `caption` or nearby summary text for complex tables.
+- Use table captions or nearby summary text for data tables.
 - Make links descriptive.
 - Ensure keyboard navigation works for any interactive elements.
+- Preserve visible focus.
 - Avoid motion; if used, respect `prefers-reduced-motion`.
+- Ensure dynamic loading, refresh, success, and error states are announced correctly.
+- Ensure every chart has an equivalent text, list, or table representation.
+- Ensure KPI cards expose label and value relationships semantically.
 
 ---
 
@@ -364,12 +438,40 @@ Then verify:
 - [ ] Charts and tables are readable without hover.
 - [ ] Source/freshness notes are included when data is presented.
 
+### Accessibility validation checklist
+
+Verify the following before handoff:
+
+- [ ] Exactly one `h1` exists.
+- [ ] Heading order is logical.
+- [ ] `main` landmark exists.
+- [ ] Major content groups have accessible headings.
+- [ ] Dynamic status areas use `role="status"` and `aria-live="polite"`.
+- [ ] Blocking errors use `role="alert"`.
+- [ ] Buttons have clear accessible names.
+- [ ] Keyboard users can operate all controls.
+- [ ] Visible focus is present and clear.
+- [ ] Links are descriptive.
+- [ ] Charts have equivalent text, list, or table data.
+- [ ] Visual chart elements that duplicate text are hidden with `aria-hidden="true"`.
+- [ ] Tables have captions or nearby summaries.
+- [ ] Table headers use `th` and `scope` where appropriate.
+- [ ] No meaning is conveyed by color alone.
+- [ ] Contrast has been checked for text, badges, muted labels, errors, chart labels, and status chips.
+- [ ] Content is readable at 200% zoom.
+- [ ] Layout works at 360px width.
+- [ ] No content is available only on hover.
+- [ ] Meaningful images have alt text or equivalent.
+- [ ] Decorative visuals are hidden from assistive technology.
+- [ ] Reduced motion is respected.
+- [ ] Error messages explain the problem and the likely fix.
+
 ---
 
 ## Short Instruction Block
 
 When a user asks for SharePoint-safe HTML, follow this instruction:
 
-> Create a single self-contained HTML file for SharePoint/OneDrive preview. Use inline CSS only. Do not use external CSS, JS, images, fonts, APIs, CDNs, local file references, secrets, or runtime network calls. Avoid JavaScript unless explicitly required; if used, keep it inline, dependency-free, non-networked, and optional. Escape all untrusted content. Use semantic accessible HTML, responsive iframe-friendly layout, system fonts, and CSS-only visuals where possible. Validate that the source contains no external dependencies and that the file renders in SharePoint/OneDrive preview.
+> Create a single self-contained HTML file for SharePoint/OneDrive preview. Use inline CSS only. Do not use external CSS, JS, images, fonts, APIs, CDNs, local file references, secrets, or runtime network calls. Avoid JavaScript unless explicitly required; if used, keep it inline, dependency-free, non-networked, optional, and accessible. Escape all untrusted content. Use semantic accessible HTML, responsive iframe-friendly layout, system fonts, and CSS-only visuals where possible. Target WCAG 2.2 AA by default. Include a `main` landmark, exactly one `h1`, logical headings, visible focus, sufficient contrast, descriptive links, accessible buttons, accessible loading/error states, and reduced-motion support. KPI cards must expose label/value relationships, preferably with a definition list. Tables must include captions or nearby summaries and proper headers. Charts must never be visual-only — every chart must provide the same data as text, a list, or a table, and must not rely on color, hover, width, or position alone to communicate meaning. Validate that the source contains no external dependencies and that the file renders in SharePoint/OneDrive preview.
 
 If the user wants auto-updating data, use only the SharePoint/OneDrive live-linked data exception: up to 10 linked `.csv` or `.xlsx` files in the same folder as the HTML artifact, with visible source/freshness notes and no agent-authored runtime fetch/API code. Live-linked reports must be live-only: never embed backup rows, fallback datasets, cached snapshots, sample rows, or stale hardcoded business data. If the live link fails, render a visible error explaining what to fix. Because linked files can change after generation, define each file's expected schema, normalize all data to safe defaults, never call array methods on unverified values, and render visible empty/error states instead of uncaught render errors.

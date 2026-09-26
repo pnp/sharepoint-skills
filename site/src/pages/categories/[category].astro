@@ -1,0 +1,34 @@
+---
+import { ArrowLeft } from '@lucide/astro';
+import SkillCard from '../../components/SkillCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { catalog, categorySlug, sitePath, type Skill } from '../../lib/catalog';
+
+export function getStaticPaths() {
+	return catalog.categories.map((category) => ({
+		params: { category: categorySlug(category) },
+		props: { category, skills: catalog.skills.filter((skill) => skill.category === category) },
+	}));
+}
+
+interface Props {
+	category: string;
+	skills: Skill[];
+}
+
+const { category, skills } = Astro.props;
+---
+
+<BaseLayout title={category} description={`Browse ${skills.length} SharePoint Skills in ${category}.`}>
+	<header class="page-heading container">
+		<a class="back-link" href={sitePath('/categories/')}><ArrowLeft size={16} aria-hidden="true" /> All categories</a>
+		<p class="eyebrow">Skill category</p>
+		<h1>{category}</h1>
+		<p>{skills.length} {skills.length === 1 ? 'community skill' : 'community skills'}</p>
+	</header>
+	<div class="directory-page container">
+		<div class="skill-grid">
+			{skills.map((skill, index) => <SkillCard skill={skill} index={index} />)}
+		</div>
+	</div>
+</BaseLayout>

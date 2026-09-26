@@ -1,0 +1,32 @@
+---
+import { ArrowRight, Layers } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { catalog, categorySlug, sitePath } from '../../lib/catalog';
+
+const categories = catalog.categories.map((name) => ({
+	name,
+	skills: catalog.skills.filter((skill) => skill.category === name),
+})).sort((left, right) => right.skills.length - left.skills.length || left.name.localeCompare(right.name));
+---
+
+<BaseLayout title="Categories" description="Browse SharePoint Skills by capability and task.">
+	<header class="page-heading container">
+		<p class="eyebrow">Browse by task</p>
+		<h1>Categories</h1>
+		<p>{categories.length} focused collections across the SharePoint Skills catalog.</p>
+	</header>
+	<div class="directory-page container">
+		<div class="category-grid">
+			{categories.map((category) => (
+				<a class="category-card" href={sitePath(`/categories/${categorySlug(category.name)}/`)}>
+					<Layers size={24} aria-hidden="true" />
+					<div>
+						<h2>{category.name}</h2>
+						<p>{category.skills.length} {category.skills.length === 1 ? 'skill' : 'skills'}</p>
+					</div>
+					<ArrowRight size={19} aria-hidden="true" />
+				</a>
+			))}
+		</div>
+	</div>
+</BaseLayout>

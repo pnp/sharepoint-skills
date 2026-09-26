@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Health Check - Project Aurora - 2026-09-15</title>
+  <style>
+    :root{--ink:#172033;--muted:#5f6b7a;--line:#d9dee7;--panel:#f7f9fc;--amber:#8a4b00;--amber-bg:#fff4ce;--green:#0b6a0b;--green-bg:#e7f6e7;--red:#a4262c;--red-bg:#fde7e9;--unknown:#4b5563;--unknown-bg:#eef0f3;--accent:#2457a7}*{box-sizing:border-box}body{margin:0;background:#eef2f7;color:var(--ink);font-family:"Segoe UI",Arial,sans-serif;line-height:1.5}.report{max-width:1100px;margin:32px auto;background:#fff;border:1px solid var(--line);box-shadow:0 8px 28px rgba(23,32,51,.08)}header{padding:40px 48px 32px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#f8fbff,#fff)}.eyebrow{margin:0 0 6px;color:var(--accent);font-size:.82rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}h1{margin:0;font-size:2.35rem;line-height:1.15}h2{margin:0 0 18px;font-size:1.45rem}h3{margin:0 0 8px;font-size:1.02rem}.meta{margin:10px 0 24px;color:var(--muted)}.overall{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center;padding:22px;border:1px solid #f0c36a;border-radius:12px;background:var(--amber-bg)}.overall-status{font-size:1.9rem;font-weight:800;color:var(--amber);letter-spacing:.04em}.overall p{margin:0;font-size:1.06rem}main section{padding:30px 48px;border-bottom:1px solid var(--line)}.health-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.health-card{padding:18px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.health-card:last-child{grid-column:1/-1}.status{display:inline-block;margin-bottom:8px;padding:3px 9px;border-radius:999px;font-size:.76rem;font-weight:800;letter-spacing:.05em}.amber{color:var(--amber);background:var(--amber-bg);border:1px solid #efc46a}.green{color:var(--green);background:var(--green-bg);border:1px solid #9fd49f}.red{color:var(--red);background:var(--red-bg);border:1px solid #efadb1}.unknown{color:var(--unknown);background:var(--unknown-bg);border:1px solid #cbd0d8}.health-card p,.attention p{margin:0;color:#303b4d}ul{margin:0;padding-left:22px}li+li{margin-top:10px}.attention{display:grid;gap:14px}.attention article{padding:18px;border-left:5px solid #d88600;background:#fffaf0;border-radius:6px}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;margin-bottom:20px}.facts div{padding:12px 0;border-bottom:1px solid var(--line)}.label{display:block;color:var(--muted);font-size:.8rem;font-weight:700;text-transform:uppercase}.coverage{display:grid;grid-template-columns:1.25fr .75fr;gap:24px}.coverage-box{padding:18px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}footer{padding:22px 48px;color:var(--muted);font-size:.88rem;background:#fafbfc}.small{color:var(--muted);font-size:.92rem}@media(max-width:720px){.report{margin:0;border:0}.overall,.health-grid,.facts,.coverage{grid-template-columns:1fr}.health-card:last-child{grid-column:auto}header,main section,footer{padding-left:22px;padding-right:22px}.overall{gap:8px}}@media print{body{background:#fff}.report{margin:0;max-width:none;border:0;box-shadow:none}main section{break-inside:avoid}.attention article{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <div class="report">
+    <header>
+      <p class="eyebrow">Project Health Check</p>
+      <h1>Project Aurora</h1>
+      <p class="meta">Reporting date: 15 September 2026 (Europe/Berlin)</p>
+      <section class="overall" aria-label="Overall project health">
+        <div class="overall-status">AMBER</div>
+        <p>Delivery remains achievable, but late integration testing, an unresolved hosting decision, overdue high-priority actions, and a high document-conversion risk require management attention.</p>
+      </section>
+    </header>
+    <main>
+      <section>
+        <h2>Project Context</h2>
+        <div class="facts">
+          <div><span class="label">Project manager</span>Anna Keller</div>
+          <div><span class="label">Sponsor</span>Daniel Weber</div>
+          <div><span class="label">Start date</span>6 April 2026</div>
+          <div><span class="label">Target go-live</span>30 October 2026</div>
+          <div><span class="label">Objective</span>Replace the customer case-management solution with a Microsoft 365 workspace for about 350 users.</div>
+          <div><span class="label">Reporting basis</span>Current evidence reviewed as of 15 September 2026.</div>
+        </div>
+      </section>
+      <section>
+        <h2>Health Summary</h2>
+        <div class="health-grid">
+          <article class="health-card"><span class="status amber">AMBER</span><h3>Schedule &amp; milestones</h3><p>Integration Testing Complete was due 10 September and remains in progress: 5 days overdue, with completion forecast for 22 September, 12 days later than planned. The 2 October Production Readiness Review is marked At Risk, while the 30 October go-live remains unchanged.</p></article>
+          <article class="health-card"><span class="status amber">AMBER</span><h3>Risks &amp; issues</h3><p>The document-conversion service risk is High and open. Retry logic, monitoring, and a repeat load test are the stated mitigation, targeted for 18 September. No production-blocking defect has been confirmed.</p></article>
+          <article class="health-card"><span class="status amber">AMBER</span><h3>Actions</h3><p>A-023 is 6 days overdue and A-027 is 4 days overdue; both are high priority. A-031 is due today, not overdue, and A-032 is due 16 September.</p></article>
+          <article class="health-card"><span class="status amber">AMBER</span><h3>Decisions &amp; dependencies</h3><p>D-014 is 7 days overdue. It prevents finalization of deployment planning and network configuration, and keeps the Deployment Plan dependent on unresolved hosting details.</p></article>
+          <article class="health-card"><span class="status amber">AMBER</span><h3>Documentation &amp; governance</h3><p>The authoritative Deliverables Register tracks all required artifacts. Completed artifacts are present, but the Security Review is not started and its review slot is not confirmed; the Deployment Plan is a draft with hosting and network placeholders pending D-014.</p></article>
+        </div>
+      </section>
+      <section>
+        <h2>Key Findings</h2>
+        <ul>
+          <li>The target go-live remains 30 October 2026, but schedule contingency has reduced because integration testing started late.</li>
+          <li>M-003 is 5 days overdue and forecast to complete 12 days later than planned, compressing the period before the 2 October readiness review.</li>
+          <li>The open High document-conversion risk could affect stable document handling; mitigation is targeted for 18 September.</li>
+          <li>D-014 is overdue and blocks final deployment planning and network configuration.</li>
+          <li>Two high-priority actions are overdue: test-environment completion and the hosting-cost comparison.</li>
+          <li>The Security Review is due 29 September, but its review date has not been confirmed; preparation is therefore at risk before the production-readiness gate.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Management Attention</h2>
+        <div class="attention">
+          <article><h3>D-014 — Select final production hosting topology</h3><p><strong>Owner:</strong> Architecture Board · <strong>Due:</strong> 8 September 2026</p><p><strong>Why it matters:</strong> Deployment planning and network configuration can't be finalized.</p><p><strong>Next action:</strong> Confirm Architecture Board attendance, complete A-027's cost comparison, and close the decision.</p></article>
+          <article><h3>A-023 — Complete remaining test-environment configuration</h3><p><strong>Owner:</strong> Tobias Lang · <strong>Due:</strong> 9 September 2026</p><p><strong>Why it matters:</strong> Two interface settings remain and integration testing is already late.</p><p><strong>Next action:</strong> Prioritize closure and verify the remaining settings against the revised test schedule.</p></article>
+          <article><h3>M-003 / A-031 — Recover and publish the integration-test schedule</h3><p><strong>Owner:</strong> Sofia Neumann · <strong>A-031 due:</strong> 15 September 2026</p><p><strong>Why it matters:</strong> The testing milestone is overdue and the recovery window before readiness review is compressed.</p><p><strong>Next action:</strong> Publish the revised schedule today and confirm whether the 22 September forecast protects Business Acceptance and the 2 October review.</p></article>
+          <article><h3>High risk — Document-conversion service instability</h3><p><strong>Owner:</strong> Jonas Fischer · <strong>Target:</strong> 18 September 2026</p><p><strong>Why it matters:</strong> Load-related failures could threaten reliable document handling.</p><p><strong>Next action:</strong> Complete retry logic and monitoring, repeat the load test, and present evidence that the risk can be reduced or accepted.</p></article>
+          <article><h3>A-032 / DEL-006 — Confirm the Security Review</h3><p><strong>Owner:</strong> Jonas Fischer · <strong>A-032 due:</strong> 16 September 2026 · <strong>Deliverable due:</strong> 29 September 2026</p><p><strong>Why it matters:</strong> Security Review is required for Production Readiness and the review slot isn't confirmed.</p><p><strong>Next action:</strong> Confirm the review date and prerequisites by 16 September without reducing security scope.</p></article>
+        </div>
+      </section>
+      <section>
+        <h2>Evidence and Coverage</h2>
+        <div class="coverage">
+          <div class="coverage-box"><h3>Main sources used</h3><p>Project Charter; Weekly Status Report dated 11 September 2026; Steering Committee Minutes dated 10 September 2026; Milestone, Risk, Action, Decision, and Deliverables registers; Migration Plan; Solution Overview; Delivery Governance; and Deployment Plan draft.</p></div>
+          <div class="coverage-box"><h3>Confidence</h3><p><strong>High</strong></p><p class="small">Current structured registers align with the latest status report and steering minutes.</p></div>
+        </div>
+        <h3 style="margin-top:22px">Material evidence gaps and ambiguities</h3>
+        <ul>
+          <li>No material required-document gap was found as of the reporting date; future deliverables were assessed against their due dates, gates, status, and prerequisites.</li>
+          <li>Evidence doesn't yet show whether the document-conversion mitigation build or revised integration-test schedule has been completed after the latest reporting artifacts.</li>
+          <li>The latest status report is dated 11 September, while registers were reviewed as of 15 September; later progress may not yet be reflected in narrative reporting.</li>
+        </ul>
+      </section>
+    </main>
+    <footer>Project Aurora · 15 September 2026 · Generated from the SharePoint project evidence available to the current user.</footer>
+  </div>
+</body>
+</html>

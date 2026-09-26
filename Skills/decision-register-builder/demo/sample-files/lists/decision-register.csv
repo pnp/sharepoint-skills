@@ -1,0 +1,4 @@
+﻿DecisionID,Title,Status,Decision,DecisionOwner,DecisionDate,RequiredBy,Rationale,Alternatives,Impact,RelatedItems,Evidence
+D-009,Use phased migration approach,Decided,Migrate customer data in two controlled waves,Anna Keller,2026-07-02,2026-07-02,Reduce operational migration risk,Single cutover; phased migration,Migration Plan,M-006;R-003,Steering Committee Minutes 2026-07-02
+D-012,Business acceptance approach,Decided,Use department-based acceptance groups,Daniel Weber,2026-08-14,2026-08-14,Ensure representative business acceptance,Single central acceptance group,Business Acceptance,DEL-005,Steering Committee Minutes 2026-08-14
+D-014,Production hosting topology,Open,Select final production hosting topology,Architecture Board,,2026-09-08,Required before deployment planning and network configuration,Managed hosting; Azure App Service,Deployment planning and network configuration,A-027;R-004;DEL-007,Architecture Workshop 2026-08-25

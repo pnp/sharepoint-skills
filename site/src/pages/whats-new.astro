@@ -1,0 +1,22 @@
+---
+import SkillCard from '../components/SkillCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { catalog } from '../lib/catalog';
+
+const recentSkills = [...catalog.skills].sort((left, right) =>
+	right.updatedAt.localeCompare(left.updatedAt) || left.title.localeCompare(right.title),
+);
+---
+
+<BaseLayout title="What's new" description="Recently added and updated SharePoint Skills.">
+	<header class="page-heading container">
+		<p class="eyebrow">Latest from the community</p>
+		<h1>What's new</h1>
+		<p>Skills ordered by their repository update date. No separate changelog to maintain.</p>
+	</header>
+	<div class="directory-page container">
+		<div class="skill-grid">
+			{recentSkills.map((skill, index) => <SkillCard skill={skill} index={index} />)}
+		</div>
+	</div>
+</BaseLayout>

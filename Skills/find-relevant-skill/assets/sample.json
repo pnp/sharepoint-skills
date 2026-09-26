@@ -1,0 +1,52 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-find-relevant-skill",
+    "source": "pnp",
+    "title": "Find Relevant Skill",
+    "shortDescription": "Checks this SharePoint site's local skills before handling a request, and — only with explicit confirmation — searches the PnP SharePoint Skills repo for a reusable one, assessing risk before recommending it.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/find-relevant-skill",
+    "longDescription": [
+      "Checks this SharePoint site's local skills before handling a request when no obvious local skill exists. Reviews skills already loaded or stored under AgentAssets/Skills first, so the agent doesn't reinvent an existing site procedure.",
+      "If no local skill matches, asks the user every time before searching the public PnP SharePoint Skills repo for a matching skill or pattern — prior approval in another turn does not carry over. Classifies any external result as a direct match, supporting match, or reference pattern, screens it for risk (over-broad triggers, unsafe HTML, destructive actions without confirmation, fabricated metadata), and recommends using, installing, adapting, or proceeding without it."
+    ],
+    "creationDateTime": "2026-08-08",
+    "updateDateTime": "2026-08-08",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Agent Tooling"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/find-relevant-skill/assets/preview.png",
+        "alt": "Find Relevant Skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "jamesdellowwv",
+        "pictureUrl": "https://github.com/jamesdellowwv.png",
+        "name": "James Dellow",
+        "company": "WebVine"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

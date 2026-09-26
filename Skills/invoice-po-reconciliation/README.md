@@ -38,7 +38,7 @@ Have the invoice file (or files) selected in the document library before trigger
 
 | Solution | Author(s) |
 | --- | --- |
-| invoice-po-reconciliation | Arbindo Chattopadhyay &#124; [LinkedIn](https://www.linkedin.com/in/arbindoc/) |
+| invoice-po-reconciliation | Arbindo Chattopadhyay &#124; [GitHub](https://github.com/Arbindoc) &#124; [LinkedIn](https://www.linkedin.com/in/arbindoc/) |
 
 ## Version history
 

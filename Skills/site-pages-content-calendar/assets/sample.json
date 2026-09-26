@@ -1,0 +1,49 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-site-pages-content-calendar",
+    "source": "pnp",
+    "title": "Site Pages Content Calendar",
+    "shortDescription": "Builds a full-size, interactive SharePoint Site Pages content calendar dashboard from real page metadata.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/site-pages-content-calendar",
+    "longDescription": [
+      "Creates a self-contained HTML dashboard from a SharePoint Site Pages library, showing pages in a full-size responsive calendar with visible page titles, status filters, and source page links.",
+      "Use it to review drafts, published pages, scheduled pages, page metadata, authors, editors, layout types, descriptions, and publishing-related dates. Scheduled pages are classified only when _ScheduledVersion is present or _ModerationStatus explicitly indicates Scheduled; _PublishStartDate alone is not treated as proof of scheduling. Clicking a page title opens a true right-side overlay drawer with detailed metadata and placement logic."
+    ],
+    "creationDateTime": "2026-07-26",
+    "updateDateTime": "2026-07-26",
+    "products": ["SharePoint", "Microsoft 365 Copilot"],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Reporting"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/site-pages-content-calendar/assets/preview.png",
+        "alt": "Site Pages Content Calendar skill preview"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Sandeep-FED",
+        "pictureUrl": "https://github.com/Sandeep-FED.png",
+        "name": "Sandeep P S",
+        "company": "KLA"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

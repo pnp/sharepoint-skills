@@ -1,0 +1,209 @@
+name: Validate skills
+
+on:
+  pull_request:
+    paths:
+      - "Skills/**"
+      - "site/**"
+      - ".github/schemas/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-gallery.yml"
+      - ".github/workflows/validate-skill-pr.yml"
+      - "CONTRIBUTING.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate skills and gallery
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
+
+      - name: Merge current base for validation
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          git fetch --no-tags origin "+refs/heads/${BASE_REF}:refs/remotes/origin/${BASE_REF}"
+          git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            merge --no-edit "refs/remotes/origin/${BASE_REF}"
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate all skills
+        id: validate
+        continue-on-error: true
+        run: >-
+          python .github/scripts/validate_skills.py
+          --root .
+          --report "$RUNNER_TEMP/skill-validation.md"
+
+      - name: Publish validation summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/skill-validation.md" ]; then
+            cat "$RUNNER_TEMP/skill-validation.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Skill validation" >> "$GITHUB_STEP_SUMMARY"
+            echo "The validator did not produce a report." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.19.0"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install gallery dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Test gallery model
+        id: unit
+        continue-on-error: true
+        working-directory: site
+        run: npm test
+
+      - name: Check gallery types
+        id: check
+        continue-on-error: true
+        working-directory: site
+        run: npm run check
+
+      - name: Build gallery
+        id: build
+        continue-on-error: true
+        working-directory: site
+        run: npm run build
+
+      - name: Record deployment identity
+        if: steps.build.outcome == 'success'
+        working-directory: site
+        run: EXPECTED_COMMIT_SHA="$(git rev-parse HEAD)" npm run deployment:mark
+
+      - name: Install Chromium
+        if: steps.build.outcome == 'success'
+        working-directory: site
+        run: npx playwright install --with-deps chromium
+
+      - name: Test gallery in desktop and mobile Chromium
+        id: e2e
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        working-directory: site
+        run: npm run test:e2e
+
+      - name: Report gallery checks
+        if: always()
+        run: |
+          {
+            echo "## Gallery checks"
+            echo "| Check | Result |"
+            echo "| --- | --- |"
+            echo "| Unit tests | ${{ steps.unit.outcome }} |"
+            echo "| Astro check | ${{ steps.check.outcome }} |"
+            echo "| Production build | ${{ steps.build.outcome }} |"
+            echo "| Browser and accessibility | ${{ steps.e2e.outcome }} |"
+            if [ -d site/dist ]; then
+              echo ""
+              echo "Published artifact size: $(du -sh site/dist | cut -f1)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Update pull request validation comment
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          REPORT_PATH: ${{ runner.temp }}/skill-validation.md
+          UNIT_RESULT: ${{ steps.unit.outcome }}
+          CHECK_RESULT: ${{ steps.check.outcome }}
+          BUILD_RESULT: ${{ steps.build.outcome }}
+          E2E_RESULT: ${{ steps.e2e.outcome }}
+        with:
+          script: |
+            const fs = require("fs");
+            const marker = "<!-- skill-validation-report -->";
+            const report = fs.existsSync(process.env.REPORT_PATH)
+              ? fs.readFileSync(process.env.REPORT_PATH, "utf8")
+              : "## Skill validation\n\nThe validator did not produce a report.";
+            const gallery = [
+              "## Gallery checks",
+              "| Check | Result |",
+              "| --- | --- |",
+              `| Unit tests | ${process.env.UNIT_RESULT} |`,
+              `| Astro check | ${process.env.CHECK_RESULT} |`,
+              `| Production build | ${process.env.BUILD_RESULT} |`,
+              `| Browser and accessibility | ${process.env.E2E_RESULT} |`
+            ].join("\n");
+            const body = `${marker}\n${report}\n\n${gallery}`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100
+            });
+            const existing = comments.find(comment =>
+              comment.user?.login === "github-actions[bot]" &&
+              comment.body?.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: Upload browser failure diagnostics
+        if: always() && steps.e2e.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-failure-${{ github.run_id }}
+          path: |
+            site/playwright-report/
+            site/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Fail when a required check reports errors
+        if: >-
+          always() &&
+          (steps.validate.outcome != 'success' ||
+          steps.unit.outcome != 'success' ||
+          steps.check.outcome != 'success' ||
+          steps.build.outcome != 'success' ||
+          steps.e2e.outcome != 'success')
+        run: exit 1

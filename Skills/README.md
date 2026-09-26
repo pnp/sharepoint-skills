@@ -7,6 +7,7 @@ Some skills also include a `demo/` subfolder containing sample content you can u
 ## Quick links
 
 - **Install:** [Installing a Skill](#installing-a-skill)
+- **Troubleshoot:** [Troubleshooting guide](./TROUBLESHOOTING.md) — if the agent doesn't recognize your skill
 - **Contribute:** [Contribution guide](../CONTRIBUTING.md) — skill folder structure, required files, file templates, and the pre-submission checklist
 
 ---

@@ -1,0 +1,103 @@
+---
+import { Bot, CircleCheck, Download, LifeBuoy, ShieldCheck, Upload } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { catalog, sitePath } from '../lib/catalog';
+
+const example = catalog.skills.find((skill) => skill.slug === 'analyze-document-library') ?? catalog.skills[0];
+---
+
+<BaseLayout title="Getting started" description="Install and run your first SharePoint Skill safely.">
+	<header class="page-heading container">
+		<p class="eyebrow">From download to first run</p>
+		<h1>Getting started</h1>
+		<p>Install a focused skill in a SharePoint agent and verify it is ready to use.</p>
+	</header>
+	<div class="support-page container">
+		<section class="prerequisite-band" aria-labelledby="prerequisites-heading">
+			<div><ShieldCheck size={28} aria-hidden="true" /><h2 id="prerequisites-heading">Before you begin</h2></div>
+			<ul>
+				<li>An active Microsoft Copilot license</li>
+				<li>A SharePoint site with Copilot available</li>
+				<li>Edit permission to install, or View permission to run a skill</li>
+			</ul>
+		</section>
+
+		<section class="video-guide" aria-labelledby="video-guide-heading">
+			<div class="section-heading">
+				<div><p class="eyebrow">Guided walkthroughs</p><h2 id="video-guide-heading">Video guides</h2></div>
+			</div>
+			<div class="video-guide__grid">
+				<article class="video-guide__item">
+					<div class="video-guide__frame">
+						<iframe
+							src="https://www.youtube-nocookie.com/embed/nEwHGlsJqdc"
+							title="Introduction to custom AI Skills in SharePoint"
+							loading="lazy"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						></iframe>
+					</div>
+					<h3>Introduction to custom AI Skills in SharePoint</h3>
+					<p>Learn what custom AI Skills are and how they extend Copilot in SharePoint.</p>
+				</article>
+				<article class="video-guide__item">
+					<div class="video-guide__frame">
+						<iframe
+							src="https://www.youtube-nocookie.com/embed/0fiu1EKy_cQ"
+							title="Getting started with SharePoint Skills"
+							loading="lazy"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						></iframe>
+					</div>
+					<h3>Getting started with SharePoint Skills</h3>
+					<p>Follow the setup flow and see how to use your first SharePoint Skill.</p>
+				</article>
+				<article class="video-guide__item">
+					<div class="video-guide__frame">
+						<iframe
+							src="https://www.youtube-nocookie.com/embed/FcLy_32vblM"
+							title="Announcing Open-Source Skills for Copilot in SharePoint"
+							loading="lazy"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						></iframe>
+					</div>
+					<h3>Announcing Open-Source Skills for Copilot in SharePoint</h3>
+					<p>Explore the open-source collection and the community behind it.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="steps" aria-labelledby="install-heading">
+			<div class="section-heading">
+				<div><p class="eyebrow">One representative skill</p><h2 id="install-heading">Install {example.title}</h2></div>
+				<a class="button" href={sitePath(example.package.url)} download><Download size={18} aria-hidden="true" /> Download example</a>
+			</div>
+			<ol>
+				<li><span>1</span><div><Download size={22} aria-hidden="true" /><h3>Download and extract</h3><p>Download the skill ZIP and extract its same-name package folder.</p></div></li>
+				<li><span>2</span><div><Upload size={22} aria-hidden="true" /><h3>Upload the folder</h3><p>Open <strong>Agent Assets</strong>, enter the auto-created <strong>Skills</strong> folder, and upload the extracted folder.</p></div></li>
+				<li><span>3</span><div><Bot size={22} aria-hidden="true" /><h3>Start a fresh session</h3><p>Wait a few minutes for discovery, then open Copilot in SharePoint and start a new conversation.</p></div></li>
+				<li><span>4</span><div><CircleCheck size={22} aria-hidden="true" /><h3>Ask for the task</h3><p>Invoke the skill by name or describe its task, then look for the skill indicator in chat.</p></div></li>
+			</ol>
+		</section>
+
+		<div class="support-columns">
+			<section class="prose">
+				<h2>Package boundaries</h2>
+				<p>The downloadable ZIP contains the inner package consumed by the agent. Gallery metadata, previews, demo files, and the outer README remain outside that package.</p>
+				<h2>Safe use</h2>
+				<p>Review generated output before acting on it. For skills that change content, confirm scope and approvals first, and use least-privilege access. Never place credentials or sensitive tenant data in skill instructions.</p>
+			</section>
+			<aside class="help-panel">
+				<LifeBuoy size={26} aria-hidden="true" />
+				<h2>Skill not appearing?</h2>
+				<p>Check the upload path, inner folder name, permissions, agent type, and discovery delay.</p>
+				<a class="button button--secondary" href="https://github.com/pnp/sharepoint-skills/blob/main/Skills/TROUBLESHOOTING.md">Open troubleshooting guide</a>
+			</aside>
+		</div>
+	</div>
+</BaseLayout>

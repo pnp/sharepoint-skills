@@ -1,0 +1,59 @@
+---
+import { ArrowUpRight, CalendarDays } from '@lucide/astro';
+import type { Skill } from '../lib/catalog';
+import { categorySlug, formatDate, sitePath } from '../lib/catalog';
+
+interface Props {
+	skill: Skill;
+	index?: number;
+	interactive?: boolean;
+}
+
+const { skill, index = 0, interactive = false } = Astro.props;
+const primaryAuthor = skill.authors[0];
+---
+
+<article
+	class="skill-card"
+	style={`--card-index: ${Math.min(index, 8)}`}
+	data-skill-card={interactive ? '' : undefined}
+	data-search={interactive ? skill.searchText : undefined}
+	data-category={interactive ? skill.category : undefined}
+	data-products={interactive ? skill.products.join('|') : undefined}
+	data-authors={interactive ? skill.authors.map((author) => author.gitHubAccount).join('|') : undefined}
+	data-created={interactive ? skill.createdAt : undefined}
+	data-updated={interactive ? skill.updatedAt : undefined}
+	data-title={interactive ? skill.title : undefined}
+>
+	<a class="skill-card__image" href={sitePath(`/skills/${skill.slug}/`)} tabindex="-1" aria-hidden="true">
+		<picture>
+			<source
+				srcset={`${sitePath(skill.preview.src640)} 640w, ${sitePath(skill.preview.src960)} 960w`}
+				sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 380px"
+				type="image/webp"
+			/>
+			<img
+				src={sitePath(skill.preview.src640)}
+				alt=""
+				width={skill.preview.width}
+				height={skill.preview.height}
+				loading={index < 3 ? 'eager' : 'lazy'}
+				fetchpriority={index === 0 ? 'high' : 'auto'}
+			/>
+		</picture>
+		<span class="skill-card__open"><ArrowUpRight size={18} aria-hidden="true" /></span>
+	</a>
+	<div class="skill-card__body">
+		<div class="skill-card__meta">
+			<a href={sitePath(`/categories/${categorySlug(skill.category)}/`)}>{skill.category}</a>
+			<span><CalendarDays size={14} aria-hidden="true" /> {formatDate(skill.updatedAt)}</span>
+		</div>
+		<h2><a href={sitePath(`/skills/${skill.slug}/`)}>{skill.title}</a></h2>
+		<p>{skill.shortDescription}</p>
+		<div class="skill-card__author">
+			<img src={primaryAuthor.pictureUrl} alt="" width="28" height="28" loading="lazy" />
+			<span>{primaryAuthor.name}</span>
+			{skill.authors.length > 1 && <span class="author-count">+{skill.authors.length - 1}</span>}
+		</div>
+	</div>
+</article>

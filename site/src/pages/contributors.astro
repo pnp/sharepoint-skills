@@ -1,0 +1,83 @@
+---
+import { ExternalLink, Users } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { catalog, sitePath, type Author, type Skill } from '../lib/catalog';
+
+interface Contributor extends Author {
+	skills: Skill[];
+}
+
+const contributors = [...catalog.skills.reduce((map, skill) => {
+	for (const author of skill.authors) {
+		const key = author.gitHubAccount.toLocaleLowerCase('en-US');
+		const contributor = map.get(key) ?? { ...author, skills: [] };
+		contributor.skills.push(skill);
+		map.set(key, contributor);
+	}
+	return map;
+}, new Map<string, Contributor>()).values()].sort(
+	(left, right) => right.skills.length - left.skills.length || left.name.localeCompare(right.name),
+);
+---
+
+<BaseLayout title="Contributors" description="Meet the community members who build and maintain SharePoint Skills.">
+	<header class="page-heading container">
+		<p class="eyebrow">Community</p>
+		<h1>Contributors</h1>
+		<p>{contributors.length} people have shared their expertise. Sharing is caring.</p>
+	</header>
+	<div class="directory-page container">
+		<section class="badge-callout" aria-labelledby="badge-heading">
+			<img
+				src={sitePath('/images/sharepoint-skills-badge.png')}
+				alt="SharePoint Skills 2026 community contributor badge"
+				width="220"
+				height="220"
+			/>
+			<div>
+				<p class="eyebrow">Contributor recognition</p>
+				<h2 id="badge-heading">Share your skill. Earn the badge.</h2>
+				<p>
+					Every contributor with an accepted SharePoint Skill can receive the SharePoint Skills
+					Credly badge after registering once for the Community Recognition Program.
+				</p>
+				<div class="action-row">
+					<a class="button" href="https://aka.ms/community/recognition">Register for recognition</a>
+					<a class="button button--secondary" href="https://www.credly.com/org/m365pnp/badge/sharepoint-skills-microsoft-365-power-platform-comm">
+						View the badge <ExternalLink size={16} aria-hidden="true" />
+					</a>
+				</div>
+			</div>
+		</section>
+		<div class="contributor-grid">
+			{contributors.map((contributor) => (
+				<article class="contributor-card">
+					<div class="contributor-card__header">
+						<img src={contributor.pictureUrl} alt="" width="64" height="64" loading="lazy" />
+						<div>
+							<h2>{contributor.name}</h2>
+							{contributor.company && <p>{contributor.company}</p>}
+							<a href={`https://github.com/${contributor.gitHubAccount}`}>
+								@{contributor.gitHubAccount} <ExternalLink size={14} aria-hidden="true" />
+							</a>
+						</div>
+					</div>
+					<p class="contribution-count"><Users size={16} aria-hidden="true" /> {contributor.skills.length} {contributor.skills.length === 1 ? 'skill' : 'skills'}</p>
+					<ul>
+						{contributor.skills.slice(0, 4).map((skill) => (
+							<li><a href={sitePath(`/skills/${skill.slug}/`)}>{skill.title}</a></li>
+						))}
+					</ul>
+					{contributor.skills.length > 4 && <p class="more-count">+{contributor.skills.length - 4} more</p>}
+				</article>
+			))}
+		</div>
+		<div class="page-callout">
+			<div>
+				<h2>Every contribution matters</h2>
+				<p>Commit contributors are recognized separately in the repository history.</p>
+			</div>
+			<a class="button button--secondary" href="https://github.com/pnp/sharepoint-skills/graphs/contributors">View repository contributors</a>
+		</div>
+	</div>
+</BaseLayout>

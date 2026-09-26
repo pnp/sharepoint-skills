@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-broken-link-auditor",
+    "source": "pnp",
+    "title": "Broken Link Auditor",
+    "shortDescription": "Scans SharePoint pages, news posts, and hyperlink fields for broken or risky links and saves a self-contained HTML link-health report to the site. Strictly read-only for content.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/broken-link-auditor",
+    "longDescription": [
+      "Broken or stale links quietly erode trust in SharePoint sites, especially after migrations, restructures, and content handovers. This skill audits the current site, a named library, or selected items for internal SharePoint links, external URLs, and hyperlink-column targets without modifying any content.",
+      "It resolves SharePoint targets when possible, validates external links with safe read-only checks, classifies findings by severity, and saves a self-contained HTML report with summary totals, per-item results, status details, and a prioritized remediation list in a Link Reports folder."
+    ],
+    "creationDateTime": "2026-08-02",
+    "updateDateTime": "2026-08-02",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Site Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/broken-link-auditor/assets/preview.png",
+        "alt": "Broken Link Auditor skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "ValerasNarbutas",
+        "pictureUrl": "https://github.com/ValerasNarbutas.png",
+        "name": "Valeras Narbutas"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+﻿ID,Action,Owner,DueDate,Status,Priority,RelatedItem,Comment
+A-018,Prepare migration reconciliation report,Markus Braun,2026-09-18,In Progress,Medium,M-004,On track
+A-023,Complete remaining test-environment configuration,Tobias Lang,2026-09-09,In Progress,High,M-003,Environment usable but two interface settings remain
+A-027,Provide final hosting-cost comparison,Nina Schubert,2026-09-11,Open,High,D-014,Required by Architecture Board
+A-031,Publish revised integration test schedule,Sofia Neumann,2026-09-15,Open,High,M-003,Requested by Steering Committee
+A-032,Confirm Security Review date,Jonas Fischer,2026-09-16,Open,Medium,DEL-006,Review slot not yet confirmed
+A-034,Prepare support handover workshop,Clara Vogel,2026-10-09,Open,Medium,DEL-008,Planned

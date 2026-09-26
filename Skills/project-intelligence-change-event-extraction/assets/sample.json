@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-project-intelligence-change-event-extraction",
+    "source": "pnp",
+    "title": "Project Intelligence - Change Event Extraction",
+    "shortDescription": "Reads every document in a SharePoint project library and writes a complete, structured change-event log to a SharePoint list — the factual foundation of the Project Intelligence Engine.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/project-intelligence-change-event-extraction",
+    "longDescription": [
+      "Change Event Extraction is the first stage of the Project Intelligence Engine. It reads every document in the Project Documents library — status reports, workshop notes, change requests, risk logs, and appendices — and extracts every event that affected, or should have affected, the project's scope, timeline, budget, or technical approach.",
+      "Each event is written to a Change Events SharePoint list across 16 structured fields, categorized by type and signal strength, with governance flags for missing change orders, approvers, and rationale. The output is the factual foundation that the Root Cause Analysis and Timeline Dashboard skills build on."
+    ],
+    "creationDateTime": "2026-07-06",
+    "updateDateTime": "2026-07-06",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Project Intelligence"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-intelligence-change-event-extraction/assets/preview.png",
+        "alt": "Project Intelligence - Change Event Extraction skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "mattwolodarsky-droid",
+        "pictureUrl": "https://github.com/mattwolodarsky-droid.png",
+        "name": "Matt Wolodarsky"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

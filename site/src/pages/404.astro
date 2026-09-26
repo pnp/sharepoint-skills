@@ -1,0 +1,18 @@
+---
+import { ArrowLeft, Search } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { catalog, categorySlug, sitePath } from '../lib/catalog';
+---
+
+<BaseLayout title="Page not found" description="The requested SharePoint Skills page could not be found.">
+	<div class="not-found container">
+		<p class="error-code">404</p>
+		<Search size={34} aria-hidden="true" />
+		<h1>That page is not in the catalog</h1>
+		<p>The skill may have moved, or the address may be incomplete.</p>
+		<div class="action-row">
+			<a class="button" href={sitePath('/')}><ArrowLeft size={17} aria-hidden="true" /> Browse all skills</a>
+			<a class="button button--secondary" href={sitePath(`/categories/${categorySlug(catalog.categories[0])}/`)}>Browse categories</a>
+		</div>
+	</div>
+</BaseLayout>

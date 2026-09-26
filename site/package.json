@@ -1,0 +1,39 @@
+{
+  "name": "site",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "generate": "node scripts/generate-gallery.mjs",
+    "dev": "npm run generate && astro dev",
+    "start": "npm run dev",
+    "build": "npm run generate && astro build",
+    "check": "npm run generate && astro check",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test && npm run check && npm run build && npm run test:e2e",
+    "deployment:mark": "node scripts/deployment-verification.mjs create",
+    "deployment:verify": "node scripts/deployment-verification.mjs verify",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@lucide/astro": "^1.41.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "astro": "^7.3.1",
+    "jszip": "^3.10.1",
+    "marked": "^18.0.11",
+    "sanitize-html": "^2.17.7",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.4.1",
+    "@types/sanitize-html": "^2.16.1",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.0-rc.4"
+  }
+}

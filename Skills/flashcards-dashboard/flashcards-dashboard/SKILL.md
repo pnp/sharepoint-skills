@@ -1,5 +1,5 @@
 ---
-name: flashcard-dashboard
+name: flashcards-dashboard
 description: |-
   Creates an interactive HTML learning dashboard from a source file by extracting key concepts into validated flashcards with source links, hover-detail answers, filters, review tracking, shuffle, and progress tracking.
 

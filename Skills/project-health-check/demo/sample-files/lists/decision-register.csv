@@ -1,0 +1,5 @@
+﻿ID,Decision,RequestedDate,DueDate,Status,Owner,ImpactIfDelayed,Outcome
+D-009,Approve target information architecture,2026-05-19,2026-05-29,Decided,Daniel Weber,Build cannot start,Approved
+D-012,Approve migration retention approach,2026-07-10,2026-07-17,Decided,Daniel Weber,Migration design delayed,Approved
+D-014,Select final production hosting topology,2026-08-25,2026-09-08,Open,Architecture Board,Deployment planning and network configuration cannot be finalized,
+D-016,Confirm go-live support coverage,2026-09-08,2026-09-25,Open,Daniel Weber,Support roster cannot be finalized,
