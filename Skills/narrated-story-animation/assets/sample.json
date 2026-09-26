@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-narrated-story-animation",
+    "source": "pnp",
+    "title": "Narrated Story Animation",
+    "shortDescription": "Creates a self-contained cinematic HTML story animation for a customer story, launch, campaign, or tutorial, with Story Studio scenes, captions, and narration.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/narrated-story-animation",
+    "longDescription": [
+      "Turns a brief or SharePoint source into a 6–9 scene narrated HTML story using the Story Studio editorial system: title, stats, bars, route, network, timeline, quote, result, and CTA.",
+      "Outputs one offline file with wipe transitions, count-ups, captions synced to browser speech, a voice picker, and playback controls. Fictional names and figures are labelled when no source is supplied.",
+      "Save the finished HTML to the site Reports library."
+    ],
+    "creationDateTime": "2026-09-26",
+    "updateDateTime": "2026-09-26",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Knowledge Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/narrated-story-animation/assets/preview.png",
+        "alt": "Narrated Story Animation skill showing a Story Studio scene on a 16:9 stage"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Ragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
