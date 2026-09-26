@@ -15,6 +15,9 @@ Use a tight campaign arc rather than a slide deck. The default is a one-minute s
 5. Measurable outcome
 6. Campaign payoff and CTA
 
+## Runtime reference
+Read `nexusflow-campaign-story.html` in this same skill folder before writing output. Reuse its CSS, scene markup, playback controls, narration, and motion. Replace the scene data, masthead labels, and captions for the new story. Keep Velora Freight and the 41% figure only when producing a labelled fictional sample. Do not invent a different visual system.
+
 ## Inputs
 - A source document, user brief, or named SharePoint file.
 - Optional audience, product name, customer name, CTA, length, language, and destination.
@@ -25,7 +28,7 @@ Use a tight campaign arc rather than a slide deck. The default is a one-minute s
 2. Write concise scene data. Keep narration to 45 words or fewer per scene. Use clear everyday language designed to be heard.
 3. Use the campaign arc above unless the user gives a different structure. Make each journey beat a discrete, useful change rather than a vague benefit.
 4. Build a complete HTML file with no external images, fonts, libraries, network calls, CDNs, or script imports.
-5. Use the NexusFlow design system:
+5. Start from `nexusflow-campaign-story.html` and apply the NexusFlow design system:
    - premium, subject-led B2B application interface, not a slide deck;
    - high-contrast ink, paper, operational blue, electric-blue emphasis, restrained green success state, and semantic progress rail;
    - strong purposeful type scale, sentence-case labels, clear hierarchy, fine functional borders, and an uncluttered layout;
