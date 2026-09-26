@@ -26,6 +26,10 @@ Ask Copilot:
 
 Works from a source document, a named file on the site, or a brief. If no source is provided, the skill builds a labelled fictional sample.
 
+## Demo content
+
+A finished fictional story is in [`demo/sample-files/`](./demo/sample-files/). Open `NexusFlow-Velora-Freight-Campaign-Story.html` in a browser to see the output. Do not upload `demo/` with the skill package.
+
 ## SharePoint Skill
 
 | Solution | Author(s) |
