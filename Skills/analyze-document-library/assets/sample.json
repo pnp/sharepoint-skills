@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-analyze-document-library",
+    "source": "pnp",
+    "title": "Analyze Document Library",
+    "shortDescription": "Analyzes a SharePoint document library and provides a structured summary.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/analyze-document-library",
+    "longDescription": [
+      "Analyzes files, folders, naming consistency, and document organization.",
+      "Provides recommendations without modifying SharePoint content."
+    ],
+    "creationDateTime": "2026-07-11",
+    "updateDateTime": "2026-07-11",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/analyze-document-library/assets/preview.png",
+        "alt": "Analyze Document Library skill output"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "a-villarruel",
+        "pictureUrl": "https://github.com/a-villarruel.png",
+        "name": "Antonio Villarruel"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

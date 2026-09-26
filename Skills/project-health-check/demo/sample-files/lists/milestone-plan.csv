@@ -1,0 +1,7 @@
+﻿ID,Milestone,PlannedDate,Status,Criticality,Owner,Comment
+M-001,Solution Design Approved,2026-06-12,Complete,High,Anna Keller,Approved on 11 June 2026
+M-002,Core Build Complete,2026-08-21,Complete,High,Markus Braun,Completed on 20 August 2026
+M-003,Integration Testing Complete,2026-09-10,In Progress,High,Sofia Neumann,Forecast completion 22 September 2026
+M-004,Business Acceptance Complete,2026-09-25,On Track,High,Lisa Hartmann,Preparation in progress
+M-005,Production Readiness Review,2026-10-02,At Risk,Critical,Anna Keller,Reduced contingency after testing delay
+M-006,Production Go-Live,2026-10-30,On Track,Critical,Anna Keller,Target date unchanged

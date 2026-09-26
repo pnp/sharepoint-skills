@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-decision-register-builder",
+    "source": "pnp",
+    "title": "Decision Register Builder",
+    "shortDescription": "Discovers and maintains an evidence-based SharePoint project Decision Register.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/decision-register-builder",
+    "longDescription": [
+      "Analyzes project documents and structured SharePoint lists to identify explicit decisions, unresolved decision requirements, proposals, deferrals, and superseding decisions.",
+      "The skill discovers an existing Decision Register, preserves existing IDs, avoids duplicate decisions, respects reporting cut-offs, and can generate a standalone HTML5 management report."
+    ],
+    "creationDateTime": "2026-09-16",
+    "updateDateTime": "2026-09-16",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Project Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/decision-register-builder/assets/preview.png",
+        "alt": "Decision Register Builder review for Project Aurora"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "maschroeder-z",
+        "pictureUrl": "https://github.com/maschroeder-z.png",
+        "name": "Marc André Schröder-Zhou"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "Specification used for SharePoint Skills packaging and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

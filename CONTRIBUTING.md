@@ -2,6 +2,10 @@
 
 Contributions and corrections are welcome! This guide covers everything you need to build a skill folder and what to include in it.
 
+Use the [GitHub issue forms](https://github.com/pnp/sharepoint-skills/issues/new/choose) to report a reproducible problem or propose a focused user story. Pull requests include a short template for affected folders, verification, and screenshots when relevant.
+
+By participating, you agree to follow the [Code of Conduct](./CODE_OF_CONDUCT.md). Report suspected security concerns according to the [Security Policy](./SECURITY.md), and never include credentials or real tenant, customer, or personal data in issues, pull requests, demos, or samples.
+
 ## Contribution workflow
 
 1. Fork the repo and create a branch: `git checkout -b skill/your-skill-name`
@@ -30,11 +34,11 @@ A skill is a folder containing docs, samples, and an upload-ready inner package.
 ### Required files
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `<skill-name>/SKILL.md` | Skill instructions with `name` and `description` frontmatter (inside the upload-ready inner package) |
 | `README.md` | Description, preview image, "What you get", SharePoint Skill credits, version history, and disclaimer |
 | `assets/sample.json` | Metadata for the [community samples gallery](https://aka.ms/community/home) |
-| `assets/preview.png` | Screenshot of the skill's output for the readme and for samples gallery (recommended 1280×720, 16:9, PNG) |
+| `assets/preview.png` | PNG screenshot of the skill's output for the readme and samples gallery (at least 640×360; 1280×720 and 16:9 recommended) |
 
 If your skill needs extra runtime files (for example, persona reference documents), keep those files beside `SKILL.md` inside the inner package folder.
 
@@ -150,6 +154,8 @@ Short description of what the skill does and when to use it.
 
 ## Pre-submission checklist
 
+When you open or update a pull request, the `Validate skills` workflow automatically checks package structure, metadata, README content, demo content, and preview images. Review and address any findings reported by that check; no local validator setup is required.
+
 Before opening your pull request, verify:
 
 - [ ] Skill folder is directly under `Skills/` (`Skills/<skill-name>/`)
@@ -158,7 +164,7 @@ Before opening your pull request, verify:
 - [ ] `SKILL.md` has `name` and `description` in the frontmatter and is in the inner package folder
 - [ ] `README.md` follows the template (description, preview image, "What you get", `SharePoint Skill` credits table, `Version history`, `Disclaimer`, and visitor-stats image)
 - [ ] `assets/sample.json` exists with the `url` and `thumbnails[0].url` pointing to your skill's actual path
-- [ ] `assets/preview.png` exists and shows the skill's actual output (not a logo or placeholder)
+- [ ] `assets/preview.png` is a PNG of at least 640×360 and shows the skill's actual output (not a logo or placeholder); 1280×720 and 16:9 are recommended
 - [ ] Skills work best when they are **focused** (one capability), **self-contained** (no external dependencies), and **discoverable** (clear `description` with trigger phrases)
 
 ---

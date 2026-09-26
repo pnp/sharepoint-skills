@@ -1,0 +1,5 @@
+﻿ID,Title,Type,Probability,Impact,Rating,Status,Owner,Mitigation,TargetDate
+R-001,Business SMEs have limited availability,Risk,Medium,Medium,Medium,Open,Lisa Hartmann,Reserve dedicated UAT sessions and deputies,2026-09-18
+R-003,Migration reconciliation may require additional cycle,Risk,Low,High,Medium,Open,Markus Braun,Run reconciliation after each rehearsal,2026-09-24
+R-004,Document-conversion service unstable under load,Risk,High,High,High,Open,Jonas Fischer,"Implement retry logic, monitoring, and repeat load test",2026-09-18
+R-006,Training material completion may slip,Risk,Medium,Low,Low,Open,Clara Vogel,Reuse approved process screenshots and prioritize core modules,2026-10-05

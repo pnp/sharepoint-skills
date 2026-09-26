@@ -1,0 +1,62 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-sync-blocker-auditor",
+    "source": "pnp",
+    "title": "Sync Blocker Auditor",
+    "shortDescription": "Audits a SharePoint document library for names and paths that break OneDrive sync, File Explorer, and Teams: illegal characters, trailing spaces, reserved names, and paths over the 400-character SharePoint and 260-character Windows limits. Saves a self-contained HTML report with a proposed safe name for every blocker. Strictly read-only.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/sync-blocker-auditor",
+    "longDescription": [
+      "SharePoint happily accepts file and folder names that the OneDrive sync client, File Explorer, and the Teams Files tab later refuse to handle. The result is the familiar 'we can't sync this file' error that surfaces one user at a time, long after the content was uploaded, with no way to see how widespread the problem is. This skill audits a whole document library against Microsoft's documented naming and path restrictions in one pass, with no Power Automate and no custom code.",
+      "It pages through every file and folder and applies a numbered rule set: Blockers such as illegal characters (\" * : < > ? / \\ |), leading or trailing whitespace, trailing periods, Windows reserved device names like CON and LPT1, reserved SharePoint and OneDrive names such as .lock, desktop.ini and _vti_, orphaned ~$ lock files, and full decoded URLs over the 400-character limit; Risks such as #, %, &, {, }, and + in names (fully supported by SharePoint Online since 2017, but still hostile to hand-built REST URLs, migration tools and on-premises clients), paths over the 260-character Windows limit that File Explorer and the Office desktop apps cannot open, nesting deeper than eight levels, .tmp files that OneDrive never syncs, and files checked out for more than seven days; and Info items such as Thumbs.db, .DS_Store, backup leftovers, and zero-byte files.",
+      "For every blocked item it derives a proposed safe name — illegal characters replaced, whitespace and trailing periods trimmed, reserved names escaped, and long names shortened while preserving the extension — and presents it for human approval. It then saves a colour-coded, self-contained HTML report (sync readiness score, severity strip, rule frequency chart, findings table, path-length table against the 400-character limit, checked-out table, folder hot spots, and a prioritised remediation list) to a Sync Reports folder. The skill is strictly read-only: it never renames, moves, deletes, or checks in anything. Unlike naming checks that look for vague or unhelpful names, this skill reports only technical sync and URL blockers. Trigger phrases include 'sync blockers', 'why won't this library sync', 'invalid file names', 'path too long', and 'files stuck checked out'."
+    ],
+    "creationDateTime": "2026-08-20",
+    "updateDateTime": "2026-08-20",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/sync-blocker-auditor/assets/preview.png",
+        "alt": "Sync Blocker Auditor skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Bhupendrakaushik",
+        "pictureUrl": "https://github.com/Bhupendrakaushik.png",
+        "name": "Bhupendra Kaushik"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Restrictions and limitations in OneDrive and SharePoint",
+        "description": "The Microsoft documentation behind this skill's disallowed-name and TMP-file rules.",
+        "url": "https://support.microsoft.com/office/64883a5d-228e-48f5-b3d2-eb39e07630fa"
+      },
+      {
+        "name": "What are the file path length limits?",
+        "description": "The 400-character SharePoint, 260-character Windows, and 255-character per-name limits this skill measures against.",
+        "url": "https://support.microsoft.com/onedrive/what-are-file-path-length-limits"
+      }
+    ]
+  }
+]

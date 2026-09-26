@@ -1,0 +1,53 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-custom-image-tagger",
+    "source": "pnp",
+
+    "title": "Custom Image Tagger",
+    "shortDescription": "Analyzes selected  images and updates SharePoint columns with concise visual metadata.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/custom-image-tagger",
+    "longDescription": [
+      "Analyzes selected construction images and updates SharePoint columns with concise visual metadata.",
+      "Creates the metadata columns for image objects (primary objects, background objects), extracts objects from each image, and saves them automatically. Enables search and Copilot reasoning based on visual content."
+    ],
+    "creationDateTime": "2026-07-01",
+    "updateDateTime": "2026-07-01",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/custom-image-tagger/assets/preview.png",
+        "alt": "Custom Image Tagger skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Arbindoc",
+        "pictureUrl": "https://github.com/Arbindoc.png",
+        "name": "Arbindoc",
+        "company": "Microsoft"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

@@ -24,7 +24,6 @@ It reviews the source skill, identifies Cowork-specific assumptions, prepares a 
   - `references/`
   - `examples/`
   - `eval/`
-  - `scripts/`
 - Flags deprecated supporting files that may be deleted after review
 - Verifies saved files after update when practical
 

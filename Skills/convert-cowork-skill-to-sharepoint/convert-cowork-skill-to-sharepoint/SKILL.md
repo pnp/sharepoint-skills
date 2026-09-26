@@ -118,7 +118,6 @@ Use this folder-structure rubric:
 - Put long guidance in `references/`.
 - Put worked scenarios in `examples/`.
 - Put pass/fail checks or test scenarios in `eval/`.
-- Put reusable helper logic in `scripts/`.
 - Remove Cowork-only supporting files from the converted design when they no longer apply.
 
 ### Phase 6: Save, verify, and report

@@ -1,0 +1,48 @@
+name: Propose an idea or story
+description: Suggest a new skill or an improvement to the repository experience.
+title: "[Idea]: "
+body:
+  - type: markdown
+    attributes:
+      value: Describe the user need and desired outcome. A polished solution design is not required.
+
+  - type: textarea
+    id: story
+    attributes:
+      label: What is the user story?
+      description: Explain who needs this, what they need, and why it matters.
+      placeholder: As a ..., I want ..., so that ...
+    validations:
+      required: true
+
+  - type: input
+    id: affected-skills
+    attributes:
+      label: Proposed or affected skill folder(s)
+      description: Enter existing or proposed folder names, or use "Repository-wide".
+      placeholder: Skills/example-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would a useful outcome look like?
+      description: Keep this focused on observable value rather than implementation details.
+      placeholder: Describe the result a user should be able to achieve.
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples, screenshots, or references
+      description: Optional. Add examples or visual references after removing sensitive information.
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I searched existing issues and kept this proposal focused on one user need.
+          required: true

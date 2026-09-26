@@ -1,0 +1,54 @@
+---
+import { FileCheck, GitPullRequest, Image, PackageCheck } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contributing" description="Share a focused, reusable SharePoint Skill with the community.">
+	<header class="page-heading container">
+		<p class="eyebrow">Sharing is caring</p>
+		<h1>Contributing</h1>
+		<p>Build one focused capability, package it predictably, and let the automated checks do the first review.</p>
+		<div class="action-row">
+			<a class="button" href="https://github.com/pnp/sharepoint-skills/blob/main/CONTRIBUTING.md">Read the full guide</a>
+			<a class="button button--secondary" href="https://github.com/pnp/sharepoint-skills/fork">Fork the repository</a>
+		</div>
+	</header>
+	<div class="support-page container">
+		<section class="contribution-flow" aria-labelledby="flow-heading">
+			<h2 id="flow-heading">Contribution flow</h2>
+			<ol>
+				<li><GitPullRequest size={24} aria-hidden="true" /><span>Fork and create a <strong>skill/your-skill-name</strong> branch.</span></li>
+				<li><PackageCheck size={24} aria-hidden="true" /><span>Add the outer gallery folder and matching inner upload package.</span></li>
+				<li><FileCheck size={24} aria-hidden="true" /><span>Run the repository validator and review every generated gallery surface.</span></li>
+				<li><Image size={24} aria-hidden="true" /><span>Open a pull request with a clear description and useful screenshots.</span></li>
+			</ol>
+		</section>
+		<div class="support-columns">
+			<section class="prose">
+				<h2>Required structure</h2>
+				<pre><code>Skills/your-skill/
+  README.md
+  assets/
+    sample.json
+    preview.png
+  your-skill/
+    SKILL.md</code></pre>
+				<p>Keep demo material beside the package, never inside it. The folder name and the SKILL.md frontmatter name must match exactly in kebab-case.</p>
+			</section>
+			<section class="prose">
+				<h2>Quality checklist</h2>
+				<ul class="check-list">
+					<li>A focused, self-contained capability</li>
+					<li>Clear trigger phrases and outcomes</li>
+					<li>A real output preview of at least 640 × 360</li>
+					<li>Complete sample metadata and attribution</li>
+					<li>No credentials, personal data, or unsafe paths</li>
+				</ul>
+			</section>
+		</div>
+		<div class="page-callout">
+			<div><h2>Start with a focused proposal</h2><p>Use the issue forms for a reproducible problem, gallery change, or new skill idea.</p></div>
+			<a class="button button--secondary" href="https://github.com/pnp/sharepoint-skills/issues/new/choose">Open an issue</a>
+		</div>
+	</div>
+</BaseLayout>

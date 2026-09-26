@@ -1,0 +1,57 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-project-health-check",
+    "source": "pnp",
+    "title": "Project Health Check",
+    "shortDescription": "Assesses SharePoint project health and optionally creates a standalone HTML management report.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/project-health-check",
+    "longDescription": [
+      "Analyzes project documents and structured SharePoint project registers to determine GREEN, AMBER, RED, or UNKNOWN health across schedule, risks, actions, decisions and dependencies, and documentation and governance.",
+      "The skill is evidence-driven, distinguishes overdue work from forecast variance, evaluates future deliverables in context, highlights management attention, and can create a self-contained HTML5 report for direct browser viewing."
+    ],
+    "creationDateTime": "2026-09-15",
+    "updateDateTime": "2026-09-15",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Project Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/copilot-chat.png",
+        "alt": "Project Health Check skill showing executing against demo project Project Aurora"
+      },
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/html-report.png",
+        "alt": "Project Health Check skill generated html report."
+      }      
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "maschroeder-z",
+        "pictureUrl": "https://github.com/maschroeder-z.png",
+        "name": "Marc Andre Schroeder-Zhou"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

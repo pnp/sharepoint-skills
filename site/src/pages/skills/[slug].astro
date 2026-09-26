@@ -1,0 +1,224 @@
+---
+import {
+	ArrowLeft,
+	Bug,
+	CalendarDays,
+	Check,
+	ChevronRight,
+	Copy,
+	Download,
+	ExternalLink,
+	FileText,
+	Lightbulb,
+	MessageSquareText,
+	Package,
+	Users,
+} from '@lucide/astro';
+import SkillCard from '../../components/SkillCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+	catalog,
+	categorySlug,
+	formatBytes,
+	formatDate,
+	sitePath,
+	type Skill,
+} from '../../lib/catalog';
+
+export function getStaticPaths() {
+	return catalog.skills.map((skill) => ({ params: { slug: skill.slug }, props: { skill } }));
+}
+
+interface Props {
+	skill: Skill;
+}
+
+const { skill } = Astro.props;
+const relatedSkills = catalog.skills
+	.filter((candidate) => candidate.slug !== skill.slug && candidate.category === skill.category)
+	.sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
+	.slice(0, 3);
+const sourceSkillUrl = `${skill.sourceUrl}/${skill.slug}/SKILL.md`;
+const rawSkillUrl = `https://raw.githubusercontent.com/pnp/sharepoint-skills/main/Skills/${skill.slug}/${skill.slug}/SKILL.md`;
+const problemUrl = `https://github.com/pnp/sharepoint-skills/issues/new?template=problem.yml&title=${encodeURIComponent(`[${skill.slug}] Problem: `)}`;
+const improvementUrl = `https://github.com/pnp/sharepoint-skills/issues/new?template=idea.yml&title=${encodeURIComponent(`[${skill.slug}] Improvement: `)}`;
+const structuredData = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareSourceCode',
+	name: skill.title,
+	description: skill.shortDescription,
+	dateCreated: skill.createdAt,
+	dateModified: skill.updatedAt,
+	codeRepository: skill.sourceUrl,
+	author: skill.authors.map((author) => ({
+		'@type': 'Person',
+		name: author.name,
+		url: `https://github.com/${author.gitHubAccount}`,
+	})),
+};
+---
+
+<BaseLayout title={skill.title} description={skill.shortDescription} image={skill.preview.src960}>
+	<div class="detail-page container">
+		<nav class="breadcrumbs" aria-label="Breadcrumb">
+			<a href={sitePath('/')}><ArrowLeft size={15} aria-hidden="true" /> Skills</a>
+			<ChevronRight size={14} aria-hidden="true" />
+			<a href={sitePath(`/categories/${categorySlug(skill.category)}/`)}>{skill.category}</a>
+			<ChevronRight size={14} aria-hidden="true" />
+			<span aria-current="page">{skill.title}</span>
+		</nav>
+
+		<header class="detail-hero">
+			<div class="detail-hero__copy">
+				<div class="tag-row">
+					<a class="tag" href={sitePath(`/categories/${categorySlug(skill.category)}/`)}>{skill.category}</a>
+					{skill.products.map((product) => <span class="tag tag--neutral">{product}</span>)}
+				</div>
+				<h1>{skill.title}</h1>
+				<p>{skill.shortDescription}</p>
+				<div class="action-row">
+					<a class="button" href={sitePath(skill.package.url)} download>
+						<Download size={18} aria-hidden="true" /> Download skill
+					</a>
+					<a class="button button--secondary" href={skill.sourceUrl}>
+						<ExternalLink size={18} aria-hidden="true" /> View source
+					</a>
+				</div>
+			</div>
+			<div class="detail-hero__preview">
+				<picture>
+					<source
+						srcset={`${sitePath(skill.preview.src640)} 640w, ${sitePath(skill.preview.src960)} 960w`}
+						sizes="(max-width: 900px) 100vw, 54vw"
+						type="image/webp"
+					/>
+					<img
+						src={sitePath(skill.preview.src960)}
+						alt={skill.preview.alt}
+						width={skill.preview.width}
+						height={skill.preview.height}
+						fetchpriority="high"
+					/>
+				</picture>
+			</div>
+		</header>
+
+		<div class="detail-layout">
+			<article class="prose detail-content">
+				{skill.longDescription.map((paragraph) => <p class="lead">{paragraph}</p>)}
+				<div set:html={skill.readmeHtml} />
+
+				<section class="package-panel" aria-labelledby="package-heading">
+					<div>
+						<p class="section-kicker"><Package size={17} aria-hidden="true" /> Package</p>
+						<h2 id="package-heading">Ready to install</h2>
+						<p>The ZIP contains only the upload-ready inner skill folder.</p>
+					</div>
+					<div class="package-panel__details">
+						<span>{formatBytes(skill.package.bytes)}</span>
+						<div class="checksum">
+							<code id="package-checksum">{skill.package.sha256}</code>
+							<button id="copy-checksum" type="button" title="Copy SHA-256" aria-label="Copy SHA-256 checksum">
+								<Copy class="copy-icon" size={17} aria-hidden="true" />
+								<Check class="check-icon" size={17} aria-hidden="true" />
+							</button>
+						</div>
+						<a class="button" href={sitePath(skill.package.url)} download>
+							<Download size={18} aria-hidden="true" /> Download {skill.title}
+						</a>
+					</div>
+				</section>
+
+				<details class="skill-source">
+					<summary><FileText size={18} aria-hidden="true" /> View SKILL.md</summary>
+					<div class="skill-source__actions">
+						<a href={sourceSkillUrl}>View on GitHub</a>
+						<a href={rawSkillUrl} download>Download Markdown</a>
+					</div>
+					<pre><code>{skill.skillMarkdown}</code></pre>
+				</details>
+
+				{skill.references.length > 0 && (
+					<section aria-labelledby="references-heading">
+						<h2 id="references-heading">References</h2>
+						<ul class="reference-list">
+							{skill.references.map((reference) => (
+								<li>
+									<a href={reference.url}>{reference.name}</a>
+									<p>{reference.description}</p>
+								</li>
+							))}
+						</ul>
+					</section>
+				)}
+
+				<section class="discussion" aria-labelledby="discussion-heading" data-discussion-term={`skill:${skill.slug}`}>
+					<MessageSquareText size={26} aria-hidden="true" />
+					<div>
+						<h2 id="discussion-heading">Discuss this skill</h2>
+						<p>Ask a question, share how you used it, or suggest an improvement with the community.</p>
+						<a class="button button--secondary" href="https://github.com/pnp/sharepoint-skills/discussions">
+							Open GitHub Discussions <ExternalLink size={16} aria-hidden="true" />
+						</a>
+					</div>
+				</section>
+			</article>
+
+			<aside class="detail-sidebar" aria-label="Skill information">
+				<section>
+					<h2>Skill information</h2>
+					<dl>
+						<div><dt><CalendarDays size={16} aria-hidden="true" /> Updated</dt><dd>{formatDate(skill.updatedAt)}</dd></div>
+						<div><dt>Created</dt><dd>{formatDate(skill.createdAt)}</dd></div>
+						<div><dt>Status</dt><dd class="status"><span></span>{skill.status}</dd></div>
+					</dl>
+				</section>
+				<section>
+					<h2><Users size={17} aria-hidden="true" /> Contributors</h2>
+					<ul class="author-list">
+						{skill.authors.map((author) => (
+							<li>
+								<img src={author.pictureUrl} alt="" width="40" height="40" loading="lazy" />
+								<div>
+									<a href={`https://github.com/${author.gitHubAccount}`}>{author.name}</a>
+									{author.company && <span>{author.company}</span>}
+								</div>
+							</li>
+						))}
+					</ul>
+				</section>
+				<section>
+					<h2>Feedback</h2>
+					<a class="sidebar-link" href={problemUrl}><Bug size={17} aria-hidden="true" /> Report a problem</a>
+					<a class="sidebar-link" href={improvementUrl}><Lightbulb size={17} aria-hidden="true" /> Suggest an improvement</a>
+				</section>
+			</aside>
+		</div>
+
+		{relatedSkills.length > 0 && (
+			<section class="related-section" aria-labelledby="related-heading">
+				<div class="section-heading">
+					<div>
+						<p class="eyebrow">More to explore</p>
+						<h2 id="related-heading">Related skills</h2>
+					</div>
+					<a href={sitePath(`/categories/${categorySlug(skill.category)}/`)}>View {skill.category}</a>
+				</div>
+				<div class="skill-grid">
+					{relatedSkills.map((related, index) => <SkillCard skill={related} index={index} />)}
+				</div>
+			</section>
+		)}
+	</div>
+	<script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline></script>
+	<script>
+		const button = document.querySelector<HTMLButtonElement>('#copy-checksum');
+		const checksum = document.querySelector<HTMLElement>('#package-checksum');
+		button?.addEventListener('click', async () => {
+			if (!checksum?.textContent) return;
+			await navigator.clipboard.writeText(checksum.textContent);
+			button.classList.add('is-copied');
+			setTimeout(() => button.classList.remove('is-copied'), 1600);
+		});
+	</script>
+</BaseLayout>

@@ -1,0 +1,1 @@
+Placeholder demo file. This name is vague but technically sync-safe - it must NOT be flagged by this skill.

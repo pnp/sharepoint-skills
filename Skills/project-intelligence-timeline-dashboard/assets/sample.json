@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-project-intelligence-timeline-dashboard",
+    "source": "pnp",
+    "title": "Project Intelligence - Timeline Dashboard",
+    "shortDescription": "Generates a self-contained HTML timeline dashboard that visualises the Project Intelligence Engine output for delivery directors and steering committees — no external dependencies.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/project-intelligence-timeline-dashboard",
+    "longDescription": [
+      "Timeline Dashboard is the final stage of the Project Intelligence Engine. It reads the fully analyzed Change Events list and the site context file and generates a single self-contained HTML file — no external CSS, fonts, or scripts — that a delivery director or steering committee can open in any browser and understand in under five minutes.",
+      "The dashboard leads with a KPI bar and a planned-vs-actual contrast panel, then presents the root cause, the causal chain, a vertical signal-trail timeline, the early-warnings-missed table, a governance summary, and a forward-looking recommendation card."
+    ],
+    "creationDateTime": "2026-07-06",
+    "updateDateTime": "2026-07-06",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Project Intelligence"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-intelligence-timeline-dashboard/assets/preview.png",
+        "alt": "Project Intelligence - Timeline Dashboard skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "mattwolodarsky-droid",
+        "pictureUrl": "https://github.com/mattwolodarsky-droid.png",
+        "name": "Matt Wolodarsky"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

@@ -1,0 +1,121 @@
+name: Deploy gallery
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Skills/**"
+      - "site/**"
+      - ".github/schemas/**"
+      - ".github/scripts/**"
+      - ".github/workflows/deploy-gallery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.19.0"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Validate all skills
+        run: python .github/scripts/validate_skills.py --root . --report "$RUNNER_TEMP/skill-validation.md"
+
+      - name: Install gallery dependencies
+        working-directory: site
+        run: npm ci
+
+      - name: Test gallery model
+        working-directory: site
+        run: npm test
+
+      - name: Check and build gallery
+        working-directory: site
+        run: npm run check && npm run build
+
+      - name: Record deployment identity
+        working-directory: site
+        env:
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
+        run: npm run deployment:mark
+
+      - name: Install Chromium
+        working-directory: site
+        run: npx playwright install --with-deps chromium
+
+      - name: Test gallery in desktop and mobile Chromium
+        working-directory: site
+        run: npm run test:e2e
+
+      - name: Record build metrics
+        run: |
+          {
+            echo "## Gallery artifact"
+            echo "- Catalog entries: $(node -p "require('./site/dist/catalog.json').skills.length")"
+            echo "- Pages: $(find site/dist -name index.html -o -name 404.html | wc -l)"
+            echo "- Optimized previews: $(find site/dist/generated/previews -name '*.webp' | wc -l)"
+            echo "- Site size: $(du -sh site/dist | cut -f1)"
+            echo "- Packages: $(find site/dist/downloads -name '*.zip' | wc -l)"
+            echo "- Package size: $(du -sh site/dist/downloads | cut -f1)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Checkout deployment verifier
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.19.0"
+
+      - name: Verify live deployment
+        working-directory: site
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
+        run: npm run deployment:verify

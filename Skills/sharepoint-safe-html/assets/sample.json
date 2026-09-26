@@ -6,11 +6,12 @@
     "shortDescription": "Creates HTML artifacts that render reliably in SharePoint, OneDrive, Teams, File Viewer, and embedded iframe preview surfaces.",
     "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/sharepoint-safe-html",
     "longDescription": [
-      "Creates a SharePoint-safe HTML file for SharePoint and OneDrive preview surfaces. The skill enforces inline CSS, semantic accessible markup, responsive iframe-friendly layouts, and privacy-safe escaping of untrusted content.",
-      "Use it for HTML reports, dashboards, decks, one-pagers, and visual artifacts that must run without external CSS, JavaScript, images, fonts, APIs, CDNs, local file paths, secrets, or runtime network calls. When the user needs auto-updating data, the skill allows the supported SharePoint/OneDrive exception of up to 10 live-linked CSV or XLSX files in the same folder as the HTML artifact, with defensive schema validation and empty/error states so changed data files do not crash the render. Live-linked reports must be live-only: no embedded backup rows, fallback datasets, cached snapshots, sample rows, or stale hardcoded business data. The skill also requires a deterministic render pipeline, explicit empty/error states, and source checks for unresolved placeholders or leaked JavaScript values."
+      "Creates a SharePoint-safe HTML file for SharePoint and OneDrive preview surfaces. The skill enforces inline CSS, semantic HTML targeting WCAG 2.2 AA, responsive iframe-friendly layouts, and privacy-safe escaping of untrusted content.",
+      "Use it for HTML reports, dashboards, decks, one-pagers, and visual artifacts that must run without external CSS, JavaScript, images, fonts, APIs, CDNs, local file paths, secrets, or runtime network calls. When the user needs auto-updating data, the skill allows the supported SharePoint/OneDrive exception of up to 10 live-linked CSV or XLSX files in the same folder as the HTML artifact, with defensive schema validation and empty/error states so changed data files do not crash the render. Live-linked reports must be live-only: no embedded backup rows, fallback datasets, cached snapshots, sample rows, or stale hardcoded business data. The skill also requires a deterministic render pipeline, explicit empty/error states, and source checks for unresolved placeholders or leaked JavaScript values.",
+      "An accessibility implementation contract covers live-region announcements for dynamic content, accessible KPI cards and data tables, chart-to-text/table equivalents, color/contrast, keyboard/focus, reduced motion, and responsive/zoom behavior, each backed by a matching validation checklist."
     ],
     "creationDateTime": "2026-06-28",
-    "updateDateTime": "2026-06-28",
+    "updateDateTime": "2026-08-08",
     "products": [
       "SharePoint",
       "Microsoft 365 Copilot"

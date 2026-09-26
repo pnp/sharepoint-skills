@@ -30,9 +30,9 @@ Best when you need a fast, defensible access snapshot for audit, handover, or go
 
 ## Version history
 
-| Version | Date     | Comments        |
-| ------- | -------- | --------------- |
-| 1.0     | Jun 2026 | Initial Release |
+| Version | Date      | Comments        |
+| ------- | --------- | --------------- |
+| 1.0     | June 2026 | Initial Release |
 
 ## Disclaimer
 

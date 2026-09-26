@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-project-intelligence-root-cause-analysis",
+    "source": "pnp",
+    "title": "Project Intelligence - Root Cause Analysis",
+    "shortDescription": "Turns the Change Events list into a full causal analysis — root cause, causal chain, intervention windows, and early-warning signals — with one actionable recommendation.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/project-intelligence-root-cause-analysis",
+    "longDescription": [
+      "Root Cause Analysis is the second stage of the Project Intelligence Engine. It reads the Change Events list produced by Change Event Extraction and applies a counterfactual root-cause test to identify the single event that most determined the outcome, then traces the causal chain forward to the impact event.",
+      "It maps every intervention window that was open, analyzes early-warning signals by detectability, classifies the failure type, and produces one structured, specific recommendation. Every finding is traceable to an event number, and results are persisted back to the Change Events list, a dated analysis document, and the site context file."
+    ],
+    "creationDateTime": "2026-07-06",
+    "updateDateTime": "2026-07-06",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Project Intelligence"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-intelligence-root-cause-analysis/assets/preview.png",
+        "alt": "Project Intelligence - Root Cause Analysis skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "mattwolodarsky-droid",
+        "pictureUrl": "https://github.com/mattwolodarsky-droid.png",
+        "name": "Matt Wolodarsky"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

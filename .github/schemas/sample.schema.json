@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pnp.github.io/sharepoint-skills/schemas/sample.schema.json",
+  "title": "SharePoint Skill sample metadata",
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name",
+      "source",
+      "title",
+      "shortDescription",
+      "url",
+      "longDescription",
+      "creationDateTime",
+      "updateDateTime",
+      "products",
+      "metadata",
+      "thumbnails",
+      "authors",
+      "references"
+    ],
+    "properties": {
+      "name": { "type": "string", "pattern": "^pnp-sharepoint-skills-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "source": { "const": "pnp" },
+      "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "shortDescription": { "type": "string", "minLength": 1, "maxLength": 500 },
+      "url": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/pnp/sharepoint-skills/" },
+      "longDescription": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "creationDateTime": { "type": "string", "format": "date" },
+      "updateDateTime": { "type": "string", "format": "date" },
+      "products": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "metadata": {
+        "type": "array",
+        "minItems": 2,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["key", "value"],
+          "properties": {
+            "key": { "type": "string", "minLength": 1 },
+            "value": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "thumbnails": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "order", "url", "alt"],
+          "properties": {
+            "type": { "enum": ["image", "video"] },
+            "order": { "type": "integer", "minimum": 0 },
+            "url": { "type": "string", "format": "uri" },
+            "alt": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "authors": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/author" }
+      },
+      "references": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/reference" }
+      }
+    }
+  },
+  "$defs": {
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gitHubAccount", "pictureUrl", "name"],
+      "properties": {
+        "gitHubAccount": { "type": "string", "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$" },
+        "pictureUrl": { "type": "string", "format": "uri" },
+        "name": { "type": "string", "minLength": 1 },
+        "company": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "url"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

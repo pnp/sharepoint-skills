@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pnp.github.io/sharepoint-skills/schemas/catalog.schema.json",
+  "title": "SharePoint Skills public catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "generatedAt", "skills", "categories", "products"],
+  "properties": {
+    "version": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/skill" }
+    },
+    "categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "products": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gitHubAccount", "pictureUrl", "name"],
+      "properties": {
+        "gitHubAccount": { "type": "string" },
+        "pictureUrl": { "type": "string", "format": "uri" },
+        "name": { "type": "string" },
+        "company": { "type": "string" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "url"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name",
+        "title",
+        "shortDescription",
+        "longDescription",
+        "createdAt",
+        "updatedAt",
+        "category",
+        "status",
+        "products",
+        "authors",
+        "references",
+        "sourceUrl",
+        "preview",
+        "package"
+      ],
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "longDescription": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date" },
+        "updatedAt": { "type": "string", "format": "date" },
+        "category": { "type": "string" },
+        "status": { "enum": ["stable", "preview", "deprecated", "archived"] },
+        "products": { "type": "array", "items": { "type": "string" } },
+        "authors": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/author" } },
+        "references": { "type": "array", "items": { "$ref": "#/$defs/reference" } },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "preview": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["alt", "width", "height", "src640", "src960"],
+          "properties": {
+            "alt": { "type": "string" },
+            "width": { "const": 1280 },
+            "height": { "const": 720 },
+            "src640": { "type": "string", "pattern": "^/generated/previews/" },
+            "src960": { "type": "string", "pattern": "^/generated/previews/" }
+          }
+        },
+        "package": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "bytes", "sha256"],
+          "properties": {
+            "url": { "type": "string", "pattern": "^/downloads/.+\\.zip$" },
+            "bytes": { "type": "integer", "minimum": 1 },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        }
+      }
+    }
+  }
+}

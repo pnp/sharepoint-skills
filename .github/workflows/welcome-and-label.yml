@@ -1,0 +1,142 @@
+name: Welcome and label new contributions
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_run:
+    workflows:
+      - Validate skills
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: Pull request number to check
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    if: github.event_name == 'issues' || github.event.action == 'opened'
+    name: Add welcome message and default label
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Welcome and label contribution
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const isIssue = context.eventName === "issues";
+
+            const issueMessage = [
+              "Thank you for opening this issue.",
+              "",
+              "A maintainer will review the details and update the labels or next steps.",
+              "",
+              "Thank you for contributing to the community."
+            ].join("\n");
+            const pullRequestMessage = [
+              "Thank you for contributing to SharePoint Skills.",
+              "",
+              "The automated skill checks will run shortly. A maintainer will review the results and update the labels or next steps.",
+              "",
+              "Thank you for contributing to the community."
+            ].join("\n");
+
+            const settings = isIssue
+              ? {
+                  label: "Needs: Triage :mag:",
+                  color: "8c51c3",
+                  description: "New issue or pull request awaiting initial review.",
+                  message: issueMessage
+                }
+              : {
+                  label: "Needs: Triage :mag:",
+                  color: "8c51c3",
+                  description: "New issue or pull request awaiting initial review.",
+                  message: pullRequestMessage
+                };
+            const itemNumber = isIssue
+              ? context.payload.issue.number
+              : context.payload.pull_request.number;
+
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: settings.label
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: settings.label,
+                color: settings.color,
+                description: settings.description
+              });
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: itemNumber,
+              labels: [settings.label]
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: itemNumber,
+              body: settings.message
+            });
+
+  skill-structure:
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request')
+    name: Check skill structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout trusted preflight
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: .github/scripts/skill_structure_preflight.cjs
+          sparse-checkout-cone-mode: false
+
+      - name: Check changed skill folders
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const path = require("path");
+            const preflightPath = path.join(
+              process.env.GITHUB_WORKSPACE,
+              ".github",
+              "scripts",
+              "skill_structure_preflight.cjs"
+            );
+            const { runStructurePreflight } = require(preflightPath);
+            const result = await runStructurePreflight({ github, context });
+            if (result.errors.length > 0 && context.eventName === "pull_request_target") {
+              core.setFailed(`Found ${result.errors.length} skill structure issue(s).`);
+            } else if (result.errors.length > 0) {
+              core.notice(`Reported ${result.errors.length} skill structure issue(s) on the pull request.`);
+            } else if (result.skipped) {
+              core.notice("No pull request was associated with this workflow run.");
+            }

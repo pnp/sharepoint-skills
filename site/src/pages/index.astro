@@ -1,0 +1,235 @@
+---
+import { ArrowRight, CalendarDays, Search, SlidersHorizontal, X } from '@lucide/astro';
+import SkillCard from '../components/SkillCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { catalog, sitePath } from '../lib/catalog';
+
+const contributors = [...new Map(
+	catalog.skills.flatMap((skill) => skill.authors).map((author) => [author.gitHubAccount.toLowerCase(), author]),
+).values()].sort((left, right) => left.name.localeCompare(right.name));
+const newestSkills = [...catalog.skills].sort((left, right) =>
+	right.updatedAt.localeCompare(left.updatedAt) || left.title.localeCompare(right.title),
+);
+---
+
+<BaseLayout>
+	<section class="catalog-intro container">
+		<div class="catalog-intro__identity">
+			<img src={sitePath('/images/SharePoint_512.png')} alt="" width="112" height="112" />
+			<div>
+				<p class="eyebrow">Microsoft 365 & Power Platform Community</p>
+				<h1>SharePoint Skills</h1>
+				<p class="catalog-intro__copy">
+					Community-built skills that give Copilot in SharePoint focused, reusable capabilities.
+				</p>
+			</div>
+		</div>
+		<div class="catalog-stat" aria-label={`${catalog.skills.length} community skills`}>
+			<strong>{catalog.skills.length}</strong>
+			<span>community skills</span>
+		</div>
+	</section>
+
+	<section class="copilot-story" aria-labelledby="copilot-story-heading">
+		<div class="copilot-story__inner container">
+			<img class="copilot-story__mark" src={sitePath('/images/copilot.png')} alt="" width="136" height="136" />
+			<div class="copilot-story__copy">
+				<p class="eyebrow">Copilot in SharePoint</p>
+				<h2 id="copilot-story-heading">Turn shared expertise into repeatable help</h2>
+				<p>
+					SharePoint Skills give Copilot in SharePoint focused instructions for everyday work.
+					Install a skill once, then invoke that capability in the flow of work.
+				</p>
+				<div class="action-row">
+					<a class="button button--light" href={sitePath('/getting-started/')}>
+						Get started <ArrowRight size={17} aria-hidden="true" />
+					</a>
+					<a class="copilot-story__link" href="https://aka.ms/CopilotinSP">Copilot adoption guidance</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<aside class="community-ribbon" aria-label="Community calls">
+		<div class="community-ribbon__inner container">
+				<CalendarDays size={25} aria-hidden="true" />
+				<p>
+					<strong>Sharing is caring.</strong>{' '}
+					<span class="community-ribbon__full">Join the weekly community calls to learn what is new and meet the people building it.</span>
+					<span class="community-ribbon__short">Join weekly community calls and stay up to date.</span>
+				</p>
+				<a href="https://aka.ms/community/home">Visit Community Home</a>
+		</div>
+	</aside>
+
+	<section class="catalog-shell container" aria-labelledby="catalog-heading">
+		<h2 id="catalog-heading" class="sr-only">Browse skills</h2>
+		<details class="filters" open>
+			<summary><SlidersHorizontal size={18} aria-hidden="true" /> Filters</summary>
+			<form class="filters__body" id="catalog-filters">
+				<label for="skill-search">Search</label>
+				<div class="search-control">
+					<Search size={18} aria-hidden="true" />
+					<input id="skill-search" name="q" type="search" placeholder="Search skills" autocomplete="off" />
+					<button id="clear-search" type="button" title="Clear search" aria-label="Clear search" hidden>
+						<X size={17} aria-hidden="true" />
+					</button>
+				</div>
+
+				<label for="category-filter">Category</label>
+				<select id="category-filter" name="category">
+					<option value="">All categories</option>
+					{catalog.categories.map((category) => <option value={category}>{category}</option>)}
+				</select>
+
+				<label for="product-filter">Product</label>
+				<select id="product-filter" name="product">
+					<option value="">All products</option>
+					{catalog.products.map((product) => <option value={product}>{product}</option>)}
+				</select>
+
+				<label for="author-filter">Contributor</label>
+				<select id="author-filter" name="author">
+					<option value="">All contributors</option>
+					{contributors.map((author) => <option value={author.gitHubAccount}>{author.name}</option>)}
+				</select>
+
+				<button class="button button--quiet filters__clear" id="clear-filters" type="button">
+					<X size={17} aria-hidden="true" /> Clear all
+				</button>
+			</form>
+		</details>
+
+		<div class="catalog-results">
+			<div class="catalog-toolbar">
+				<p id="result-count" aria-live="polite">Showing {Math.min(18, catalog.skills.length)} of {catalog.skills.length} skills</p>
+				<label for="sort-skills">Sort</label>
+				<select id="sort-skills" name="sort">
+					<option value="updated">Recently updated</option>
+					<option value="newest">Newest</option>
+					<option value="name">Name</option>
+				</select>
+			</div>
+			<div class="skill-grid" id="skill-grid">
+				{newestSkills.map((skill, index) => <SkillCard skill={skill} index={index} interactive />)}
+			</div>
+			<div class="empty-state" id="empty-state" hidden>
+				<Search size={28} aria-hidden="true" />
+				<h3>No skills found</h3>
+				<p>Try a broader search or clear a filter.</p>
+				<button class="button button--quiet" id="empty-clear" type="button">Clear filters</button>
+			</div>
+			<button class="button button--secondary load-more" id="load-more" type="button">Show more</button>
+		</div>
+	</section>
+</BaseLayout>
+
+<script>
+	const PAGE_SIZE = 18;
+	const form = document.querySelector<HTMLFormElement>('#catalog-filters');
+	const grid = document.querySelector<HTMLElement>('#skill-grid');
+	const search = document.querySelector<HTMLInputElement>('#skill-search');
+	const category = document.querySelector<HTMLSelectElement>('#category-filter');
+	const product = document.querySelector<HTMLSelectElement>('#product-filter');
+	const author = document.querySelector<HTMLSelectElement>('#author-filter');
+	const sort = document.querySelector<HTMLSelectElement>('#sort-skills');
+	const count = document.querySelector<HTMLElement>('#result-count');
+	const empty = document.querySelector<HTMLElement>('#empty-state');
+	const loadMore = document.querySelector<HTMLButtonElement>('#load-more');
+	const clearSearch = document.querySelector<HTMLButtonElement>('#clear-search');
+	const filterPanel = document.querySelector<HTMLDetailsElement>('.filters');
+	const cards = [...document.querySelectorAll<HTMLElement>('[data-skill-card]')];
+	let visibleLimit = PAGE_SIZE;
+
+	if (!form || !grid || !search || !category || !product || !author || !sort || !count || !empty || !loadMore || !clearSearch) {
+		throw new Error('Catalog controls could not be initialized.');
+	}
+
+	const setSelectValue = (select: HTMLSelectElement, value: string | null) => {
+		if (value && [...select.options].some((option) => option.value === value)) select.value = value;
+	};
+
+	const query = new URLSearchParams(window.location.search);
+	search.value = query.get('q') ?? '';
+	setSelectValue(category, query.get('category'));
+	setSelectValue(product, query.get('product'));
+	setSelectValue(author, query.get('author'));
+	setSelectValue(sort, query.get('sort'));
+	if (filterPanel && window.matchMedia('(max-width: 880px)').matches) filterPanel.open = false;
+
+	function clearFilters() {
+		form?.reset();
+		if (sort) sort.value = 'updated';
+		visibleLimit = PAGE_SIZE;
+		applyFilters();
+	}
+
+	function applyFilters() {
+		const searchValue = search?.value.trim().toLocaleLowerCase('en-US') ?? '';
+		const categoryValue = category?.value ?? '';
+		const productValue = product?.value ?? '';
+		const authorValue = author?.value.toLocaleLowerCase('en-US') ?? '';
+		const sortValue = sort?.value ?? 'updated';
+		const matches = cards.filter((card) => {
+			const products = card.dataset.products?.split('|') ?? [];
+			const authors = card.dataset.authors?.toLocaleLowerCase('en-US').split('|') ?? [];
+			return (
+				(!searchValue || card.dataset.search?.includes(searchValue)) &&
+				(!categoryValue || card.dataset.category === categoryValue) &&
+				(!productValue || products.includes(productValue)) &&
+				(!authorValue || authors.includes(authorValue))
+			);
+		});
+
+		matches.sort((left, right) => {
+			if (sortValue === 'name') return (left.dataset.title ?? '').localeCompare(right.dataset.title ?? '');
+			const field = sortValue === 'newest' ? 'created' : 'updated';
+			return (right.dataset[field] ?? '').localeCompare(left.dataset[field] ?? '') ||
+				(left.dataset.title ?? '').localeCompare(right.dataset.title ?? '');
+		});
+		for (const card of cards) card.hidden = true;
+		for (const [index, card] of matches.entries()) {
+			grid?.append(card);
+			card.hidden = index >= visibleLimit;
+		}
+
+		const shown = Math.min(visibleLimit, matches.length);
+		count!.textContent = matches.length === cards.length
+			? `Showing ${shown} of ${matches.length} skills`
+			: `Showing ${shown} of ${matches.length} matching skills`;
+		empty!.hidden = matches.length > 0;
+		loadMore!.hidden = shown >= matches.length;
+		clearSearch!.hidden = !searchValue;
+
+		const nextQuery = new URLSearchParams();
+		if (searchValue) nextQuery.set('q', search?.value.trim() ?? '');
+		if (categoryValue) nextQuery.set('category', categoryValue);
+		if (productValue) nextQuery.set('product', productValue);
+		if (authorValue) nextQuery.set('author', author?.value ?? '');
+		if (sortValue !== 'updated') nextQuery.set('sort', sortValue);
+		const nextUrl = `${window.location.pathname}${nextQuery.size ? `?${nextQuery}` : ''}`;
+		window.history.replaceState({}, '', nextUrl);
+	}
+
+	form.addEventListener('input', () => {
+		visibleLimit = PAGE_SIZE;
+		applyFilters();
+	});
+	sort.addEventListener('change', () => {
+		visibleLimit = PAGE_SIZE;
+		applyFilters();
+	});
+	loadMore.addEventListener('click', () => {
+		visibleLimit += PAGE_SIZE;
+		applyFilters();
+	});
+	document.querySelector('#clear-filters')?.addEventListener('click', clearFilters);
+	document.querySelector('#empty-clear')?.addEventListener('click', clearFilters);
+	clearSearch.addEventListener('click', () => {
+		search.value = '';
+		search.focus();
+		visibleLimit = PAGE_SIZE;
+		applyFilters();
+	});
+	applyFilters();
+</script>

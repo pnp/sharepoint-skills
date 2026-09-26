@@ -1,0 +1,59 @@
+name: Report a problem
+description: Report a reproducible problem with a skill, sample, or repository workflow.
+title: "[Problem]: "
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve SharePoint Skills. Please share only the details needed to understand and reproduce the problem.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Briefly describe the problem and its impact.
+      placeholder: Tell us what went wrong.
+    validations:
+      required: true
+
+  - type: input
+    id: affected-skills
+    attributes:
+      label: Affected skill folder(s)
+      description: Enter folder names, or use "Repository-wide" when the issue is not skill-specific.
+      placeholder: Skills/example-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can we reproduce it?
+      description: Provide the shortest reliable sequence of steps, including relevant prompts or files.
+      placeholder: |
+        1. Install or open...
+        2. Ask the agent to...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: Describe the expected result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or supporting details
+      description: Optional. Drag in screenshots or add logs and links. Remove tenant, customer, and personal data first.
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I searched existing issues and removed sensitive information from this report.
+          required: true

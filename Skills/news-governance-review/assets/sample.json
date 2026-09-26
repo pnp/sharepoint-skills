@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-news-governance-review",
+    "source": "pnp",
+    "title": "News Governance Review",
+    "shortDescription": "Reviews SharePoint intranet news posts and flags obsolete, draft-like, mistargeted, or ownerless content with recommended outcomes and reasons in a self-contained HTML dashboard. Works with the default Site Pages schema. Strictly advisory and read-only.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/news-governance-review",
+    "longDescription": [
+      "Intranet news flows fill up over time with posts that are outdated, half-finished, mistargeted, or ownerless, and important news gets pushed down and missed. This skill gives site owners, editors, and communications teams a structured governance review of the news on a site. It pages through every news post and evaluates each one against freshness, publication-quality, governance, findability, relevance, and link-quality rules, using only the default Site Pages fields, so it works on any modern SharePoint site without custom columns or setup.",
+      "Every post receives a recommended outcome: Keep, Update, Archive, Delete, or Needs owner review, with evidence-based reasons and a High/Medium/Low severity, so the output works directly as a prioritized cleanup backlog. Unverifiable links are marked 'Link should be manually verified'. Results are saved as a color-coded, self-contained HTML dashboard in a News Review Reports folder. The skill is strictly advisory and read-only: it never deletes, unpublishes, archives, or edits any page; content owners decide what happens. Trigger phrases include 'review news', 'news governance', 'audit news posts', 'find outdated news', and 'news cleanup backlog'."
+    ],
+    "creationDateTime": "2026-07-23",
+    "updateDateTime": "2026-07-23",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Content Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/news-governance-review/assets/preview.png",
+        "alt": "News Governance Review skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "saurabh7019",
+        "pictureUrl": "https://github.com/saurabh7019.png",
+        "name": "Saurabh Tripathi"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
