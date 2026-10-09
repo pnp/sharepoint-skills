@@ -23,7 +23,7 @@ Example:
 
 > Review the Project Aurora content and build/update the Decision Register. Use 15 September 2026 as the reporting date. Create the final standalone HTML report.
 
-See [`demo/DEMO-SETUP.md`](./demo/DEMO-SETUP.md) for the complete setup, list schemas, seed data, prompts, expected results, verification steps, second test, and troubleshooting.
+See [demo/README.md](demo/README.md) for the complete setup, list schemas, seed data, prompts, expected results, verification steps, second test, and troubleshooting.
 
 ## SharePoint Skill
 

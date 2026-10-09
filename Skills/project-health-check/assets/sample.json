@@ -29,15 +29,15 @@
       {
         "type": "image",
         "order": 100,
-        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/copilot-chat.png",
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/preview.png",
         "alt": "Project Health Check skill showing executing against demo project Project Aurora"
       },
       {
         "type": "image",
-        "order": 100,
-        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/html-report.png",
-        "alt": "Project Health Check skill generated html report."
-      }      
+        "order": 200,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-health-check/assets/copilot-chat.png",
+        "alt": "Project Health Check skill in Copilot chat."
+      }
     ],
     "authors": [
       {
