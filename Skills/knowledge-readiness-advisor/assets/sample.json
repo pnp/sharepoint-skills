@@ -1,0 +1,54 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-knowledge-readiness-advisor",
+    "source": "pnp",
+    "title": "Knowledge Readiness Advisor",
+    "shortDescription": "Assess SharePoint business knowledge for governance, quality, and Copilot readiness using an evidence-based six-dimension framework.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/knowledge-readiness-advisor",
+    "longDescription": [
+      "Knowledge Readiness Advisor helps Modern Workplace consultants evaluate whether SharePoint business content is sufficiently governed, current, consistent, and reliable to support trustworthy AI and Copilot experiences.",
+      "The skill performs an executive assessment across six dimensions: Currency, Clarity, Consistency, Findability, Ownership, and AI Suitability.",
+      "It identifies conflicting guidance, outdated content, missing ownership, governance gaps, and AI readiness risks, then produces evidence-based recommendations and client workshop questions.",
+      "The assessment is designed for Knowledge Management and Copilot Readiness activities and does not provide formal certification or compliance approval."
+    ],
+    "creationDateTime": "2026-10-01",
+    "updateDateTime": "2026-10-01",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Knowledge Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/knowledge-readiness-advisor/assets/preview.png",
+        "alt": "Knowledge Readiness Advisor executive assessment"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "mnbatista",
+        "pictureUrl": "https://github.com/mnbatista.png",
+        "name": "Maycon de Novaes Batista",
+        "company": "Avanade"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
