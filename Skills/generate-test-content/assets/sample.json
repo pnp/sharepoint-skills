@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-generate-test-content",
+    "source": "pnp",
+    "title": "Generate Test Content",
+    "shortDescription": "Generates realistic test content for SharePoint lists and document libraries: inspects the current structure, previews five proposed items, and creates the requested number after approval.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/generate-test-content",
+    "longDescription": [
+      "Generates realistic dummy, sample, or test content for the current SharePoint list or document library. Inspects the real column schema for lists, or asks for the required document type(s) for libraries, so the generated content matches the actual structure and purpose.",
+      "Prepares exactly five representative proposed items as a preview and asks for approval before creating anything. After approval, creates the requested number of items (default: 10) and verifies the create operation, reporting back a concise inventory of what was created."
+    ],
+    "creationDateTime": "2026-10-03",
+    "updateDateTime": "2026-10-03",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/generate-test-content/assets/preview.png",
+        "alt": "Generate Test Content skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "swaminawale",
+        "pictureUrl": "https://github.com/swaminawale.png",
+        "name": "Swami Nawale"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
