@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-generate-site-onboarding-guide",
+    "source": "pnp",
+    "title": "Generate Site Onboarding Guide",
+    "shortDescription": "Creates a read-only onboarding guide for any SharePoint site.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/generate-site-onboarding-guide",
+    "longDescription": [
+      "Generate a concise onboarding guide that helps new team members understand the purpose and organization of a SharePoint site.",
+      "The skill analyzes pages, document libraries, lists, navigation, and key resources using read-only inspection and produces an evidence-based Markdown guide."
+    ],
+    "creationDateTime": "2026-10-16",
+    "updateDateTime": "2026-10-16",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Knowledge Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/generate-site-onboarding-guide/assets/preview.png",
+        "alt": "Generate Site Onboarding Guide"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "a-villarruel",
+        "pictureUrl": "https://github.com/a-villarruel.png",
+        "name": "Antonio Villarruel"
+      }
+    ],
+    "references": [
+      {
+        "name": "Agent Skills Specification",
+        "description": "Specification followed by SharePoint AI Skills.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
