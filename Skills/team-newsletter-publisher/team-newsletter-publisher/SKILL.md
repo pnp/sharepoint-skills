@@ -1,6 +1,6 @@
 ---
 name: team-newsletter-publisher
-description: Converts a Word newsletter generated from the Team Newsletter Word template (Team_Newsletter_Demo_Template) into a designed newsletter as a PDF and/or a single self-contained HTML page, using the fixed Team Newsletter layout. Use when the user asks to "turn this newsletter Word file into a PDF", "publish the team newsletter", "make the newsletter HTML", "convert the newsletter doc", or selects a .docx created from the newsletter form. Do not use for writing newsletter content from scratch or for other document types.
+description: Converts a Word newsletter generated from the Team Newsletter Word template (Team-Newsletter-Template.docx) into a designed newsletter as a PDF and/or a single self-contained HTML page, using the fixed Team Newsletter layout. Use when the user asks to "turn this newsletter Word file into a PDF", "publish the team newsletter", "make the newsletter HTML", "convert the newsletter doc", or selects a .docx created from the newsletter form. Do not use for writing newsletter content from scratch or for other document types.
 ---
 
 # Team Newsletter Publisher
@@ -11,8 +11,10 @@ Turn one filled Team Newsletter Word file into a finished newsletter that looks 
 - `newsletter-template.html` — the exact layout and CSS with `{{Field}}` placeholders. Treat it as the design master: keep its structure, class names and styles; only replace placeholders and remove hidden blocks.
 - `field-mapping.md` — where each Word field goes, its styling, length guidance, the empty-field rules, the hero-image rules, colours, type scale and a checklist.
 
+The Word template users fill in, `Team-Newsletter-Template.docx`, is not part of this skill package. It is a download in the sample README (next to the README, outside this folder) and defines the `{{Field}}` names this skill reads. If a user needs a starting file, point them to that sample README.
+
 ## Inputs
-- One Word file (.docx) created from the Team Newsletter form/template. If the user has not selected one, ask which file to use (it normally sits in the same library as the template, e.g. "DUG Newsletter Demo").
+- One Word file (.docx) created from the Team Newsletter form/template (`Team-Newsletter-Template.docx`, downloadable from the sample README). If the user has not selected one, ask which file to use (it normally sits in the same library as the template, e.g. "DUG Newsletter Demo").
 - Output format: PDF, HTML or both. If not stated, create both.
 
 ## Instructions
@@ -27,7 +29,11 @@ Turn one filled Team Newsletter Word file into a finished newsletter that looks 
    - "4 · Team spotlight" → "Name — Role", then the story.
    - "5 · Quick tips" → title + body, twice.
    - "6 · Have something for the next issue?" → ContributeNote, then "Deadline for next issue:" + NextDeadline.
-   Ignore instruction text that is not content: "Hero image (map this field as Image)" and "Three short updates. Leave a slot empty if you have fewer stories."
+   Ignore instruction text that is not content, and never copy it into the newsletter:
+   - "Hero image (map this field as Image)" (caption in older copies of the template).
+   - The whole bracketed guidance note under {{FeaturedImage}} that starts "(Image from Word to HTML has shown mixed results" and ends "…uses that image from the library in the HTML.)".
+   - The sentence after that note: "Update the Skill if you choose the Library route for the image."
+   - "Three short updates. Leave a slot empty if you have fewer stories."
 2. **Treat a field as empty** when it is blank or still shows its placeholder (for example `{{News3_Title}}`).
 3. **Copy text exactly.** Do not rewrite, summarise, shorten, translate or add content. Never invent a value for an empty field. Keep paragraph breaks in FeaturedBody.
 4. **Hero image.** Use the picture embedded in the Featured story box of the Word file. Embed it (HTML: `data:` URI in `<img data-field="FeaturedImage">`; PDF: embedded image), full column width, 16:9 cropped to fill (object-fit: cover), max height 70 mm in print, alt text = FeaturedTitle. If there is no picture, remove the whole `<figure>` — never show the placeholder text, an empty box or a broken image.

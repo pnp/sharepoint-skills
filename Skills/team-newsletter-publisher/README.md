@@ -22,6 +22,8 @@ Ask Copilot:
 - *"make the newsletter HTML"*
 - *"convert the newsletter doc"*
 
+[Download the Word template](./Team-Newsletter-Template.docx) (`Team-Newsletter-Template.docx`) to create your newsletter files.
+
 Select a .docx created from the Team Newsletter template first. The skill is not meant for writing newsletter content from scratch or for other document types.
 
 ## Package contents
@@ -31,6 +33,8 @@ The upload-ready package is `team-newsletter-publisher/`:
 - `SKILL.md` — instructions
 - `field-mapping.md` — field-to-layout mapping, styling, length guidance, empty-field rules and checklist
 - `newsletter-template.html` — the design master with `{{Field}}` placeholders
+
+The Word template, `Team-Newsletter-Template.docx`, sits next to this README and is not part of the package. Do not upload it with the skill; its `{{Field}}` names match `field-mapping.md`.
 
 ## Demo content
 
@@ -47,6 +51,7 @@ An example output with fictional content is in [`demo/sample-files/`](./demo/sam
 | Version | Date | Comments |
 | --- | --- | --- |
 | 1.0 | October 2026 | Initial Release |
+| 1.1 | October 2026 | Added the Team Newsletter Word template |
 
 ## Disclaimer
 

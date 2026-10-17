@@ -2,6 +2,8 @@
 
 Every content element in the newsletter comes from one field in the Word file. Decorative elements (masthead band, accent rule, contents strip, rules, footer) never take field content.
 
+The field names below are the `{{Field}}` placeholders in the Word template `Team-Newsletter-Template.docx`, which is downloadable from the sample README (it is not part of the skill package).
+
 ## Field mapping
 
 
@@ -67,8 +69,9 @@ Every content element in the newsletter comes from one field in the Word file. D
 
 ## Hero image rules
 
-- **Where it is:** The Word template holds no picture: {{FeaturedImage}} is a text token under the caption “Hero image (map this field as Image)”. When the form maps it as an Image field, the generated Word file contains an embedded picture (a drawing) in that spot, inside the Featured story block. In the .docx package the file is stored in word/media/.
-- **Which picture:** Use the first picture in the Featured story block. Ignore the caption line “Hero image (map this field as Image)” — it is an instruction, never content.
+- **Where it is:** The Word template holds no picture: {{FeaturedImage}} is a text token in the Featured story block, followed by a bracketed instruction note (older copies use the caption “Hero image (map this field as Image)”). When the form maps it as an Image field, the generated Word file contains an embedded picture (a drawing) in that spot, inside the Featured story block. In the .docx package the file is stored in word/media/.
+- **Which picture:** Use the first picture in the Featured story block. Ignore the bracketed note under {{FeaturedImage}} (“(Image from Word to HTML has shown mixed results …)”), the sentence after it (“Update the Skill if you choose the Library route for the image.”) and the caption “Hero image (map this field as Image)” — they are instructions, never content.
+- **Library alternative:** The template's note mentions taking the hero image from the document library by file name instead of embedding it in Word. This skill does not do that — it uses the embedded picture. If you choose the library route, update this skill (SKILL.md step 4 and these rules) first.
 - **Embed it:** HTML: place it in <figure><img data-field="FeaturedImage"> as a data: URI so the file stays self-contained. PDF: embed the image itself; never link to an external file.
 - **Size and crop:** Full column width (184 mm on A4). Frame ratio 16:9, cropped to fill and centred (object-fit: cover), max height 70 mm in print. Never stretch, add a border, text overlay or caption.
 - **Alt text:** alt = FeaturedTitle. If the title is empty the whole Featured story section is hidden anyway.
