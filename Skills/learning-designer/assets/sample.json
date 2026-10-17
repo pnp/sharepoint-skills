@@ -1,0 +1,45 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-learning-designer",
+    "source": "pnp",
+    "title": "Learning Designer",
+    "shortDescription": "Turns a Learning Request Brief from a SharePoint Structured Document Generation form into a self-contained HTML learning dashboard with up to 3 stages, flashcards, practice and checks.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/learning-designer",
+    "longDescription": [
+      "Reads a Learning Request Brief .docx generated from a Structured Document Generation form and maps every field — topic, audience, goals, up to three stages, flashcard concepts, practice exercise, success criteria, knowledge checks and next steps — into a guided learning dashboard.",
+      "The output is one self-contained HTML file that follows the bundled reference dashboard: a staged learning path, Why / When / How / Check blocks, CSS flip cards and an optional embedded overview visual. Content is grounded in the brief's authoritative source, and unverified details are flagged with a visible warning."
+    ],
+    "creationDateTime": "2026-10-17",
+    "updateDateTime": "2026-10-17",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Learning & Training" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/learning-designer/assets/preview.png",
+        "alt": "Learning Designer skill output showing the Custom Skills in PowerPoint learning dashboard with its tabs, hero and three-stage path"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Ragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
