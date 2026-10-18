@@ -15,6 +15,7 @@ Modern SharePoint pages do not load the legacy JSOM chain by default, which caus
 - Lightweight milestone logging suitable for browser console execution
 - Delete confirmation guidance for destructive operations
 - End-user run instructions and a safety warning footer
+- A footer note telling users to check for HTML encoding and request a clean resend if needed
 
 ## Supported scenarios
 - Classic SharePoint pages

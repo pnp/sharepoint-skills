@@ -325,5 +325,9 @@ To run this code:
 
 ## Mandatory footer
 Always end with this warning outside the code block and prefix it with a small warning icon.
+Always add a short follow-up note telling the user to review the rendered code for any HTML encoding before running it.
 
 ⚠️ Custom Code Execution Notice: This is custom JSOM code generated for your SharePoint site. Please review and run it responsibly. JSOM operations can permanently create, update, or delete data, list items, taxonomy terms, and user profile properties depending on the logic you execute. Test in a non-production site first and ensure you have proper backups and permissions. You are responsible for the changes this code makes. Compatible with both classic and modern SharePoint pages when using the provided loader.
+
+Review the rendered code before running it. If you see any HTML encoding such as `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, or `=&gt;`, send this follow-up prompt:
+`Send code without any HTML encoding and make sure its rendered in response without encoding`

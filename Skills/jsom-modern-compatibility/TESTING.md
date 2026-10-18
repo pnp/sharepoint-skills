@@ -27,4 +27,5 @@
 - If batching is used, it should align with official SharePoint guidance; if batching is unclear, the script should fall back to normal JSOM patterns
 - Classic pages, including SharePoint 2013 classic pages, remain supported
 - The response includes short run instructions and the safety footer with a warning icon
+- The footer also tells the user to inspect the rendered code for HTML encoding and gives a follow-up prompt to request a clean resend if needed
 - For delete scenarios, a confirmation dialog is included
