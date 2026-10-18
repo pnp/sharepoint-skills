@@ -17,7 +17,9 @@
 - The full runnable script is returned in a single JavaScript code block for one-click copy
 - Generated code uses actual JavaScript characters and is not HTML-encoded
 - Encoded forms such as `&amp;&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, and `=&gt;` do not appear unless they came from the user's own content or instructions
-- The final returned code block appears only after a quality check for encoding, syntax, and site-relative dependency URLs
+- Rendered operators and syntax appear exactly as JavaScript syntax; for example, `&` never renders as `&amp;` in runnable code
+- If a clean code block cannot be rendered without encoding, the response may fall back to plain text code rather than returning an encoded runnable block
+- The final returned code block appears only after a quality check for encoding, syntax, site-relative dependency URLs, and renderer-safe output
 - Supporting libraries for search, taxonomy, and user profiles are ensured before business logic runs
 - SharePoint JavaScript files load from the current site URL, not the tenant root site
 - Logging is concise and limited to startup, dependency loading, execution start, success summary, and errors

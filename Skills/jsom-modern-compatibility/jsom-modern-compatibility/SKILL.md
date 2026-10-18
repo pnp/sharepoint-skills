@@ -1,7 +1,7 @@
 ---
 name: jsom-modern-compatibility
 description: |-
-  Generate ready-to-copy JSOM (JavaScript Object Model) code that runs on both classic and modern SharePoint pages, including SharePoint 2013 classic pages, by ensuring required SharePoint JavaScript dependencies are loaded before business logic runs.
+  Generate ready to copy JSOM (JavaScript Object Model) code that runs on both classic and modern SharePoint pages, including SharePoint 2013 classic pages, by ensuring required SharePoint JavaScript dependencies are loaded before business logic runs.
 
   Use when the user says:
     - "write JSOM code"
@@ -78,6 +78,28 @@ Examples of required raw JavaScript syntax in runnable code:
 
 Before finalizing the answer, perform a self-check on the generated code block and replace any accidental HTML entities with raw JavaScript characters unless those entities came from the user's own content or instructions.
 If any HTML entity appears in the runnable code block, rewrite the code block before sending it to the user.
+
+## Renderer-safe output requirement
+This requirement is very important and mandatory.
+
+The runnable JavaScript code block must remain valid after chat rendering and copy/paste.
+Make sure the rendered code block does not include any HTML encoding.
+Operators and syntax must render exactly as JavaScript operators and syntax, not as HTML entities.
+For example, `&` must never render as `&amp;` in runnable code.
+
+Before sending the response, scan the final code block for encoded entities such as:
+- `&lt;`
+- `&gt;`
+- `&amp;`
+- `&quot;`
+- `&#39;`
+- `=&gt;`
+
+If any of these appear in runnable or rendered code and they did not come from the user's own content or instructions, rewrite the script and reshare it without any encoding in rendering.
+If Copilot still renders the code block with encoding and you cannot produce a clean runnable code block, it is acceptable to return the runnable JavaScript as plain text instead of a fenced code block so the user receives unencoded code.
+When CAML or XML is required and direct markup may render unsafely in chat, prefer safer construction patterns that preserve copy-paste execution.
+Prefer classic JavaScript syntax in the boilerplate and generated script when it improves renderer-safe copy/paste reliability.
+Do not force unnatural JavaScript patterns unless they are needed to keep the final copied script runnable.
 
 ## Dependency-loading rules
 Always ensure the core dependency chain is available before executing business logic:
@@ -163,36 +185,89 @@ console.log('[JSOM] Delete confirmed by user - proceeding');
 Use this pattern in every generated script and adapt it only as needed for the requested task:
 
 ```javascript
-function loadScript(src){
-  return new Promise((resolve, reject) => {
-    if(document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = () => { console.log(`[JSOM Loader] Loaded: ${src}`); resolve(); };
-    s.onerror = () => reject(new Error(`Load failed: ${src}`));
-    document.head.appendChild(s);
+function loadScript(src) {
+  return new Promise(function(resolve, reject) {
+    var selector = 'script[src="' + src + '"]';
+    var existing = document.querySelector(selector);
+    var script;
+
+    if (existing) {
+      resolve();
+      return;
+    }
+
+    script = document.createElement('script');
+    script.src = src;
+    script.onload = function() {
+      console.log('[JSOM Loader] Loaded: ' + src);
+      resolve();
+    };
+    script.onerror = function() {
+      reject(new Error('Load failed: ' + src));
+    };
+    document.head.appendChild(script);
   });
 }
 
-async function ensureJSOMLibraries(extraFiles){
+async function ensureJSOMLibraries(extraFiles) {
   console.log('[JSOM Loader] Checking environment - classic or modern?');
-  const siteBase = window._spPageContextInfo && window._spPageContextInfo.webAbsoluteUrl
-    ? window._spPageContextInfo.webAbsoluteUrl
-    : window.location.origin;
-  const base = siteBase.replace(/\/$/, '') + '/_layouts/15/';
-  const core = ['init.js','MicrosoftAjax.js','SP.Runtime.js','SP.js','SP.Search.js','SP.Taxonomy.js','SP.UserProfiles.js'];
-  const chain = core.concat(extraFiles || []);
-  for(const file of chain){
-    const src = base + file;
-    if(window.SP && window.SP.ClientContext && window.SP.SOD && (file === 'init.js' || file === 'MicrosoftAjax.js' || file === 'SP.Runtime.js' || file === 'SP.js')){
-      continue;
-    }
-    try {
-      await loadScript(src);
-    } catch(error) {
-      console.warn(`[JSOM Loader] ${file}: ${error.message}`);
+
+  var siteBase = window.location.origin;
+  var pageInfo = window._spPageContextInfo;
+  var core = ['init.js', 'MicrosoftAjax.js', 'SP.Runtime.js', 'SP.js', 'SP.Search.js', 'SP.Taxonomy.js', 'SP.UserProfiles.js'];
+  var chain = core.slice(0);
+  var i;
+  var file;
+  var src;
+  var hasClassicJsom = false;
+
+  if (pageInfo) {
+    if (pageInfo.webAbsoluteUrl) {
+      siteBase = pageInfo.webAbsoluteUrl;
     }
   }
+
+  if (siteBase.charAt(siteBase.length - 1) === '/') {
+    siteBase = siteBase.substring(0, siteBase.length - 1);
+  }
+
+  if (extraFiles) {
+    for (i = 0; i < extraFiles.length; i++) {
+      chain.push(extraFiles[i]);
+    }
+  }
+
+  if (window.SP) {
+    if (window.SP.ClientContext) {
+      if (window.SP.SOD) {
+        hasClassicJsom = true;
+      }
+    }
+  }
+
+  if (hasClassicJsom) {
+    console.log('[JSOM Loader] Classic page detected - core JSOM already available');
+  } else {
+    console.log('[JSOM Loader] Modern page detected - loading SharePoint JavaScript dependencies');
+  }
+
+  for (i = 0; i < chain.length; i++) {
+    file = chain[i];
+    src = siteBase + '/_layouts/15/' + file;
+
+    if (hasClassicJsom) {
+      if (file === 'init.js' || file === 'MicrosoftAjax.js' || file === 'SP.Runtime.js' || file === 'SP.js') {
+        continue;
+      }
+    }
+
+    try {
+      await loadScript(src);
+    } catch (error) {
+      console.warn('[JSOM Loader] ' + file + ': ' + error.message);
+    }
+  }
+
   console.log('[JSOM Loader] Dependencies ensured - ready to run JSOM');
 }
 ```
@@ -227,6 +302,7 @@ Non-technical users must not need to decode entities, repair operators, or fix s
 Before returning the code block to the user, inspect the full generated script and confirm all of the following:
 - no HTML entities appear in runnable JavaScript unless they came from the user's own content or instructions;
 - no encoded operators, encoded quotes, encoded comparison symbols, or encoded arrow functions remain;
+- no renderer-sensitive encoded entities such as `&lt;`, `&gt;`, `&amp;`, `&quot;`, `&#39;`, or `=&gt;` remain in runnable code;
 - the script is syntactically valid JavaScript for direct browser-console execution;
 - the dependency URLs are relative to the current site URL;
 - the full runnable script is contained in one JavaScript code block;

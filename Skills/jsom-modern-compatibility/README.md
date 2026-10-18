@@ -50,6 +50,9 @@ The skill is optimized to return:
 
 The generated code must be directly runnable in the browser console without manual cleanup. HTML-encoded operators, quotes, arrows, or comparison symbols are treated as invalid output unless the user explicitly asked for encoded text.
 The skill now includes a final quality-check step before returning code so encoded output should be rewritten before the user sees it.
+It also includes a renderer-safe check so encoded entities introduced by chat rendering are treated as invalid for runnable code.
+A very important mandatory rule is that the rendered code block must not show HTML-encoded operators or syntax. For example, `&` must never appear as `&amp;` in runnable code.
+If a clean runnable code block cannot be produced without encoding, the skill may fall back to plain text code so the user still receives unencoded runnable JavaScript.
 
 ## Logging behavior
 The skill now favors lightweight logging:
