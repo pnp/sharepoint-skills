@@ -1,0 +1,63 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-jsom-modern-compatibility",
+    "source": "pnp",
+    "title": "JSOM Modern Compatibility",
+    "shortDescription": "Generates ready-to-copy JSOM scripts for classic and modern SharePoint pages with automatic dependency loading and site-relative SharePoint library resolution.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/jsom-modern-compatibility",
+    "longDescription": [
+      "Generates ready-to-copy JSOM scripts that end users can paste directly into the browser developer console on SharePoint pages without manually handling dependency loading.",
+      "Supports classic SharePoint pages, modern SharePoint pages, and SharePoint 2013 classic pages. Ensures core SharePoint JavaScript libraries such as SP.js, SP.Search.js, SP.Taxonomy.js, and SP.UserProfiles.js are loaded before business logic runs.",
+      "Uses the current site URL as the base for loading SharePoint JavaScript dependencies so subsites and site collections resolve libraries correctly instead of falling back to the tenant root site.",
+      "Optimized for end users by returning one complete JavaScript code block, concise console logging, short run instructions, and a safety warning for destructive operations."
+    ],
+    "creationDateTime": "2026-10-18",
+    "updateDateTime": "2026-10-18",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Site Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/jsom-modern-compatibility/assets/preview.png",
+        "alt": "JSOM Modern Compatibility skill showing ready-to-copy JSOM output"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "rohit404404",
+        "pictureUrl": "https://github.com/rohit404404.png",
+        "name": "Rohit Devmore",
+        "company": "Consultant"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Connect to SharePoint using the JavaScript Object Model (JSOM)",
+        "description": "Microsoft Learn guidance for connecting to SharePoint with JSOM in SharePoint Framework scenarios.",
+        "url": "https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/guidance/connect-to-sharepoint-using-jsom"
+      },
+      {
+        "name": "Complete basic operations using JavaScript library code in SharePoint",
+        "description": "Microsoft Learn guidance for SharePoint JavaScript object model usage and dependency loading.",
+        "url": "https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/complete-basic-operations-using-javascript-library-code-in-sharepoint"
+      },
+      {
+        "name": "JavaScript API reference for SharePoint 2013",
+        "description": "Archived Microsoft Learn reference for SharePoint 2013 JavaScript libraries including search, taxonomy, and user profiles.",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/office/sharepoint-visio/jj193034(v=office.15)"
+      }
+    ]
+  }
+]
