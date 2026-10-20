@@ -14,18 +14,48 @@
 
 ## Expected Results
 - The response includes one short explanation and one complete JavaScript code block
-- The full runnable script is returned in a single JavaScript code block for one-click copy
-- Generated code uses actual JavaScript characters and is not HTML-encoded
-- Encoded forms such as `&amp;&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, and `=&gt;` do not appear unless they came from the user's own content or instructions
-- Rendered operators and syntax appear exactly as JavaScript syntax; for example, `&` never renders as `&amp;` in runnable code
-- If a clean code block cannot be rendered without encoding, the response may fall back to plain text code rather than returning an encoded runnable block
-- The final returned code block appears only after a quality check for encoding, syntax, site-relative dependency URLs, and renderer-safe output
-- Supporting libraries for search, taxonomy, and user profiles are ensured before business logic runs
+- Runnable JavaScript uses raw syntax and remains copy/paste executable after rendering
+- The final script passes a quality check for syntax, current-site dependency URLs, and one-block output
+- Base JSOM dependencies are ensured before business logic runs, and feature-specific libraries load only when needed
 - SharePoint JavaScript files load from the current site URL, not the tenant root site
 - Logging is concise and limited to startup, dependency loading, execution start, success summary, and errors
 - Large-list or bulk-operation scripts use throttling-aware patterns such as row limits, paging, targeted queries, and safe chunking
-- If batching is used, it should align with official SharePoint guidance; if batching is unclear, the script should fall back to normal JSOM patterns
-- Classic pages, including SharePoint 2013 classic pages, remain supported
-- The response includes short run instructions and the safety footer with a warning icon
-- The footer also tells the user to inspect the rendered code for HTML encoding and gives a follow-up prompt to request a clean resend if needed
-- For delete scenarios, a confirmation dialog is included
+- If batching is used, it aligns with official SharePoint guidance; otherwise the script falls back to normal JSOM patterns
+- Classic and modern pages remain supported, including SharePoint 2013 classic pages when the browser supports the loader's JavaScript features
+- The response includes short run instructions, the safety footer, and a confirmation dialog for delete or other clearly destructive bulk operations
+
+## Observed Results
+
+### Environment
+- Repository validator: passed
+- npm test: passed
+- npm run check: passed
+- npm run build: passed
+- npm run test:e2e: passed
+- Isolated loader regression harness: `test-artifacts/loader-regression-harness.js`
+- Detailed regression results: `test-artifacts/loader-regression-results.md`
+
+### Regression checks performed
+1. Successful dependency load
+   - Result: pass
+   - Observed: required namespaces available before readiness log
+
+2. Required dependency load failure
+   - Result: pass
+   - Observed: loader throws and business logic does not continue
+
+3. Existing in-flight script tag
+   - Result: pass
+   - Observed: loader waits for the existing script load event
+
+4. Existing failed script tag
+   - Result: pass
+   - Observed: loader rejects with a clear error
+
+5. Concurrent calls for the same script
+   - Result: pass
+   - Observed: shared in-flight promise prevents duplicate loads
+
+6. Modern page without `_spPageContextInfo.webAbsoluteUrl`
+   - Result: pass
+   - Observed: loader fails clearly and does not fall back to tenant root

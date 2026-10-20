@@ -1,7 +1,7 @@
 ---
 name: jsom-modern-compatibility
 description: |-
-  Generate ready to copy JSOM (JavaScript Object Model) code that runs on both classic and modern SharePoint pages, including SharePoint 2013 classic pages, by ensuring required SharePoint JavaScript dependencies are loaded before business logic runs.
+  Generate ready-to-copy JSOM (JavaScript Object Model) code that runs on both classic and modern SharePoint pages, including SharePoint 2013 classic pages, by ensuring required SharePoint JavaScript dependencies are loaded before business logic runs.
 
   Use when the user says:
     - "write JSOM code"
@@ -39,77 +39,36 @@ Preferred references:
 - [Complete basic operations using JavaScript library code in SharePoint | Microsoft Learn](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/complete-basic-operations-using-javascript-library-code-in-sharepoint)
 
 ## When to use
-Use this skill when the user asks to:
-- write, fix, or run JSOM code;
-- fetch or update SharePoint list or library data with JSOM;
-- use taxonomy, user profiles, or search with JSOM;
-- resolve errors such as `SP is not defined`, missing `sp.js`, or missing SharePoint client-side libraries on modern pages.
+Apply this skill to JSOM generation, troubleshooting, dependency loading, and SharePoint JSOM operations including lists/libraries, Search, Taxonomy, and User Profiles.
 
 ## Output requirements
-Every answer that returns runnable code must include:
-1. exactly one complete runnable JavaScript code block;
-2. the full compatibility loader plus the requested business logic;
+Every runnable answer must include:
+1. exactly one complete JavaScript code block;
+2. the compatibility loader plus the requested business logic;
 3. short run instructions outside the code block;
 4. the safety footer outside the code block.
 
-Do not split one runnable script across multiple code blocks.
-Do not place explanatory prose inside the code block.
+Do not split one runnable script across multiple code blocks or place explanatory prose inside the code block.
 
-## Encoding requirements
-This requirement is critical.
+## Encoding and renderer-safe output
+Runnable JavaScript must use raw JavaScript syntax and contain no HTML-encoded operators, quotes, comparison symbols, or arrow functions unless they came from the user's own content or instructions.
 
-Generated code must not be HTML-encoded unless the user explicitly asks for encoded output.
-The default must always be raw, runnable JavaScript that can be copied directly into the browser console.
-If encoded characters appear in operators, strings, template literals, conditions, or function bodies, the script is invalid for this skill.
-
-Always use raw JavaScript syntax in runnable code, never HTML entity encoding.
-
-Examples of invalid encoded output in runnable code:
-- HTML entity encoded logical operators
-- HTML entity encoded comparison operators
-- HTML entity encoded quotes
-- HTML entity encoded arrow functions
-
-Examples of required raw JavaScript syntax in runnable code:
-- logical AND operator written with raw ampersands
-- comparison operators written with raw angle brackets
-- quotes written as normal JavaScript quotes
-- arrow functions written with the normal JavaScript arrow operator
-
-Before finalizing the answer, perform a self-check on the generated code block and replace any accidental HTML entities with raw JavaScript characters unless those entities came from the user's own content or instructions.
-If any HTML entity appears in the runnable code block, rewrite the code block before sending it to the user.
-
-## Renderer-safe output requirement
-This requirement is very important and mandatory.
-
-The runnable JavaScript code block must remain valid after chat rendering and copy/paste.
-Make sure the rendered code block does not include any HTML encoding.
-Operators and syntax must render exactly as JavaScript operators and syntax, not as HTML entities.
-For example, `&` must never render as `&amp;` in runnable code.
-
-Before sending the response, scan the final code block for encoded entities such as:
-- `&lt;`
-- `&gt;`
-- `&amp;`
-- `&quot;`
-- `&#39;`
-- `=&gt;`
-
-If any of these appear in runnable or rendered code and they did not come from the user's own content or instructions, rewrite the script and reshare it without any encoding in rendering.
-If Copilot still renders the code block with encoding and you cannot produce a clean runnable code block, it is acceptable to return the runnable JavaScript as plain text instead of a fenced code block so the user receives unencoded code.
+Before responding, verify the rendered code remains directly copy/paste executable. If rendering cannot preserve raw syntax, return the script as plain text instead of a fenced code block.
 When CAML or XML is required and direct markup may render unsafely in chat, prefer safer construction patterns that preserve copy-paste execution.
 Prefer classic JavaScript syntax in the boilerplate and generated script when it improves renderer-safe copy/paste reliability.
-Do not force unnatural JavaScript patterns unless they are needed to keep the final copied script runnable.
 
 ## Dependency-loading rules
-Always ensure the core dependency chain is available before executing business logic:
+Always ensure the base JSOM dependencies required for the task are available before business logic runs:
 - `init.js`
 - `MicrosoftAjax.js`
 - `SP.Runtime.js`
 - `SP.js`
-- `SP.Search.js`
-- `SP.Taxonomy.js`
-- `SP.UserProfiles.js`
+
+Load feature-specific libraries only when needed:
+- `SP.Search.js` for Search
+- `SP.Taxonomy.js` for Managed Metadata
+- `SP.UserProfiles.js` for User Profiles
+- other supporting libraries such as `sp.documentmanagement.js`, `sp.publishing.js`, or `sp.requestexecutor.js` only when the requested task needs them
 
 Always load SharePoint JavaScript files relative to the current site, not from the tenant root site unless the current site itself is the root site.
 
@@ -121,16 +80,6 @@ Incorrect pattern:
 - `https://tenant.sharepoint.com/_layouts/15/SP.Search.js`
 
 Use the current web URL or current site URL as the base for `/_layouts/15/` so the generated script stays scoped to the site where the user is running it.
-
-If the requested task depends on additional SharePoint JavaScript libraries, load those too before running the task.
-
-Examples of additional supporting libraries to consider when relevant:
-- `sp.documentmanagement.js`
-- `sp.publishing.js`
-- `sp.requestexecutor.js`
-
-Do not load unrelated libraries by default. Load extra libraries only when the requested business logic needs them.
-
 ## Logging guidance
 Keep logging helpful but lightweight.
 
@@ -168,7 +117,7 @@ Do not invent unsupported batching patterns.
 For large-list scenarios, prefer implementations that are safe for non-technical users to run in the browser console without overwhelming the site.
 
 ## Delete safety rule
-For delete or destructive operations, include this confirmation block before the destructive action:
+For delete operations or other clearly destructive, irreversible bulk operations, include this confirmation block before the destructive action:
 
 ```javascript
 // --- DELETE SAFETY CONFIRMATION - COMMENT OUT TO BYPASS ---
@@ -185,63 +134,107 @@ console.log('[JSOM] Delete confirmed by user - proceeding');
 Use this pattern in every generated script and adapt it only as needed for the requested task:
 
 ```javascript
-function loadScript(src) {
+const pendingScriptLoads = new Map();
+
+function hasRequiredJsomNamespaces() {
+  return !!(
+    window.SP &&
+    window.SP.ClientContext &&
+    window.SP.SOD
+  );
+}
+
+function getVerifiedWebAbsoluteUrl() {
+  var pageInfo = window._spPageContextInfo;
+
+  if (pageInfo && pageInfo.webAbsoluteUrl) {
+    return pageInfo.webAbsoluteUrl.replace(/\/$/, '');
+  }
+
+  throw new Error(
+    'Unable to determine the current SharePoint web URL. ' +
+    'window._spPageContextInfo.webAbsoluteUrl is required on this page.'
+  );
+}
+
+function waitForExistingScript(existing, src) {
   return new Promise(function(resolve, reject) {
+    if (existing.dataset.loadState === 'loaded') {
+      resolve();
+      return;
+    }
+
+    if (existing.dataset.loadState === 'failed') {
+      reject(new Error('Previously failed: ' + src));
+      return;
+    }
+
+    function onLoad() {
+      existing.dataset.loadState = 'loaded';
+      resolve();
+    }
+
+    function onError() {
+      existing.dataset.loadState = 'failed';
+      reject(new Error('Load failed: ' + src));
+    }
+
+    existing.addEventListener('load', onLoad, { once: true });
+    existing.addEventListener('error', onError, { once: true });
+  });
+}
+
+function loadScript(src) {
+  if (pendingScriptLoads.has(src)) {
+    return pendingScriptLoads.get(src);
+  }
+
+  var promise = new Promise(function(resolve, reject) {
     var selector = 'script[src="' + src + '"]';
     var existing = document.querySelector(selector);
     var script;
 
     if (existing) {
-      resolve();
+      waitForExistingScript(existing, src).then(resolve).catch(reject);
       return;
     }
 
     script = document.createElement('script');
     script.src = src;
+    script.dataset.loadState = 'loading';
     script.onload = function() {
+      script.dataset.loadState = 'loaded';
       console.log('[JSOM Loader] Loaded: ' + src);
       resolve();
     };
     script.onerror = function() {
+      script.dataset.loadState = 'failed';
       reject(new Error('Load failed: ' + src));
     };
     document.head.appendChild(script);
+  }).finally(function() {
+    pendingScriptLoads.delete(src);
   });
+
+  pendingScriptLoads.set(src, promise);
+  return promise;
 }
 
 async function ensureJSOMLibraries(extraFiles) {
   console.log('[JSOM Loader] Checking environment - classic or modern?');
 
-  var siteBase = window.location.origin;
-  var pageInfo = window._spPageContextInfo;
-  var core = ['init.js', 'MicrosoftAjax.js', 'SP.Runtime.js', 'SP.js', 'SP.Search.js', 'SP.Taxonomy.js', 'SP.UserProfiles.js'];
+  var siteBase = getVerifiedWebAbsoluteUrl();
+  var core = ['init.js', 'MicrosoftAjax.js', 'SP.Runtime.js', 'SP.js'];
   var chain = core.slice(0);
   var i;
   var file;
   var src;
-  var hasClassicJsom = false;
-
-  if (pageInfo) {
-    if (pageInfo.webAbsoluteUrl) {
-      siteBase = pageInfo.webAbsoluteUrl;
-    }
-  }
-
-  if (siteBase.charAt(siteBase.length - 1) === '/') {
-    siteBase = siteBase.substring(0, siteBase.length - 1);
-  }
+  var hasClassicJsom = hasRequiredJsomNamespaces();
+  var failures = [];
 
   if (extraFiles) {
     for (i = 0; i < extraFiles.length; i++) {
       chain.push(extraFiles[i]);
-    }
-  }
-
-  if (window.SP) {
-    if (window.SP.ClientContext) {
-      if (window.SP.SOD) {
-        hasClassicJsom = true;
-      }
     }
   }
 
@@ -265,12 +258,27 @@ async function ensureJSOMLibraries(extraFiles) {
       await loadScript(src);
     } catch (error) {
       console.warn('[JSOM Loader] ' + file + ': ' + error.message);
+      failures.push(file + ' (' + error.message + ')');
     }
+  }
+
+  if (failures.length > 0) {
+    throw new Error('Required SharePoint JavaScript dependencies failed to load: ' + failures.join(', '));
+  }
+
+  if (!hasRequiredJsomNamespaces()) {
+    throw new Error('JSOM dependencies did not initialize correctly. window.SP.ClientContext is unavailable.');
   }
 
   console.log('[JSOM Loader] Dependencies ensured - ready to run JSOM');
 }
 ```
+
+Additional requirements for every generated script:
+- Do not use `window.location.origin` as a fallback SharePoint web URL.
+- Do not continue business logic if any required dependency fails to load.
+- Do not assume an existing script tag means the library is ready.
+- Always verify `window.SP`, `SP.ClientContext`, and `SP.SOD` before reporting readiness.
 
 ## Code-generation procedure
 1. Identify the requested SharePoint task.
@@ -295,22 +303,15 @@ Use this order:
 3. short run instructions;
 4. the safety footer.
 
-Before sending the response, verify that the JavaScript code block is directly runnable in the browser console without manual cleanup by the user.
-Non-technical users must not need to decode entities, repair operators, or fix syntax before running it.
-
 ## Final output quality check
-Before returning the code block to the user, inspect the full generated script and confirm all of the following:
-- no HTML entities appear in runnable JavaScript unless they came from the user's own content or instructions;
-- no encoded operators, encoded quotes, encoded comparison symbols, or encoded arrow functions remain;
-- no renderer-sensitive encoded entities such as `&lt;`, `&gt;`, `&amp;`, `&quot;`, `&#39;`, or `=&gt;` remain in runnable code;
-- the script is syntactically valid JavaScript for direct browser-console execution;
-- the dependency URLs are relative to the current site URL;
-- the full runnable script is contained in one JavaScript code block;
-- explanatory text is outside the code block.
+Before responding, verify:
+- runnable JavaScript contains no HTML-encoded syntax unless it came from the user's own content or instructions;
+- the script is syntactically valid for direct browser-console execution;
+- dependency URLs use the current SharePoint web URL;
+- all runnable JavaScript is contained in exactly one code block;
+- explanatory text remains outside the code block.
 
-If any check fails, rewrite the script before sending it.
-Do not send a partially corrected script.
-Do not ask the user to manually decode or repair the code.
+If any check fails, correct it before responding.
 
 ## How to run this code
 Always include this guidance after the code block:
@@ -319,15 +320,16 @@ To run this code:
 1. Open your SharePoint page in Chrome or Edge where you want to run this.
 2. Press Ctrl+Shift+J on Windows or Cmd+Option+J on Mac to open Developer Tools.
 3. Open the Console tab.
-4. Copy the full JavaScript code block using the copy button and paste it into the console.
-5. Press Enter and watch the `[JSOM]` and `[JSOM Loader]` messages.
-6. For delete operations, only click OK in the confirmation dialog if you are sure.
+4. If needed, refer to the Microsoft Edge DevTools Console guide for running JavaScript in the console: https://learn.microsoft.com/en-us/microsoft-edge/devtools/console/console-javascript
+5. Copy the full JavaScript code block and paste it into the console.
+6. Press Enter and watch the `[JSOM]` and `[JSOM Loader]` messages.
+7. For delete operations, only click OK in the confirmation dialog if you are sure.
 
 ## Mandatory footer
 Always end with this warning outside the code block and prefix it with a small warning icon.
 Always add a short follow-up note telling the user to review the rendered code for any HTML encoding before running it.
 
-⚠️ Custom Code Execution Notice: This is custom JSOM code generated for your SharePoint site. Please review and run it responsibly. JSOM operations can permanently create, update, or delete data, list items, taxonomy terms, and user profile properties depending on the logic you execute. Test in a non-production site first and ensure you have proper backups and permissions. You are responsible for the changes this code makes. Compatible with both classic and modern SharePoint pages when using the provided loader.
+⚠️ Custom Code Execution Notice: This is custom JSOM code generated for your SharePoint site. Please review and run it responsibly. JSOM operations can permanently create, update, or delete data, list items, taxonomy terms, and user profile properties depending on the logic you execute. Test in a non-production site first and ensure you have proper backups and permissions. You are responsible for the changes this code makes. Compatible with classic and modern SharePoint pages, including SharePoint 2013 classic pages, when executed in a browser that supports the JavaScript features used by the loader.
 
 Review the rendered code before running it. If you see any HTML encoding such as `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, or `=&gt;`, send this follow-up prompt:
 `Send code without any HTML encoding and make sure its rendered in response without encoding`
