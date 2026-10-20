@@ -1,0 +1,61 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-send-customer-packet",
+    "source": "pnp",
+    "title": "Send Customer Packet",
+    "shortDescription": "Prepares and sends the customer packet email with a view-only link, gated on Packet status and an explicit confirmation of the exact preview.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/send-customer-packet",
+    "longDescription": [
+      "Reads the packet's columns, fills an email template from them, creates a view-only sharing link for the selected file only, and shows To, Subject and body.",
+      "Sends only after \"Confirm to send\" for that exact preview, then sets Packet status to Customer Sent. Never sends when required columns are missing."
+    ],
+    "creationDateTime": "2026-10-20",
+    "updateDateTime": "2026-10-20",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Communication"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/send-customer-packet/assets/preview.png",
+        "alt": "Send Customer Packet skill output"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "HassanJMoses",
+        "pictureUrl": "https://github.com/HassanJMoses.png",
+        "name": "Hassan Moses"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "New Customer Packet demo",
+        "description": "The full demo: story, sample files, HTML layouts, setup and video.",
+        "url": "https://github.com/HassanJMoses/copilot-sharepoint-demos"
+      },
+      {
+        "name": "Demo video",
+        "description": "Copilot in SharePoint for Insurance: the three skills run end to end.",
+        "url": "https://www.youtube.com/watch?v=xFWDL-QakWM"
+      }
+    ]
+  }
+]
