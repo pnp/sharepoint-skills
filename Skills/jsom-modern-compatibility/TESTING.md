@@ -32,8 +32,7 @@
 - npm run check: passed
 - npm run build: passed
 - npm run test:e2e: passed
-- Isolated loader regression harness: `test-artifacts/loader-regression-harness.js`
-- Detailed regression results: `test-artifacts/loader-regression-results.md`
+- Isolated local JavaScript harness used to rerun the loader regression cases
 
 ### Regression checks performed
 1. Successful dependency load
@@ -59,3 +58,8 @@
 6. Modern page without `_spPageContextInfo.webAbsoluteUrl`
    - Result: pass
    - Observed: loader fails clearly and does not fall back to tenant root
+
+### Reproduction notes
+- The regression cases were rerun in an isolated local JavaScript harness that simulates script tags, load/error events, concurrent requests, and missing page context.
+- The harness verified successful loads, required-load failure, existing in-flight and failed scripts, concurrent calls, and missing `_spPageContextInfo.webAbsoluteUrl`.
+- The observed results above were recorded from those reruns.
