@@ -1,0 +1,50 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-create-notebook-glossary",
+    "source": "pnp",
+    "title": "Create Notebook Glossary",
+    "shortDescription": "Creates a source-grounded, searchable notebook-style glossary from a SharePoint or OneDrive document or link, then saves it to SharePoint.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/create-notebook-glossary",
+    "longDescription": [
+      "Creates an interactive, self-contained HTML glossary from terms and definitions explicitly supported by a source document.",
+      "Presents entries in a handwritten notebook layout with sticky-note search, A-Z navigation, pastel term notes, curled-wire binding, and sketched page arrows.",
+      "Includes searchable and alphabetical navigation with organic page-turn animation and reduced-motion support, without external assets or dependencies.",
+      "Ideal for turning SharePoint or OneDrive reference documents into an engaging, reusable glossary."
+    ],
+    "creationDateTime": "2026-10-28",
+    "updateDateTime": "2026-10-28",
+    "products": ["SharePoint", "Microsoft 365 Copilot"],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Knowledge Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/create-notebook-glossary/assets/preview.png",
+        "alt": "Create Notebook Glossary displaying an interactive handwritten notebook with searchable glossary entries"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "Sandeep-FED",
+        "pictureUrl": "https://github.com/Sandeep-FED.png",
+        "name": "Sandeep P S"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for discovery and packaging.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
