@@ -1,0 +1,4 @@
+interface:
+  display_name: "Accessible SVG Icons"
+  short_description: "Create and audit accessible, responsive SVG icons."
+  brand_color: "#5B5FC7"

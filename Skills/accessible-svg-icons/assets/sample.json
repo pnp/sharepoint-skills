@@ -1,0 +1,52 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-accessible-svg-icons",
+    "source": "pnp",
+    "title": "Accessible SVG Icons",
+    "shortDescription": "Creates, improves, and audits accessible SVG icons for dashboards, pages, SharePoint solutions, and web applications.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/accessible-svg-icons",
+    "longDescription": [
+      "Creates and improves self-contained SVG icons for HTML dashboards, HTML pages, SharePoint solutions, web applications, and other digital interfaces.",
+      "Before drawing, the skill inspects available HTML, CSS, existing iconography, audience, interface purpose, design tokens, interaction requirements, themes, and viewport constraints. It decides whether an icon is useful, classifies it as decorative, informative, or interactive, and returns an icon plan before implementation markup.",
+      "The skill supports line and solid variants, responsive sizing, currentColor, light and dark themes, forced-colour modes, keyboard focus, pointer targets, non-colour status cues, and accessible naming. It can also audit existing SVG and HTML for accessibility, visual consistency, small-size legibility, and remote dependencies."
+    ],
+    "creationDateTime": "2026-10-30",
+    "updateDateTime": "2026-10-30",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Accessibility"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/accessible-svg-icons/assets/preview.png",
+        "alt": "Accessible SVG Icons skill preview showing dashboard, status, and action icons"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "richard-plantt",
+        "pictureUrl": "https://github.com/richard-plantt.png",
+        "name": "Richard Plantt"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
