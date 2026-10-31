@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-interactive-3d-scene",
+    "source": "pnp",
+    "title": "Interactive 3D Scene",
+    "shortDescription": "Builds a self-contained, clickable 3D scene for the SharePoint HTML viewer using the host's Babylon.js library, with a 2D fallback, optional sound and a demo mode.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/interactive-3d-scene",
+    "longDescription": [
+      "Turns a theme or occasion, such as a team celebration, a seasonal greeting or a product launch, into a playful 3D scene with 3 to 6 tappable objects that glow, bounce, shake, spin, flash or burst into sparks.",
+      "Outputs a single HTML file that follows the SharePoint HTML viewer rules: no external files, the Babylon.js library requested through the host manifest, and a finished SVG drawing with the same reactions when 3D is not available.",
+      "Includes keyboard and button access, a live status line, reduced motion support, sound synthesized with Web Audio that stays off until the viewer turns it on, and a demo mode for 16:9 or 9:16 screen recordings. Ships with a starter template and reference guides so the pattern can be reused for any theme."
+    ],
+    "creationDateTime": "2026-10-31",
+    "updateDateTime": "2026-10-31",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Communication & Engagement" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/interactive-3d-scene/assets/preview.png",
+        "alt": "Interactive 3D Scene skill showing three clickable scenes: a winter office celebration, a product launch and a Halloween example"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaraghavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

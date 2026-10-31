@@ -1,0 +1,346 @@
+﻿<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Winter Office Celebration: an interactive scene</title>
+<!-- Ask the SharePoint HTML host for its 3D library. It injects it as window.BABYLON. Keep this before every other script. -->
+<script type="application/json" class="ka-lib-manifest">["babylon"]</script>
+<style>
+/* THEME: change these first. */
+:root{--bg:#0e1b2c;--panel:#14263d;--line:#2b4767;--text:#f2f7ff;--muted:#c3d2e6;--accent:#9fe3ff;--focus:#9fe3ff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(120% 80% at 50% 0%,#1f3a5c 0%,var(--bg) 62%);color:var(--text);font-family:"Segoe UI",Aptos,Arial,sans-serif;line-height:1.5;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:24px}
+.kicker{margin:0;color:var(--accent);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+h1{margin:6px 0 4px;font-size:clamp(28px,5vw,46px);line-height:1.08}
+.lede{margin:0 0 16px;color:var(--muted);max-width:62ch}
+.stage{position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--bg);aspect-ratio:16/9}
+.stage svg{display:block;width:100%;height:100%}
+.stage canvas{display:none;width:100%;height:100%;outline:none;touch-action:none}
+.stage.is-3d svg{display:none}
+.stage.is-3d canvas{display:block}
+[data-act]{cursor:pointer}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.flash.on{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:.55}100%{opacity:0}}
+.toast{position:absolute;left:50%;bottom:16px;transform:translate(-50%,8px);max-width:min(92%,640px);padding:8px 14px;border-radius:999px;background:rgba(5,10,25,.82);color:var(--text);font-weight:600;text-align:center;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 8px}
+.btn{min-height:44px;min-width:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--accent);color:#1a1300;border-color:var(--accent)}
+.btn .ico{width:12px;height:12px;border-radius:50%;display:inline-block}
+.caption,.mode{margin:4px 0;color:var(--muted);font-size:14px}
+.status{margin:4px 0;min-height:1.5em;font-weight:600}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* 2D fallback reactions: one class per reaction type */
+.svgobj{transform-box:fill-box;transform-origin:50% 100%}
+.go-glow{animation:g-glow 1.6s ease-out}
+.go-bounce{animation:g-bounce .9s ease-out}
+.go-shake{animation:g-shake .8s ease-in-out}
+.go-spin{animation:g-spin 1.1s ease-in-out;transform-origin:50% 50%}
+.go-burst{animation:g-glow 1.2s ease-out}
+@keyframes g-glow{0%,100%{filter:none}30%{filter:brightness(1.8) drop-shadow(0 0 18px var(--accent))}}
+@keyframes g-bounce{0%,100%{transform:none}30%{transform:translateY(-14%) scale(1.04,.96)}60%{transform:translateY(0) scale(.97,1.03)}}
+@keyframes g-shake{0%,100%{transform:none}20%{transform:rotate(-6deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+@keyframes g-spin{0%{transform:none}100%{transform:rotate(360deg)}}
+.amb circle{animation:drift 9s linear infinite}
+@keyframes drift{0%{transform:translateY(-40px);opacity:0}15%{opacity:.9}100%{transform:translateY(900px);opacity:0}}
+/* Demo (recording) mode: scene only, no chrome, no cursor */
+body.demo{background:#000;overflow:hidden;cursor:none}
+body.demo .wrap{padding:0;max-width:none}
+body.demo .chrome{display:none!important}
+body.demo .stage{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:0;width:min(100vw,calc(100vh*16/9));height:auto}
+body.demo.portrait .stage{aspect-ratio:9/16;width:min(100vw,calc(100vh*9/16))}
+body.demo .stage canvas,body.demo [data-act]{cursor:none}
+@media (prefers-reduced-motion:reduce){.amb{display:none}.go-bounce,.go-shake,.go-spin{animation:g-glow 1.2s ease-out}.flash.on{animation-duration:.9s}.toast{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="chrome">
+ <p class="kicker">Winter office celebration</p>
+ <h1>Thanks for a great year, team</h1>
+ <p class="lede">Tap anything in the scene, or use the buttons below. Every reaction also works from the keyboard.</p>
+</header>
+
+<figure class="stage" id="stage" aria-labelledby="scene-cap">
+ <!-- 2D fallback: visible by default, same objects and data-act names as the 3D scene. -->
+ <svg viewBox="0 0 1600 900" role="img" aria-labelledby="svg-t" focusable="false">
+  <title id="svg-t">A snowy evening outside the office with a snow globe, a mug of cocoa, a tree with lights, a party popper and a lit office window</title>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3a5c"/><stop offset="1" stop-color="#0e1b2c"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <g class="amb" fill="#ffffff" opacity=".8"><circle cx="160" cy="0" r="5"/><circle cx="480" cy="0" r="4" style="animation-delay:-2s"/><circle cx="820" cy="0" r="5" style="animation-delay:-5s"/><circle cx="1180" cy="0" r="4" style="animation-delay:-7s"/><circle cx="1460" cy="0" r="5" style="animation-delay:-3.5s"/></g>
+  <rect y="700" width="1600" height="200" fill="#dfe9f5"/>
+  <g class="svgobj" data-act="window"><rect x="1180" y="250" width="300" height="230" rx="8" fill="#2b4767"/><rect x="1200" y="270" width="120" height="90" fill="#ffe8a3"/><rect x="1340" y="270" width="120" height="90" fill="#ffe8a3"/><rect x="1200" y="375" width="120" height="90" fill="#ffe8a3"/><rect x="1340" y="375" width="120" height="90" fill="#ffe8a3"/></g>
+  <g class="svgobj" data-act="tree"><rect x="235" y="620" width="40" height="80" fill="#5b3a29"/><polygon points="255,300 120,640 390,640" fill="#2f7d5b"/><circle cx="220" cy="470" r="10" fill="#ffd166"/><circle cx="300" cy="540" r="10" fill="#9fe3ff"/><circle cx="250" cy="400" r="10" fill="#ff8fab"/></g>
+  <g class="svgobj" data-act="globe"><rect x="560" y="640" width="150" height="60" rx="10" fill="#8a5a3c"/><circle cx="635" cy="560" r="95" fill="#bfe6ff" opacity=".75"/><polygon points="635,500 595,610 675,610" fill="#2f7d5b"/></g>
+  <g class="svgobj" data-act="cocoa"><rect x="830" y="570" width="120" height="130" rx="16" fill="#e76f51"/><path d="M950 600 q50 0 50 40 q0 40 -50 40" fill="none" stroke="#e76f51" stroke-width="18"/><ellipse cx="890" cy="575" rx="55" ry="12" fill="#6b3e26"/></g>
+  <g class="svgobj" data-act="popper"><polygon points="1080,700 1040,520 1120,520" fill="#b388ff"/><rect x="1036" y="505" width="88" height="20" rx="6" fill="#ffd166"/></g>
+  <rect class="flash" id="flash2d" width="1600" height="900" fill="#fff" opacity="0" pointer-events="none"/>
+ </svg>
+ <canvas id="scene3d" role="img" aria-label="A 3D winter scene outside the office with a snow globe, a mug of cocoa, a tree with string lights, a party popper and a glowing office window. Use the buttons below the scene for every reaction."></canvas>
+ <div class="flash" id="flash" aria-hidden="true"></div>
+ <div class="toast" id="toast" aria-hidden="true"></div>
+ <figcaption id="scene-cap" class="sr-only">Interactive winter office celebration scene</figcaption>
+</figure>
+
+<div class="controls chrome" id="controls" role="group" aria-label="Scene reactions"></div>
+<div class="controls chrome" role="group" aria-label="Scene settings">
+ <button type="button" class="btn" id="sound" aria-pressed="false" aria-keyshortcuts="M" hidden>Sound: off</button>
+</div>
+<div class="chrome">
+ <p class="caption" id="keys-help">Keyboard: Tab to a button and press Enter or Space. Number keys trigger the reactions in order. <b>M</b> turns sound on or off.</p>
+ <p class="status" id="status" role="status" aria-live="polite"></p>
+ <p class="mode" id="mode">Still view.</p>
+</div>
+<noscript><p>Scripts are off, so you are seeing a still drawing of the scene.</p></noscript>
+</main>
+<script>
+(function(){
+'use strict';
+/* ====================== SCENE CONFIG: edit this block for a new theme ======================
+ act:    id shared by the 3D meshes, the SVG group (data-act) and the button
+ react:  glow | bounce | shake | spin | flash | burst  (combine with spaces, e.g. "glow burst")
+ sound:  chime | pop | whoosh | boom | rustle | none
+ pos:    [x,y,z] in metres. x right, y up, +z away from the camera. Keep x within about -7..7.
+ parts:  primitives in object space. t: box|sph|cyl|cone|torus. Sizes in metres. glow:true = lights up on react.
+ lines:  status/caption text, rotated per tap. Keep each under about 70 characters.
+============================================================================================ */
+var SCENE={
+ name:'Winter office celebration',
+ sky:'#0e1b2c', fog:'#1f3a5c', ground:'#dfe9f5', accent:'#9fe3ff',
+ ambient:{kind:'fall', color:'#ffffff', count:90},
+ objects:[
+  {act:'tree', button:'Light the tree', color:'#2f7d5b', pos:[-6,0,0], react:'glow shake', sound:'rustle',
+   parts:[{t:'cyl',d:.6,h:1,y:.5,c:'#5b3a29'},{t:'cone',d:3.4,h:4.6,y:3.2,c:'#2f7d5b'},{t:'sph',d:.4,x:-.7,y:2.4,z:-1.1,c:'#ffd166',glow:true},{t:'sph',d:.4,x:.6,y:3.4,z:-.8,c:'#9fe3ff',glow:true},{t:'sph',d:.4,x:-.3,y:4.3,z:-.5,c:'#ff8fab',glow:true}],
+   lines:['The string lights blink on.','Snow slides off the branches.','The tree twinkles in three colours.']},
+  {act:'globe', button:'Shake the snow globe', color:'#bfe6ff', pos:[-2,0,1.6], react:'shake spin', sound:'chime',
+   parts:[{t:'cyl',d:2,h:.6,y:.3,c:'#8a5a3c'},{t:'sph',d:2,y:1.5,c:'#bfe6ff',glow:true},{t:'cone',d:.8,h:1.1,y:1.4,c:'#2f7d5b'}],
+   lines:['Snow swirls inside the globe.','A tiny blizzard, just for you.','The globe sparkles as it settles.']},
+  {act:'cocoa', button:'Sip the cocoa', color:'#e76f51', pos:[1.4,0,1.8], react:'bounce', sound:'pop',
+   parts:[{t:'cyl',d:1.3,h:1.5,y:.75,c:'#e76f51'},{t:'torus',d:.9,th:.18,x:.75,y:.8,rz:1.57,c:'#e76f51'},{t:'cyl',d:1.1,h:.06,y:1.5,c:'#6b3e26'}],
+   lines:['Mmm, warm cocoa for everyone.','The mug hops with joy.','Extra marshmallows, on the house.']},
+  {act:'popper', button:'Pop the party popper', color:'#b388ff', pos:[4.4,0,.8], react:'burst flash', sound:'boom',
+   parts:[{t:'cone',d:1.3,h:2.4,y:1.2,rx:3.14,c:'#b388ff'},{t:'cyl',d:1.35,h:.25,y:2.45,c:'#ffd166',glow:true}],
+   lines:['Pop! Confetti everywhere.','The whole team cheers.','Another burst of confetti.']},
+  {act:'window', button:'Light the office window', color:'#ffe8a3', pos:[5.5,2.5,6], react:'glow', sound:'whoosh',
+   parts:[{t:'box',w:5,h:4,dd:.3,y:0,c:'#2b4767'},{t:'box',w:2.1,h:1.6,dd:.1,x:-1.2,y:.9,z:-.2,c:'#ffe8a3',glow:true},{t:'box',w:2.1,h:1.6,dd:.1,x:1.2,y:.9,z:-.2,c:'#ffe8a3',glow:true},{t:'box',w:2.1,h:1.6,dd:.1,x:-1.2,y:-.9,z:-.2,c:'#ffe8a3',glow:true},{t:'box',w:2.1,h:1.6,dd:.1,x:1.2,y:-.9,z:-.2,c:'#ffe8a3',glow:true}],
+   lines:['The office lights up for the party.','Someone waves from the window.','The lights flicker hello.']}
+ ],
+ sounds:{on:'Sound on.', off:'Sound off.', none:'Sound isn’t available in this browser.'},
+ modes:{live:'Moving scene. Drag to look around, scroll or pinch to zoom, tap anything.',
+        still:'Still view: the moving scene isn’t available here, so you’re seeing a flat drawing with the same reactions.'},
+ demo:{hold:3, step:2.5, tail:2}
+};
+/* ========================================================================================= */
+
+var $=function(id){return document.getElementById(id);};
+var stage=$('stage'),canvas=$('scene3d'),statusEl=$('status'),modeEl=$('mode'),toastEl=$('toast'),soundBtn=$('sound'),controls=$('controls');
+var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+var reduced=!!(mq&&mq.matches);
+
+/* ---------- URL flags (query or hash): demo=1, aspect=9x16, sound=0, mode=2d, seed=N ---------- */
+function flag(n){var re=new RegExp('[?#&]'+n+'=([^&#]*)');var m=re.exec(location.search)||re.exec(location.hash);return m?decodeURIComponent(m[1]):null;}
+var DEMO=flag('demo')==='1', PORTRAIT=flag('aspect')==='9x16', FORCE2D=flag('mode')==='2d';
+var seed=parseInt(flag('seed')||'7',10)||7;
+function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;}   /* fixed-seed PRNG: never use Math.random */
+if(DEMO){document.body.classList.add('demo');if(PORTRAIT)document.body.classList.add('portrait');}
+
+/* ---------- buttons from config ---------- */
+var byAct={};
+SCENE.objects.forEach(function(o,i){byAct[o.act]=o;var b=document.createElement('button');b.type='button';b.className='btn';b.setAttribute('data-act',o.act);
+ b.setAttribute('aria-keyshortcuts',String(i+1));var ic=document.createElement('span');ic.className='ico';ic.style.background=o.color;ic.setAttribute('aria-hidden','true');
+ b.appendChild(ic);b.appendChild(document.createTextNode(o.button));controls.appendChild(b);});
+
+/* ---------- status line + caption ---------- */
+var count={},toastT=0;
+function say(txt){statusEl.textContent=txt;toastEl.textContent=txt;toastEl.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){toastEl.classList.remove('on');},2600);}
+function line(o){count[o.act]=(count[o.act]||0)+1;return o.lines[(count[o.act]-1)%o.lines.length];}
+
+/* ---------- optional sound: synthesized, off by default, only after a user gesture (or demo) ---------- */
+var actx=null,master=null,soundOn=false,noiseBuf=null,pad=null;
+function ctx(){try{if(!actx){var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;actx=new AC();master=actx.createGain();master.gain.value=.7;master.connect(actx.destination);}
+ if(actx.state==='suspended'&&actx.resume){var r=actx.resume();if(r&&r.catch)r.catch(function(){});}return actx;}catch(e){actx=null;return null;}}
+function noise(c){if(!noiseBuf){var n=c.sampleRate*2,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<n;i++)d[i]=rnd()*2-1;noiseBuf=b;}var s=c.createBufferSource();s.buffer=noiseBuf;return s;}
+function env(g,t,a,peak,d){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+d);}
+function tone(c,type,f,t,a,peak,d,f2){var o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);env(g,t,a,peak,d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05);}
+function hiss(c,type,f,f2,q,t,a,peak,d){var n=noise(c),b=c.createBiquadFilter(),g=c.createGain();b.type=type;b.frequency.setValueAtTime(f,t);if(f2)b.frequency.exponentialRampToValueAtTime(f2,t+d);b.Q.value=q||1;env(g,t,a,peak,d);n.connect(b);b.connect(g);g.connect(master);n.start(t);n.stop(t+d+.05);}
+var SFX={
+ chime:function(c){var t=c.currentTime;[880,1320,1760].forEach(function(f,i){tone(c,'sine',f,t+i*.06,.01,.25/(i+1),1.6);});},
+ pop:function(c){var t=c.currentTime;tone(c,'triangle',520,t,.005,.5,.25,140);hiss(c,'highpass',3000,0,0,t,.002,.2,.08);},
+ whoosh:function(c){var t=c.currentTime;hiss(c,'bandpass',300,2400,2,t,.15,.35,.9);},
+ boom:function(c){var t=c.currentTime;hiss(c,'highpass',1800,0,0,t,.003,.5,.2);hiss(c,'lowpass',700,60,1,t+.05,.06,.6,2.2);},
+ rustle:function(c){var t=c.currentTime;for(var i=0;i<5;i++)hiss(c,'bandpass',2500+rnd()*2500,0,3,t+i*.09,.01,.12,.18);}
+};
+function play(name){if(!soundOn||!name||name==='none'||!SFX[name])return;var c=ctx();if(!c)return;try{SFX[name](c);}catch(e){}}
+function padOn(){var c=ctx();if(!c||pad)return;try{var g=c.createGain();g.gain.value=0;g.gain.linearRampToValueAtTime(.06,c.currentTime+2);g.connect(master);
+ var o1=c.createOscillator(),o2=c.createOscillator();o1.frequency.value=196;o2.frequency.value=196*1.498;o1.type=o2.type='sine';o1.detune.value=-6;o2.detune.value=5;o1.connect(g);o2.connect(g);o1.start();o2.start();pad={g:g,o:[o1,o2]};}catch(e){pad=null;}}
+function padOff(){if(!pad||!actx)return;var p=pad;pad=null;try{p.g.gain.linearRampToValueAtTime(0,actx.currentTime+.6);setTimeout(function(){p.o.forEach(function(o){try{o.stop();}catch(e){}});},800);}catch(e){}}
+function setSound(on,quiet){if(on&&!ctx()){soundOn=false;if(!quiet)say(SCENE.sounds.none);}else{soundOn=on;if(!quiet)say(on?SCENE.sounds.on:SCENE.sounds.off);}
+ if(soundOn)padOn();else padOff();soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.textContent='Sound: '+(soundOn?'on':'off');}
+
+/* ---------- 2D reactions (fallback) ---------- */
+var flashEl=$('flash');
+function screenFlash(){flashEl.classList.remove('on');void flashEl.offsetWidth;flashEl.classList.add('on');}
+var acts2d={};
+SCENE.objects.forEach(function(o){acts2d[o.act]=function(){var el=stage.querySelector('svg [data-act="'+o.act+'"]');if(!el)return;
+ o.react.split(' ').forEach(function(r){if(r==='flash'){screenFlash();return;}var cls='go-'+r;el.classList.remove(cls);void el.getBoundingClientRect();el.classList.add(cls);});
+ setTimeout(function(){o.react.split(' ').forEach(function(r){el.classList.remove('go-'+r);});},1700);};});
+var acts=acts2d;
+function run(act,fromUser){var o=byAct[act];if(!o||!acts[act])return;acts[act]();say(line(o));play(o.sound);}
+
+/* ---------- 3D scene (progressive enhancement) ---------- */
+function start3D(){
+ var B=window.BABYLON;
+ if(FORCE2D||!B||!B.Engine||!B.MeshBuilder)return null;
+ if(B.Engine.isSupported&&!B.Engine.isSupported())return null;
+ var engine=new B.Engine(canvas,true,{antialias:true,audioEngine:false,preserveDrawingBuffer:DEMO,powerPreference:'default'},false);
+ stage.classList.add('is-3d');
+ var scene=new B.Scene(engine);
+ var V=function(x,y,z){return new B.Vector3(x,y,z);};
+ var hex=function(h){return B.Color3.FromHexString(h);};
+ scene.clearColor=B.Color4.FromColor3(hex(SCENE.sky),1);
+ scene.fogMode=B.Scene.FOGMODE_EXP2;scene.fogDensity=.028;scene.fogColor=hex(SCENE.fog);
+ scene.skipPointerMovePicking=true;
+
+ /* camera: limited orbit, no panning, no keyboard camera input (keys belong to the page) */
+ var BASE_A=-Math.PI/2+.15,BASE_R=PORTRAIT?12:16,BASE_B=PORTRAIT?1.28:1.2;
+ var cam=new B.ArcRotateCamera('cam',BASE_A,BASE_B,BASE_R,V(0,2.6,0),scene);
+ cam.lowerRadiusLimit=10;cam.upperRadiusLimit=40;cam.lowerBetaLimit=.75;cam.upperBetaLimit=1.42;
+ cam.lowerAlphaLimit=BASE_A-1;cam.upperAlphaLimit=BASE_A+1;cam.panningSensibility=0;cam.wheelPrecision=30;cam.pinchPrecision=60;cam.minZ=.5;cam.maxZ=300;cam.fov=.8;
+ if(cam.inputs&&cam.inputs.removeByType)cam.inputs.removeByType('ArcRotateCameraKeyboardMoveInput');
+ function fit(){var w=canvas.clientWidth||16,h=canvas.clientHeight||9;cam.fovMode=(w/h<1)?B.Camera.FOVMODE_HORIZONTAL_FIXED:B.Camera.FOVMODE_VERTICAL_FIXED;cam.fov=(w/h<1)?1.2:.8;}
+ if(!DEMO)cam.attachControl(canvas,true);
+
+ /* light budget: one hemispheric, one directional, one point light for flashes. No shadows. */
+ var hemi=new B.HemisphericLight('hemi',V(0,1,0),scene);hemi.intensity=.75;hemi.groundColor=hex(SCENE.ground);
+ var dir=new B.DirectionalLight('dir',V(-.4,-1,.5),scene);dir.intensity=.45;
+ var fl=new B.PointLight('fl',V(0,10,-4),scene);fl.intensity=0;fl.diffuse=hex(SCENE.accent);
+
+ var ground=B.MeshBuilder.CreateGround('ground',{width:300,height:300},scene);var gm=new B.StandardMaterial('gm',scene);gm.diffuseColor=hex(SCENE.ground);gm.specularColor=B.Color3.Black();ground.material=gm;ground.isPickable=false;
+
+ var mats={};function mat(c,glow,act){var k=act+c+(glow?'g':'');if(mats[k])return mats[k];var m=new B.StandardMaterial('m'+k,scene);m.diffuseColor=hex(c);m.specularColor=new B.Color3(.08,.08,.08);if(glow)m.emissiveColor=hex(c).scale(.35);mats[k]=m;return m;}
+ function part(p,parent,act){var M=B.MeshBuilder,m;
+  if(p.t==='box')m=M.CreateBox('p',{width:p.w||1,height:p.h||1,depth:p.dd||p.w||1},scene);
+  else if(p.t==='sph')m=M.CreateSphere('p',{diameter:p.d||1,segments:16},scene);
+  else if(p.t==='cyl')m=M.CreateCylinder('p',{diameterTop:p.dt!=null?p.dt:(p.d||1),diameterBottom:p.d||1,height:p.h||1,tessellation:20},scene);
+  else if(p.t==='cone')m=M.CreateCylinder('p',{diameterTop:0,diameterBottom:p.d||1,height:p.h||1,tessellation:20},scene);
+  else if(p.t==='torus')m=M.CreateTorus('p',{diameter:p.d||1,thickness:p.th||.2,tessellation:24},scene);
+  else return null;
+  m.position.set(p.x||0,p.y||0,p.z||0);if(p.rx)m.rotation.x=p.rx;if(p.ry)m.rotation.y=p.ry;if(p.rz)m.rotation.z=p.rz;
+  m.material=mat(p.c||'#cccccc',!!p.glow,act);m.parent=parent;m.metadata={act:act};return m;}
+
+ /* tween helper driven by the render loop */
+ var tweens=[],T=0;function tween(d,f,done){tweens.push({t:0,d:d,f:f,done:done});}
+ var K=function(){return reduced?0:1;};   /* motion scale: 0 under reduced motion */
+
+ var objs={};
+ SCENE.objects.forEach(function(o){var root=new B.TransformNode(o.act,scene);root.position.set(o.pos[0],o.pos[1],o.pos[2]);
+  var ps=[];o.parts.forEach(function(p){var m=part(p,root,o.act);if(m)ps.push(m);});objs[o.act]={o:o,root:root,parts:ps,busy:{}};});
+
+ /* ambient particles: one sphere with thin instances (one draw call) */
+ var amb=null,ambP=[];
+ if(SCENE.ambient&&SCENE.ambient.kind!=='none'){amb=B.MeshBuilder.CreateSphere('amb',{diameter:.12,segments:4},scene);var am=new B.StandardMaterial('am',scene);am.emissiveColor=hex(SCENE.ambient.color);am.disableLighting=true;amb.material=am;amb.isPickable=false;
+  for(var i=0;i<SCENE.ambient.count;i++){ambP.push({x:(rnd()-.5)*40,y:rnd()*16,z:(rnd()-.5)*24-2,v:.4+rnd()*.8,ph:rnd()*6.28});}
+  var buf=new Float32Array(16*ambP.length);ambP.forEach(function(p,i){B.Matrix.Translation(p.x,p.y,p.z).copyToArray(buf,i*16);});amb.thinInstanceSetBuffer('matrix',buf,16,false);amb._buf=buf;}
+
+ /* burst particles: pooled thin instances */
+ var sp=B.MeshBuilder.CreateBox('spark',{size:.16},scene);var sm=new B.StandardMaterial('sm',scene);sm.emissiveColor=hex(SCENE.accent);sm.disableLighting=true;sp.material=sm;sp.isPickable=false;
+ var SPN=48,spb=new Float32Array(16*SPN),sparks=[];for(var s=0;s<SPN;s++){sparks.push({life:0});B.Matrix.Scaling(0,0,0).copyToArray(spb,s*16);}sp.thinInstanceSetBuffer('matrix',spb,16,false);var spNext=0;
+ function burst(at){var n=reduced?8:24;for(var i=0;i<n;i++){var q=sparks[spNext];spNext=(spNext+1)%SPN;var a=rnd()*6.28,u=rnd();q.life=1.1;q.p=at.clone();q.v=V(Math.cos(a)*(2+u*3),4+rnd()*4,Math.sin(a)*(2+u*3)).scale(reduced?.4:1);}}
+
+ /* generic reactions */
+ var R={
+  glow:function(ob){var gl=ob.parts.filter(function(m){return m.material.name.slice(-1)==='g';});if(!gl.length)gl=ob.parts;
+   var base=hex(ob.o.color);tween(1.6,function(p){var k=Math.sin(p*Math.PI);gl.forEach(function(m){m.material.emissiveColor=base.scale(.35+.9*k);});});},
+  bounce:function(ob){if(reduced)return R.glow(ob);var y0=ob.o.pos[1];tween(.9,function(p){var h=Math.sin(p*Math.PI)*1.6*(1-p*.3);ob.root.position.y=y0+h;var sq=1+Math.sin(p*Math.PI*3)*.08*(1-p);ob.root.scaling.set(sq,2-sq,sq);},function(){ob.root.position.y=y0;ob.root.scaling.setAll(1);});},
+  shake:function(ob){if(reduced)return R.glow(ob);tween(.9,function(p){ob.root.rotation.z=Math.sin(p*Math.PI*8)*.12*(1-p);},function(){ob.root.rotation.z=0;});},
+  spin:function(ob){if(reduced)return R.glow(ob);var r0=ob.root.rotation.y;tween(1.1,function(p){ob.root.rotation.y=r0+(p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2)*Math.PI*2;},function(){ob.root.rotation.y=r0;});},
+  flash:function(ob){screenFlash();fl.position.copyFrom(ob.root.position);tween(reduced?1:.6,function(p){fl.intensity=(1-p)*(reduced?1.2:3);hemi.intensity=.75+(1-p)*(reduced?.2:.6);},function(){fl.intensity=0;hemi.intensity=.75;});},
+  burst:function(ob){burst(ob.root.position.add(V(0,2,0)));}
+ };
+ var acts3d={};
+ SCENE.objects.forEach(function(o){acts3d[o.act]=function(){var ob=objs[o.act];o.react.split(' ').forEach(function(r){if(R[r])R[r](ob);});};});
+
+ /* picking: POINTERTAP on any part of an object runs its act; hover shows a pointer */
+ var pickable=function(m){return !!(m&&m.metadata&&m.metadata.act&&m.isEnabled()&&m.isVisible);};
+ var lastUser=-99,lastMove=0;
+ scene.onPointerObservable.add(function(pi){var t=pi.type;
+  if(t===B.PointerEventTypes.POINTERDOWN||t===B.PointerEventTypes.POINTERWHEEL)lastUser=T;
+  if(t===B.PointerEventTypes.POINTERTAP){var h=scene.pick(scene.pointerX,scene.pointerY,pickable);if(h&&h.hit&&h.pickedMesh)run(h.pickedMesh.metadata.act,true);}
+  else if(t===B.PointerEventTypes.POINTERMOVE&&pi.event&&pi.event.pointerType==='mouse'){var now=performance.now();if(now-lastMove>120){lastMove=now;var hh=scene.pick(scene.pointerX,scene.pointerY,pickable);canvas.style.cursor=DEMO?'none':(hh&&hh.hit?'pointer':'grab');}}
+ });
+
+ /* demo camera drift toward an object */
+ function focus(act){var ob=objs[act];if(!ob)return;var a0=cam.alpha,t0=cam.target.clone(),a1=BASE_A+Math.max(-.6,Math.min(.6,ob.o.pos[0]*.05)),t1=V(ob.o.pos[0]*.35,2.6+Math.min(ob.o.pos[1],8)*.25,ob.o.pos[2]*.2);
+  tween(reduced?.01:1.2,function(p){var e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;cam.alpha=a0+(a1-a0)*e;cam.setTarget(B.Vector3.Lerp(t0,t1,e));});}
+
+ scene.onBeforeRenderObservable.add(function(){var dt=Math.min(engine.getDeltaTime()/1000,.1);T+=dt;
+  for(var i=tweens.length-1;i>=0;i--){var w=tweens[i];w.t+=dt;var p=Math.min(1,w.t/w.d);w.f(p);if(p>=1){tweens.splice(i,1);if(w.done)w.done();}}
+  if(amb&&!reduced){var k=SCENE.ambient.kind,b=amb._buf;for(i=0;i<ambP.length;i++){var q=ambP[i];
+    if(k==='fall'){q.y-=q.v*dt;if(q.y<0)q.y=16;}else if(k==='rise'){q.y+=q.v*dt;if(q.y>16)q.y=0;}else{q.y+=Math.sin(T+q.ph)*dt*.3;}
+    B.Matrix.Translation(q.x+Math.sin(T*.5+q.ph)*.4,q.y,q.z).copyToArray(b,i*16);}amb.thinInstanceBufferUpdated('matrix');}
+  var any=false;for(i=0;i<SPN;i++){var sq=sparks[i];if(sq.life>0){any=true;sq.life-=dt;sq.v.y-=9*dt;sq.p.addInPlace(sq.v.scale(dt));var sc=Math.max(0,sq.life);B.Matrix.Scaling(sc,sc,sc).multiply(B.Matrix.Translation(sq.p.x,sq.p.y,sq.p.z)).copyToArray(spb,i*16);}else if(sq.life>-1){sq.life=-2;B.Matrix.Scaling(0,0,0).copyToArray(spb,i*16);any=true;}}
+  if(any)sp.thinInstanceBufferUpdated('matrix');
+  if(!reduced&&!DEMO&&T-lastUser>5){var target=BASE_A+Math.sin(T*.08)*.35;cam.alpha+=(target-cam.alpha)*.004;}   /* idle drift */
+ });
+
+ if(mq){var onMq=function(){reduced=mq.matches;if(amb)amb.setEnabled(!reduced);};if(mq.addEventListener)mq.addEventListener('change',onMq);else if(mq.addListener)mq.addListener(onMq);}
+ if(amb)amb.setEnabled(!reduced);
+
+ /* resolution: cap device pixel ratio, lower it if frames drop */
+ var pr=1;function setScale(){var w=canvas.clientWidth||800,dpr=window.devicePixelRatio||1;pr=Math.min(dpr,w<560?1.25:1.5);engine.setHardwareScalingLevel(1/pr);engine.resize();fit();}
+ setScale();var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(setScale,120);});
+ setInterval(function(){if(running&&!DEMO&&engine.getFps()<26&&pr>.75){pr-=.25;engine.setHardwareScalingLevel(1/pr);}},3000);
+
+ /* render only while the page is visible and the canvas is on screen */
+ var running=false,onScreen=true,loop=function(){scene.render();};
+ function update(){var want=!document.hidden&&onScreen;if(want&&!running){engine.runRenderLoop(loop);running=true;}else if(!want&&running){engine.stopRenderLoop(loop);running=false;}}
+ document.addEventListener('visibilitychange',update);
+ if(window.IntersectionObserver)new IntersectionObserver(function(es){onScreen=es[0].isIntersecting;update();}).observe(canvas);
+ update();
+ return {acts:acts3d,focus:focus};
+}
+
+var live=null;
+try{live=start3D();}catch(e){live=null;stage.classList.remove('is-3d');}
+if(live){acts=live.acts;modeEl.textContent=SCENE.modes.live;}
+else{modeEl.textContent=SCENE.modes.still;
+ var svg=stage.querySelector('svg');
+ svg.addEventListener('click',function(ev){var n=ev.target;while(n&&n!==svg){var a=n.getAttribute&&n.getAttribute('data-act');if(a){run(a,true);return;}n=n.parentNode;}});}
+
+/* buttons + keyboard */
+var btns=controls.querySelectorAll('[data-act]');
+for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){run(this.getAttribute('data-act'),true);});
+soundBtn.hidden=!(window.AudioContext||window.webkitAudioContext);
+soundBtn.addEventListener('click',function(){setSound(!soundOn);});
+document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey||e.repeat)return;var tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT'||(e.target&&e.target.isContentEditable))return;
+ var k=(e.key||'').toLowerCase();if(k==='m'&&!soundBtn.hidden){e.preventDefault();setSound(!soundOn);return;}
+ var n=parseInt(k,10);if(n>=1&&n<=SCENE.objects.length){e.preventDefault();run(SCENE.objects[n-1].act,true);}});
+
+/* ---------- demo (recording) mode: ?demo=1 or #demo=1 [&aspect=9x16] [&sound=0] ---------- */
+if(DEMO){
+ var D=SCENE.demo,events=[],t=D.hold;
+ SCENE.objects.forEach(function(o){events.push({t:+t.toFixed(2),act:o.act,label:o.button});t+=D.step;});
+ var total=+(t+D.tail).toFixed(2);
+ window.__demoTimeline={total:total,hold:D.hold,step:D.step,aspect:PORTRAIT?'9x16':'16x9',renderer:live?'3d':'2d',events:events};
+ if(flag('sound')!=='0'){
+  /* Try to start sound without a click. Only browsers that allow autoplay will say "running". */
+  try{var AC0=window.AudioContext||window.webkitAudioContext;if(AC0){actx=new AC0();master=actx.createGain();master.gain.value=.7;master.connect(actx.destination);}}catch(e){actx=null;}
+  window.__demoAudio=actx?actx.state:'unavailable';
+  if(actx&&actx.state==='running')setSound(true,true);   /* otherwise stay silent, no retries */
+ }
+ var t0=performance.now();
+ events.forEach(function(ev){   /* camera drifts for 0.9 s, the effect fires exactly at ev.t */
+  if(live)setTimeout(function(){live.focus(ev.act);},Math.max(0,ev.t-.9)*1000);
+  setTimeout(function(){run(ev.act,false);},ev.t*1000);});
+ setTimeout(function(){window.__demoDone=true;window.__demoElapsed=(performance.now()-t0)/1000;try{window.dispatchEvent(new CustomEvent('demo:done',{detail:window.__demoTimeline}));}catch(e){}},total*1000);
+}
+})();
+</script>
+</body>
+</html>
