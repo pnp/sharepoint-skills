@@ -261,7 +261,7 @@ body{
   white-space:nowrap;
   z-index:200;
   max-width:280px;
-  white-space:normal;
+  white-space:pre-line;
   line-height:1.45;
 }
 .rdm-tooltip .tt-title{font-weight:600;margin-bottom:4px}
@@ -437,7 +437,7 @@ body{
        document.querySelectorAll('.phase-block,.milestone-diamond').forEach(function(el){
          el.addEventListener('mouseenter',function(e){
            var t=document.getElementById('rdm-tooltip');
-           t.innerHTML=el.title.replace(/·/g,'<br>');
+           t.textContent=el.title.replace(/·/g,'\n');
            t.style.left=(e.clientX+12)+'px';
            t.style.top=(e.clientY-8)+'px';
            t.style.opacity='1';

@@ -34,6 +34,7 @@ Creates a professional live-linked document browser dashboard for a SharePoint d
 | Version | Date | Comments |
 | --- | --- | --- |
 | 1.0 | August 2026 | Initial Release |
+| 1.1 | November 2026 | Security hardening: treat metadata/live data as untrusted text, validate trusted site origins and library-scoped paths, bound repeated decoding, and preserve permission-trimmed read-only access without exposing credentials. No concrete exploit was established in the review. |
 
 ## Disclaimer
 

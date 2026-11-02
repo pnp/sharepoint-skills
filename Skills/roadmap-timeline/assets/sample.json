@@ -10,7 +10,7 @@
       "All layout positions are pre-computed as percentages and embedded as inline styles — no JavaScript is required for positioning. Includes a today-line overlay, status-colored phase blocks, and milestone diamonds. Four visual palette options. No external dependencies — output runs inside a SharePoint sandboxed iframe."
     ],
     "creationDateTime": "2026-05-29",
-    "updateDateTime": "2026-05-29",
+    "updateDateTime": "2026-11-02",
     "products": [
       "SharePoint",
       "Microsoft 365 Copilot"

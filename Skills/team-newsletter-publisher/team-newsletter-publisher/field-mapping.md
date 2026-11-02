@@ -36,6 +36,8 @@ The field names below are the `{{Field}}` placeholders in the Word template `Tea
 | `{{NewsN_Body}}` | Card text | 9 pt regular #161616 | 35–55 words | Keep the card if the title exists. |
 | `{{NewsN_Link}}` | Card link with “→” | 8.5 pt bold #164C80; link text from Word, URL as target | Link text 2–6 words; if only a URL, show “Read more” | Hide the link line. |
 
+Validate link targets before substitution: allow credential-free absolute HTTPS URLs, or single-slash SharePoint paths resolved against the independently verified source web origin. Reject control characters, backslashes, protocol-relative URLs and other schemes. Serialize the parsed URL, then HTML-escape the quoted attribute without further decoding. An invalid target becomes plain label text, not an anchor, and must be reported to the user. See step 5 in `SKILL.md`.
+
 ### 3 · Upcoming events (N = 1, 2)
 
 | Word field | Component | Styling | Length | If empty |
@@ -123,5 +125,6 @@ The field names below are the `{{Field}}` placeholders in the Word template `Tea
 - [ ] The hero image is the picture from the Word file, cropped 16:9 and not distorted — or the figure is hidden.
 - [ ] The hero image has alt text (FeaturedTitle) and is embedded, not linked.
 - [ ] Dates, times and links are correct; every link opens.
+- [ ] Every link passes the URL policy in SKILL.md step 5; rejected targets are non-clickable and reported, including mixed-case or control-character-obfuscated executable schemes.
 - [ ] The spotlight person has approved name, role and story.
 - [ ] No text is cut off or overlapping; no heading sits alone at the bottom of a page.

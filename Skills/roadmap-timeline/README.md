@@ -30,6 +30,7 @@ Ask Copilot:
 | Version | Date | Comments |
 | --- | --- | --- |
 | 1.0 | May 2026 | Initial Release |
+| 1.1 | November 2026 | Security update: render tooltip values as text instead of reparsing HTML; preserve multiline tooltips and require context-appropriate escaping of source values. |
 
 ## Disclaimer
 
