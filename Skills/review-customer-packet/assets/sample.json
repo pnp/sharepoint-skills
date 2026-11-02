@@ -1,0 +1,61 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-review-customer-packet",
+    "source": "pnp",
+    "title": "Review Customer Packet",
+    "shortDescription": "Reviews a completed customer packet against its application and the packet rulebook, reconciles every VIN, and sets Customer Ready only after the reviewer confirms.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/review-customer-packet",
+    "longDescription": [
+      "Derives the expected document list from the application and packet-manifest.md, reads the merged PDF, and shows an expected-versus-found table with evidence.",
+      "Reconciles proof-of-insurance cards and vehicle schedules VIN by VIN. Freezes an immutable review receipt and updates one column, Packet status, only after the exact confirmation phrase."
+    ],
+    "creationDateTime": "2026-10-20",
+    "updateDateTime": "2026-10-20",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Review"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/review-customer-packet/assets/preview.png",
+        "alt": "Review Customer Packet skill output"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "HassanJMoses",
+        "pictureUrl": "https://github.com/HassanJMoses.png",
+        "name": "Hassan Moses"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "New Customer Packet demo",
+        "description": "The full demo: story, sample files, HTML layouts, setup and video.",
+        "url": "https://github.com/HassanJMoses/copilot-sharepoint-demos"
+      },
+      {
+        "name": "Demo video",
+        "description": "Copilot in SharePoint for Insurance: the three skills run end to end.",
+        "url": "https://www.youtube.com/watch?v=xFWDL-QakWM"
+      }
+    ]
+  }
+]

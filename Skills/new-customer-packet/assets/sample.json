@@ -1,0 +1,62 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-new-customer-packet",
+    "source": "pnp",
+    "title": "New Customer Packet",
+    "shortDescription": "Builds a complete, branded new-customer insurance packet from one application PDF, selected by library metadata and rendered from HTML layouts.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/new-customer-packet",
+    "longDescription": [
+      "Reads one application PDF, fills the customer columns, selects the templates whose columns match the customer's state, coverage and business type, and freezes one ordered manifest.",
+      "Renders each document from its HTML layout with the state seal bound from a Seals folder, converts to PDF, merges once, copies the packet to a Completed Packets library and sets the statuses.",
+      "Stops with Needs information when a required count is missing. Carries a rulebook (packet-manifest.md) and a field map (template-fields.md) in its references folder."
+    ],
+    "creationDateTime": "2026-10-20",
+    "updateDateTime": "2026-10-20",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Document Generation"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/new-customer-packet/assets/preview.png",
+        "alt": "New Customer Packet skill output"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "HassanJMoses",
+        "pictureUrl": "https://github.com/HassanJMoses.png",
+        "name": "Hassan Moses"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "New Customer Packet demo",
+        "description": "The full demo: story, sample files, HTML layouts, setup and video.",
+        "url": "https://github.com/HassanJMoses/copilot-sharepoint-demos"
+      },
+      {
+        "name": "Demo video",
+        "description": "Copilot in SharePoint for Insurance: the three skills run end to end.",
+        "url": "https://www.youtube.com/watch?v=xFWDL-QakWM"
+      }
+    ]
+  }
+]
