@@ -134,14 +134,85 @@ console.log('[JSOM] Delete confirmed by user - proceeding');
 Use this pattern in every generated script and adapt it only as needed for the requested task:
 
 ```javascript
-const pendingScriptLoads = new Map();
+var JSOM_LOAD_TIMEOUT_MS = 15000;
+var JSOM_READY_POLL_MS = 100;
+var pendingScriptLoads = new Map();
+
+function getPath(root, path) {
+  var parts = path.split('.');
+  var current = root;
+  var i;
+
+  for (i = 0; i < parts.length; i++) {
+    if (current === null || current === undefined) {
+      return undefined;
+    }
+    current = current[parts[i]];
+  }
+
+  return current;
+}
+
+var JSOM_LIBRARY_READY_CHECKS = {
+  'init.js': function() {
+    return typeof getPath(window, 'SP.SOD.executeOrDelayUntilScriptLoaded') === 'function' ||
+      typeof window.ExecuteOrDelayUntilScriptLoaded === 'function';
+  },
+  'microsoftajax.js': function() {
+    return typeof getPath(window, 'Type.registerNamespace') === 'function';
+  },
+  'sp.runtime.js': function() {
+    return typeof getPath(window, 'SP.ClientRuntimeContext') === 'function';
+  },
+  'sp.js': function() {
+    return typeof getPath(window, 'SP.ClientContext') === 'function';
+  },
+  'sp.search.js': function() {
+    return typeof getPath(window, 'Microsoft.SharePoint.Client.Search.Query.KeywordQuery') === 'function';
+  },
+  'sp.taxonomy.js': function() {
+    return typeof getPath(window, 'SP.Taxonomy.TaxonomySession') === 'function';
+  },
+  'sp.userprofiles.js': function() {
+    return typeof getPath(window, 'SP.UserProfiles.PeopleManager') === 'function';
+  },
+  'sp.documentmanagement.js': function() {
+    return typeof getPath(window, 'SP.DocumentSet.DocumentSet') === 'function';
+  },
+  'sp.publishing.js': function() {
+    return typeof getPath(window, 'SP.Publishing.PublishingWeb') === 'function';
+  },
+  'sp.requestexecutor.js': function() {
+    return typeof getPath(window, 'SP.RequestExecutor') === 'function';
+  }
+};
+// When you load a library that is not listed above, add a readiness check for it here.
+// Without one, a pre-existing tag for that library can only settle by a load or error
+// event, and otherwise rejects at the timeout instead of hanging.
+
+function getReadyCheck(file) {
+  return JSOM_LIBRARY_READY_CHECKS[file.toLowerCase()] || null;
+}
+
+function isLibraryReady(file) {
+  var check = getReadyCheck(file);
+
+  if (!check) {
+    return false;
+  }
+
+  try {
+    return !!check();
+  } catch (error) {
+    return false;
+  }
+}
 
 function hasRequiredJsomNamespaces() {
-  return !!(
-    window.SP &&
-    window.SP.ClientContext &&
-    window.SP.SOD
-  );
+  return isLibraryReady('init.js') &&
+    isLibraryReady('MicrosoftAjax.js') &&
+    isLibraryReady('SP.Runtime.js') &&
+    isLibraryReady('SP.js');
 }
 
 function getVerifiedWebAbsoluteUrl() {
@@ -157,66 +228,137 @@ function getVerifiedWebAbsoluteUrl() {
   );
 }
 
-function waitForExistingScript(existing, src) {
+function findExistingScript(src) {
+  var scripts = document.getElementsByTagName('script');
+  var target = src.toLowerCase();
+  var i;
+
+  for (i = 0; i < scripts.length; i++) {
+    if (scripts[i].src && scripts[i].src.toLowerCase() === target) {
+      return scripts[i];
+    }
+  }
+
+  return null;
+}
+
+// Waits for one library to become usable. Settles on whichever happens first:
+// the readiness check passes, a load or error event fires, or the timeout expires.
+// It never assumes that a script tag being present means the library is ready.
+function waitForLibrary(script, file, src) {
   return new Promise(function(resolve, reject) {
-    if (existing.dataset.loadState === 'loaded') {
-      resolve();
-      return;
+    var settled = false;
+    var pollTimer = null;
+    var timeoutTimer = null;
+    var hasCheck = !!getReadyCheck(file);
+
+    function cleanup() {
+      settled = true;
+      if (pollTimer) {
+        clearInterval(pollTimer);
+      }
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
+      }
+      script.removeEventListener('load', onLoad);
+      script.removeEventListener('error', onError);
     }
 
-    if (existing.dataset.loadState === 'failed') {
-      reject(new Error('Previously failed: ' + src));
-      return;
+    function succeed() {
+      if (settled) {
+        return;
+      }
+      cleanup();
+      script.dataset.loadState = 'loaded';
+      resolve();
+    }
+
+    function fail(message) {
+      if (settled) {
+        return;
+      }
+      cleanup();
+      script.dataset.loadState = 'failed';
+      reject(new Error(message));
     }
 
     function onLoad() {
-      existing.dataset.loadState = 'loaded';
-      resolve();
+      if (!hasCheck || isLibraryReady(file)) {
+        succeed();
+      } else {
+        fail('Loaded but not initialized: ' + src);
+      }
     }
 
     function onError() {
-      existing.dataset.loadState = 'failed';
-      reject(new Error('Load failed: ' + src));
+      fail('Load failed: ' + src);
     }
 
-    existing.addEventListener('load', onLoad, { once: true });
-    existing.addEventListener('error', onError, { once: true });
-  });
-}
-
-function loadScript(src) {
-  if (pendingScriptLoads.has(src)) {
-    return pendingScriptLoads.get(src);
-  }
-
-  var promise = new Promise(function(resolve, reject) {
-    var selector = 'script[src="' + src + '"]';
-    var existing = document.querySelector(selector);
-    var script;
-
-    if (existing) {
-      waitForExistingScript(existing, src).then(resolve).catch(reject);
+    if (isLibraryReady(file)) {
+      succeed();
       return;
     }
 
-    script = document.createElement('script');
-    script.src = src;
-    script.dataset.loadState = 'loading';
-    script.onload = function() {
-      script.dataset.loadState = 'loaded';
-      console.log('[JSOM Loader] Loaded: ' + src);
-      resolve();
-    };
-    script.onerror = function() {
-      script.dataset.loadState = 'failed';
-      reject(new Error('Load failed: ' + src));
-    };
-    document.head.appendChild(script);
+    if (script.dataset.loadState === 'failed') {
+      fail('Previously failed: ' + src);
+      return;
+    }
+
+    if (script.dataset.loadState === 'loaded' && !hasCheck) {
+      succeed();
+      return;
+    }
+
+    script.addEventListener('load', onLoad);
+    script.addEventListener('error', onError);
+
+    if (hasCheck) {
+      pollTimer = setInterval(function() {
+        if (isLibraryReady(file)) {
+          succeed();
+        }
+      }, JSOM_READY_POLL_MS);
+    }
+
+    timeoutTimer = setTimeout(function() {
+      fail('Timed out after ' + JSOM_LOAD_TIMEOUT_MS + ' ms waiting for ' + src +
+        ' (the script tag exists but the library never became ready)');
+    }, JSOM_LOAD_TIMEOUT_MS);
+  });
+}
+
+function loadScript(file, src) {
+  var key = src.toLowerCase();
+  var promise;
+
+  if (pendingScriptLoads.has(key)) {
+    return pendingScriptLoads.get(key);
+  }
+
+  promise = Promise.resolve().then(function() {
+    var script;
+
+    if (isLibraryReady(file)) {
+      return;
+    }
+
+    script = findExistingScript(src);
+
+    if (!script) {
+      script = document.createElement('script');
+      script.src = src;
+      script.dataset.loadState = 'loading';
+      document.head.appendChild(script);
+    }
+
+    return waitForLibrary(script, file, src).then(function() {
+      console.log('[JSOM Loader] Ready: ' + file);
+    });
   }).finally(function() {
-    pendingScriptLoads.delete(src);
+    pendingScriptLoads.delete(key);
   });
 
-  pendingScriptLoads.set(src, promise);
+  pendingScriptLoads.set(key, promise);
   return promise;
 }
 
@@ -224,13 +366,9 @@ async function ensureJSOMLibraries(extraFiles) {
   console.log('[JSOM Loader] Checking environment - classic or modern?');
 
   var siteBase = getVerifiedWebAbsoluteUrl();
-  var core = ['init.js', 'MicrosoftAjax.js', 'SP.Runtime.js', 'SP.js'];
-  var chain = core.slice(0);
+  var chain = ['init.js', 'MicrosoftAjax.js', 'SP.Runtime.js', 'SP.js'];
   var i;
   var file;
-  var src;
-  var hasClassicJsom = hasRequiredJsomNamespaces();
-  var failures = [];
 
   if (extraFiles) {
     for (i = 0; i < extraFiles.length; i++) {
@@ -238,36 +376,25 @@ async function ensureJSOMLibraries(extraFiles) {
     }
   }
 
-  if (hasClassicJsom) {
+  if (hasRequiredJsomNamespaces()) {
     console.log('[JSOM Loader] Classic page detected - core JSOM already available');
   } else {
-    console.log('[JSOM Loader] Modern page detected - loading SharePoint JavaScript dependencies');
+    console.log('[JSOM Loader] Modern or partially initialized page - ensuring SharePoint JavaScript dependencies');
   }
 
+  // Load in order and stop at the first failure: later libraries depend on earlier ones.
   for (i = 0; i < chain.length; i++) {
     file = chain[i];
-    src = siteBase + '/_layouts/15/' + file;
-
-    if (hasClassicJsom) {
-      if (file === 'init.js' || file === 'MicrosoftAjax.js' || file === 'SP.Runtime.js' || file === 'SP.js') {
-        continue;
-      }
-    }
-
     try {
-      await loadScript(src);
+      await loadScript(file, siteBase + '/_layouts/15/' + file);
     } catch (error) {
-      console.warn('[JSOM Loader] ' + file + ': ' + error.message);
-      failures.push(file + ' (' + error.message + ')');
+      console.error('[JSOM Loader] ' + file + ': ' + error.message);
+      throw new Error('Required SharePoint JavaScript dependency failed: ' + file + ' (' + error.message + ')');
     }
-  }
-
-  if (failures.length > 0) {
-    throw new Error('Required SharePoint JavaScript dependencies failed to load: ' + failures.join(', '));
   }
 
   if (!hasRequiredJsomNamespaces()) {
-    throw new Error('JSOM dependencies did not initialize correctly. window.SP.ClientContext is unavailable.');
+    throw new Error('JSOM dependencies did not initialize correctly. SP.SOD, Type, SP.ClientRuntimeContext or SP.ClientContext is unavailable.');
   }
 
   console.log('[JSOM Loader] Dependencies ensured - ready to run JSOM');
@@ -276,9 +403,11 @@ async function ensureJSOMLibraries(extraFiles) {
 
 Additional requirements for every generated script:
 - Do not use `window.location.origin` as a fallback SharePoint web URL.
-- Do not continue business logic if any required dependency fails to load.
-- Do not assume an existing script tag means the library is ready.
-- Always verify `window.SP`, `SP.ClientContext`, and `SP.SOD` before reporting readiness.
+- Do not continue business logic if any required dependency fails to load, fails to initialize, or times out.
+- Do not assume an existing script tag means the library is ready. Check each library's own readiness (its namespace) whether or not the tag carries the loader's `data-load-state` marker, because SharePoint or another loader may have inserted it and already finished or failed.
+- Never wait on a script without a bounded timeout. The loader rejects with an explicit error after `JSOM_LOAD_TIMEOUT_MS` (default 15000) instead of hanging.
+- When adding a library that is not in `JSOM_LIBRARY_READY_CHECKS`, add a readiness check for it.
+- Always verify `SP.SOD`, `Type.registerNamespace`, `SP.ClientRuntimeContext`, and `SP.ClientContext` before reporting readiness.
 
 ## Code-generation procedure
 1. Identify the requested SharePoint task.

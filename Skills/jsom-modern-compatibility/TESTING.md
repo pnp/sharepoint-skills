@@ -26,40 +26,36 @@
 
 ## Observed Results
 
-### Environment
-- Repository validator: passed
-- npm test: passed
-- npm run check: passed
-- npm run build: passed
-- npm run test:e2e: passed
-- Isolated local JavaScript harness used to rerun the loader regression cases
+### Loader regression harness
+Run with `node Skills/jsom-modern-compatibility/demo/sample-files/loader-regression.test.js` (see `demo/README.md`). The harness extracts the boilerplate from `SKILL.md` and runs it in an isolated Node.js VM with a simulated DOM; no tenant is contacted.
 
-### Regression checks performed
-1. Successful dependency load
-   - Result: pass
-   - Observed: required namespaces available before readiness log
+Environment actually tested: Node.js v22.23.3 on Linux, 2 Nov 2026. Loader timeout lowered to 300 ms for the run.
 
-2. Required dependency load failure
-   - Result: pass
-   - Observed: loader throws and business logic does not continue
+| # | Case | Result |
+|---|------|--------|
+| 1 | Successful load on a modern page, from the current site URL | PASS |
+| 2 | Feature library (SP.Search.js) loads from the current site | PASS |
+| 3 | Required load failure stops the chain and rejects | PASS |
+| 4 | Load event without library initialization rejects | PASS |
+| 5 | Tracked in-flight tag waits for its load event, no duplicate tag | PASS |
+| 6 | Tracked failed tag rejects immediately | PASS |
+| 7 | Untracked already-loaded tags (classic page), no new requests | PASS |
+| 8 | Partially initialized page: untracked loaded init.js | PASS |
+| 9 | Untracked init.js tag, empty dataset, no events, JSOM not ready: bounded rejection | PASS (rejects after the timeout) |
+| 10 | Untracked already-failed tag: bounded rejection | PASS |
+| 11 | Untracked in-flight tag that later fires load | PASS |
+| 12 | Untracked in-flight tag that later fires error | PASS |
+| 13 | Untracked tag ready with no observed event (readiness polling) | PASS |
+| 14 | New tag whose request never answers: bounded rejection | PASS |
+| 15 | Concurrent calls share loads | PASS |
+| 16 | No `_spPageContextInfo`: fails clearly, no tenant-root fallback | PASS |
 
-3. Existing in-flight script tag
-   - Result: pass
-   - Observed: loader waits for the existing script load event
+Result: 16/16 passed.
 
-4. Existing failed script tag
-   - Result: pass
-   - Observed: loader rejects with a clear error
+For comparison, the previous loader (commit 12d2d92) passed 9/16 in the same harness: cases 8, 9, 10, 13 and 14 stayed pending indefinitely, case 3 kept requesting later libraries after a required failure, and case 4 only failed at the final namespace check.
 
-5. Concurrent calls for the same script
-   - Result: pass
-   - Observed: shared in-flight promise prevents duplicate loads
+### Not yet tested
+- Live SharePoint Online classic and modern pages, and SharePoint 2013 classic pages, have not been run against this revision of the loader. Results above come from the simulated harness only.
 
-6. Modern page without `_spPageContextInfo.webAbsoluteUrl`
-   - Result: pass
-   - Observed: loader fails clearly and does not fall back to tenant root
-
-### Reproduction notes
-- The regression cases were rerun in an isolated local JavaScript harness that simulates script tags, load/error events, concurrent requests, and missing page context.
-- The harness verified successful loads, required-load failure, existing in-flight and failed scripts, concurrent calls, and missing `_spPageContextInfo.webAbsoluteUrl`.
-- The observed results above were recorded from those reruns.
+### Repository checks
+- `python .github/scripts/validate_skills.py --root .`: passed (2 Nov 2026).
