@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-information-architecture-review",
+    "source": "pnp",
+    "title": "Information Architecture Review",
+    "shortDescription": "Evaluates the information architecture of a SharePoint site using read-only analysis and provides governance-oriented recommendations.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/information-architecture-review",
+    "longDescription": [
+      "Information Architecture Review performs a read-only assessment of a SharePoint site to evaluate how information is organized across document libraries, folders, metadata, pages, and navigation.",
+      "The skill identifies strengths, governance risks, and opportunities to improve discoverability, consistency, and scalability. It generates practical, evidence-based recommendations without modifying SharePoint content."
+    ],
+    "creationDateTime": "2026-11-01",
+    "updateDateTime": "2026-11-01",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Information Architecture"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/information-architecture-review/assets/preview.png",
+        "alt": "Information Architecture Review preview"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "a-villarruel",
+        "pictureUrl": "https://github.com/a-villarruel.png",
+        "name": "Antonio Villarruel"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
