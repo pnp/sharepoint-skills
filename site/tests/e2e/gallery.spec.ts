@@ -131,6 +131,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 	expect(homeResults.violations).toEqual([]);
 
 	await page.getByRole('switch', { name: 'Switch to dark mode' }).click();
+	await expect(page.locator('html')).not.toHaveClass(/theme-transition/);
 	const darkHomeResults = await new AxeBuilder({ page }).analyze();
 	expect(darkHomeResults.violations).toEqual([]);
 

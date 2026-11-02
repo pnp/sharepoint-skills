@@ -52,6 +52,7 @@ An example output with fictional content is in [`demo/sample-files/`](./demo/sam
 | --- | --- | --- |
 | 1.0 | October 2026 | Initial Release |
 | 1.1 | October 2026 | Added the Team Newsletter Word template |
+| 1.2 | November 2026 | Security update: validate hyperlink schemes and trusted SharePoint origins before rendering; reject executable or malformed destinations, retain labels as plain text and report rejected links. |
 
 ## Disclaimer
 

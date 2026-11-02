@@ -142,6 +142,8 @@ On mouse hover over a `.phase-block` or `.milestone-diamond`, the native `title`
 - Owner (if present)
 - Status badge
 
+Set tooltip content with `textContent` or text nodes, never `innerHTML`, even when the source `title` attribute was HTML-escaped. Use newline characters between lines and `white-space: pre-line` to preserve the layout.
+
 ---
 
 ## Mode 2: Milestones (Vertical List)
