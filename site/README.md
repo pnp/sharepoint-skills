@@ -17,6 +17,8 @@ No contributed skill scripts are executed during generation.
 
 ## Commands
 
+Use Node.js 22.22.0 or later, as required by Astro 7.4. The validation and deployment workflows use Node.js 22.23.4.
+
 Run commands from `site/`:
 
 | Command | Purpose |
