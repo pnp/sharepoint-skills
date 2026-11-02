@@ -8,6 +8,7 @@ Prepares and sends the customer packet email with a view-only link, gated on Pac
 
 - A complete email preview (To, Subject, body) filled from the packet's columns and a template file you control
 - A view-only sharing link for the selected packet only
+- A separate recipient-and-version-bound confirmation before any access grant; email delivery still requires confirmation of the exact preview
 - A send gate on Packet status = Customer Ready and an immutable preview receipt
 - Packet status set to Customer Sent only after delivery
 
@@ -32,6 +33,7 @@ This skill reads `Email templates/customer-packet-email.md` from the site's Docu
 | Version | Date | Comments |
 | --- | --- | --- |
 | 1.0 | October 2026 | Initial release |
+| 1.1 | November 2026 | Security update: require explicit recipient-and-packet-version approval before sharing, revalidate metadata before granting access, restrict links to the approved recipient, and distinguish sharing approval from email confirmation or cancellation. |
 
 ## Disclaimer
 

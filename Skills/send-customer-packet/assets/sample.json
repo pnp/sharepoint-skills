@@ -10,7 +10,7 @@
       "Sends only after \"Confirm to send\" for that exact preview, then sets Packet status to Customer Sent. Never sends when required columns are missing."
     ],
     "creationDateTime": "2026-10-20",
-    "updateDateTime": "2026-10-20",
+    "updateDateTime": "2026-11-02",
     "products": [
       "SharePoint",
       "Microsoft 365 Copilot"
