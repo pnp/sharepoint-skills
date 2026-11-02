@@ -40,3 +40,5 @@ The PnP key art, side backgrounds, logo, and Parker display fonts are vendored f
 ## Deployment
 
 Pull requests run repository validation, unit tests, type checks, a production build, and desktop/mobile browser and accessibility checks. Pushes to `main` repeat those checks and deploy `dist/` through GitHub Pages with no runtime service or secret.
+
+Accessibility checks wait for the theme-switch transition to finish before measuring dark-mode contrast, so they evaluate the settled palette rather than intermediate animated colors.
