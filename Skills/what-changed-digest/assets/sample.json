@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-what-changed-digest",
+    "source": "pnp",
+    "title": "What Changed Digest",
+    "shortDescription": "Creates an HTML digest of the documents, pages, and list items that changed on a site in a time window.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/what-changed-digest",
+    "longDescription": [
+      "Lists the documents, site pages, and list items created or edited on the current site in a time window. The default window is the last 7 days. The HTML digest groups the changes by library or list and by person.",
+      "The digest has KPI cards, up to five highlights, activity per day, a table per library or list, and a per-person summary. It also lists what it can't see, such as deleted items and permission changes.",
+      "The skill only reads site content. It writes one file, the digest, by default to a Reports library."
+    ],
+    "creationDateTime": "2026-11-05",
+    "updateDateTime": "2026-11-05",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Reporting" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/what-changed-digest/assets/preview.png",
+        "alt": "What Changed Digest showing KPI cards, daily activity, and changed items per library."
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "xenophobentx",
+        "pictureUrl": "https://github.com/xenophobentx.png",
+        "name": "Kornél Felföldi"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
