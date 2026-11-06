@@ -46,9 +46,9 @@ Use this skill when the user wants to catch up on recent activity on the current
 3. **Render, save, and summarize (write plan).** Run one more `execute_plan` script. SharePoint refuses a save in a plan that also reads data, so this plan must not call any read tool (`tools.files.read`, `tools.lists.*`). Use exactly these calls:
    - `var kept = await load(<handle from step 1>);`
    - `var json = JSON.stringify(kept.blob).replace(/</g, '\\u003c'); var html = kept.template.split('{{DATA_JSON}}').join(json);` Check that `html.length === kept.template.length - 13 + json.length`; if not, stop and report the mismatch.
-   - `var saved = tools.output.createFile({ fileName: kept.fileName, content: html, images: null, listUrl: <kept.destination.absUrl, or destUrl from step 2>, folderPath: null });`
+   - `var saved = await tools.output.createFile({ files: [ { fileName: kept.fileName, content: html, images: null, listUrl: <kept.destination.absUrl, or destUrl from step 2>, folderPath: null } ] });` and `var file = saved.fileUrl || (saved.files && saved.files[0] && saved.files[0].fileUrl);`
    - Take the text between `<script id="engine">` and the next `</script>` from `kept.template`, run `var model = new Function(engineText + '\nreturn digestModel;')();`, and call `var m = model(kept.blob);`.
-   - Return `{ file: saved.fileUrl, window: m.window, kpis: m.kpis, total: m.total, highlights: m.highlights, notes: m.notes }`. If the save fails, return the exact error instead of `file`.
+   - Return `{ file: file, window: m.window, kpis: m.kpis, total: m.total, highlights: m.highlights, notes: m.notes }`. If the save fails, return the exact error instead of `file`.
 4. Reply in chat from the step 3 result only (see Output format). Don't compute results yourself. If the save failed, say so with the exact error and never say the digest was saved.
 
 ## Rules

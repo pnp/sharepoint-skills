@@ -53,7 +53,15 @@ function person(v) {
   return str(x).replace(/\s*(mailto:)?\S+@\S+/g, '').trim();
 }
 
+// discover() sometimes returns only id, title, and url. Then the kind comes from the URL.
 function kindOf(l) {
+  if ((l.baseTemplate === undefined || l.baseTemplate === null) && (l.isDocumentLibrary === undefined || l.isDocumentLibrary === null)) {
+    var u = str(l.url);
+    if (/\/_catalogs\//i.test(u)) return null;
+    if (/\/SitePages$/i.test(u)) return 'page';
+    if (/\/Lists\//i.test(u)) return 'list';
+    return 'doc';
+  }
   var t = Number(l.baseTemplate);
   if (t === 119) return 'page';
   if (t === 101 || l.isDocumentLibrary === true) return 'doc';
