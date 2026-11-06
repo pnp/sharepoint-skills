@@ -5,6 +5,66 @@ test.beforeEach(async ({ page }) => {
 	await page.route('https://m365-visitor-stats.azurewebsites.net/**', (route) => route.abort());
 });
 
+test('starts desktop and mobile navigation with the community link', async ({ page, isMobile }) => {
+	for (const [route, currentLink] of [
+		['./', 'Skills'],
+		['skills/analyze-document-library/', 'Skills'],
+		['getting-started/', 'Getting started'],
+	]) {
+		await page.goto(route);
+		if (isMobile) await page.locator('.mobile-nav summary').click();
+
+		const navigation = page.getByRole('navigation', {
+			name: isMobile ? 'Mobile navigation' : 'Primary navigation',
+		});
+		const links = navigation.getByRole('link');
+		await expect(links).toHaveText([
+			'Community', 'Skills', 'Getting started', 'Contributors', 'Contributing', 'GitHub',
+		]);
+		const community = links.first();
+		await expect(community).toBeVisible();
+		await expect(community).toHaveAccessibleName('Community');
+		await expect(community).toHaveAttribute('href', 'https://aka.ms/community/home');
+		await expect(community).not.toHaveAttribute('target');
+		await expect(community).not.toHaveAttribute('aria-current');
+		await expect(community.locator('svg')).toHaveAttribute('width', '12');
+		await expect(community.locator('svg')).toHaveAttribute('height', '12');
+		await expect(community.locator('svg')).toHaveAttribute('aria-hidden', 'true');
+		await expect(community.locator('svg')).toHaveClass(/lucide-arrow-up-right/);
+		await expect(links.nth(1)).toHaveAttribute('href', '/sharepoint-skills/');
+		if (!isMobile) {
+			await expect(navigation.getByRole('link', { name: currentLink, exact: true }))
+				.toHaveAttribute('aria-current', 'page');
+			await expect(community).toHaveCSS('font-size', '14px');
+			await expect(community).toHaveCSS('font-weight', '600');
+			await expect(community).toHaveCSS('gap', '7px');
+			await expect(community).toHaveCSS('padding', '9px 10px');
+		}
+		await community.focus();
+		await expect(community).toBeFocused();
+	}
+});
+
+test('keeps community navigation reachable at tablet widths', async ({ page }) => {
+	for (const width of [881, 960, 981]) {
+		await page.setViewportSize({ width, height: 900 });
+		await page.goto('./');
+		const isCollapsed = width <= 980;
+		if (isCollapsed) {
+			await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeHidden();
+			await page.locator('.mobile-nav summary').click();
+		}
+		const navigation = page.getByRole('navigation', {
+			name: isCollapsed ? 'Mobile navigation' : 'Primary navigation',
+		});
+		await expect(navigation.getByRole('link', { name: 'Community', exact: true })).toBeVisible();
+		const hasOverflow = await page.evaluate(
+			() => document.documentElement.scrollWidth > window.innerWidth,
+		);
+		expect(hasOverflow).toBe(false);
+	}
+});
+
 test('filters the catalog and preserves the query in the URL', async ({ page, request }) => {
 	const catalogResponse = await request.get('catalog.json');
 	expect(catalogResponse.ok()).toBeTruthy();
