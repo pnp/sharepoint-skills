@@ -48,7 +48,7 @@ Use this skill when the user wants to catch up on recent activity on the current
    - `var json = JSON.stringify(kept.blob).replace(/</g, '\\u003c'); var html = kept.template.split('{{DATA_JSON}}').join(json);` Check that `html.length === kept.template.length - 13 + json.length`; if not, stop and report the mismatch.
    - `var saved = await tools.output.createFile({ files: [ { fileName: kept.fileName, content: html, images: null, listUrl: <kept.destination.absUrl, or destUrl from step 2>, folderPath: null } ] });` and `var file = saved.fileUrl || (saved.files && saved.files[0] && saved.files[0].fileUrl);`
    - Take the text between `<script id="engine">` and the next `</script>` from `kept.template`, run `var model = new Function(engineText + '\nreturn digestModel;')();`, and call `var m = model(kept.blob);`.
-   - Return `{ file: file, window: m.window, kpis: m.kpis, total: m.total, highlights: m.highlights, notes: m.notes }`. If the save fails, return the exact error instead of `file`.
+   - Return `{ file: file, window: m.window, coverage: m.coverage, kpis: m.kpis, total: m.total, highlights: m.highlights, notes: m.notes }`. If the save fails, return the exact error instead of `file`.
 4. Reply in chat from the step 3 result only (see Output format). Don't compute results yourself. If the save failed, say so with the exact error and never say the digest was saved.
 
 ## Rules
@@ -56,7 +56,8 @@ Use this skill when the user wants to catch up on recent activity on the current
 - Don't change, move, or tag any site content. The only write is the digest file (and the destination library, only after the user agrees).
 - If a container fails or is throttled, keep going, and list it in the digest and in chat as "not checked" with the reason. Never report a failed container as "no changes".
 - Never present a sampled count as a full count. When a container is sampled, the digest's first highlight says the counts cover only the included changes.
-- If nothing changed in the window, still produce the digest with zero counts and say so plainly.
+- `coverage` says how much was read: `full` (every container), `partial` (some failed or had unreadable dates), or `none` (nothing could be read). Only with `full` and zero changes may you say nothing changed. With `partial`, say no changes were found in what could be checked and name what wasn't checked. With `none`, say you couldn't determine what changed; never give zero counts.
+- If nothing changed in the window and `coverage` is `full`, still produce the digest with zero counts and say so plainly.
 
 ## Output format
 Reply in chat with:

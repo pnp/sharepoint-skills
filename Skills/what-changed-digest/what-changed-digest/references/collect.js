@@ -127,7 +127,8 @@ function build(p, results) {
     if (res && !Array.isArray(res) && Array.isArray(res.rows)) { truncated = !!res.truncated; res = res.rows; }
     var entry = { t: c.title, u: c.absUrl, k: c.kind, s: false, x: '' };
     C.push(entry);
-    if (!Array.isArray(res)) { entry.x = res && res.error ? str(res.error) : 'couldn’t be read'; return; }
+    // f: 1 marks a container that couldn't be read at all, so the digest never shows it as "no changes".
+    if (!Array.isArray(res)) { entry.f = 1; entry.x = res && res.error ? str(res.error) : 'couldn’t be read'; return; }
     var rows = [], unreadable = 0;
     res.forEach(function (it) {
       if (str(it.FSObjType) === '1') return;
