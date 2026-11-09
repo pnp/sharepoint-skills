@@ -1,0 +1,48 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-project-baseline-alignment-review",
+    "source": "pnp",
+    "title": "Project Baseline Alignment Review",
+    "shortDescription": "Review project baseline documents and SharePoint records to identify scope, schedule, budget, governance, and dependency alignment issues.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/project-baseline-alignment-review",
+    "longDescription": [
+      "Compares project charter, scope, schedule, budget, and status reporting with structured SharePoint project records.",
+      "Classifies findings as confirmed inconsistencies, potential issues, information gaps, or change-control gaps, with evidence, severity, and recommended actions.",
+      "Operates in read-only mode and explicitly reports missing or inaccessible sources."
+    ],
+    "creationDateTime": "2026-11-10",
+    "updateDateTime": "2026-11-10",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "name": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "name": "SKILL-CATEGORY",
+        "value": "Project Management"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/project-baseline-alignment-review/assets/preview.png",
+        "alt": "Project Baseline Alignment Review report preview"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "a-villarruel",
+        "pictureUrl": "https://github.com/a-villarruel.png",
+        "name": "Antonio Villarruel"
+      }
+    ],
+    "references": [
+      "https://agentskills.io/specification"
+    ]
+  }
+]
