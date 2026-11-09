@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library roast</title>
+<style>
+  :root {
+    --brand: var(--colorBrandBackground, #0f6cbd);
+    --stage: #120e1a;
+    --stage2: #1c1626;
+    --card: #221b2e;
+    --card-line: #3a3048;
+    --ink: #f6f1ea;
+    --ink2: #c9bfd3;
+    --muted: #9a8fa8;
+    --gold: #f5c451;
+    --mild: #e9b949;
+    --spicy: #f08a3c;
+    --hot: #e5484d;
+    --paper: var(--colorNeutralBackground1, #ffffff);
+    --paper-ink: var(--colorNeutralForeground1, #242424);
+    --paper-muted: var(--colorNeutralForeground2, #616161);
+    --paper-line: var(--colorNeutralStroke1, #e0e0e0);
+    --font: var(--fontFamily, "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif);
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --mono: "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--stage); }
+  body { margin: 0; color: var(--ink); font: 15px/1.55 var(--font); background:
+    radial-gradient(ellipse 38% 60% at 30% -8%, rgba(255, 220, 150, .20), transparent 70%),
+    radial-gradient(ellipse 38% 60% at 70% -8%, rgba(255, 220, 150, .16), transparent 70%),
+    radial-gradient(ellipse 80% 30% at 50% 100%, rgba(245, 196, 81, .07), transparent 70%),
+    var(--stage); min-height: 100vh; }
+  .stage { position: relative; max-width: 1180px; margin: 0 auto; padding: 0 64px 56px; }
+  .curtain { position: fixed; top: 0; bottom: 0; width: 46px; z-index: 0; pointer-events: none;
+    background: repeating-linear-gradient(90deg, #5a0f1a 0 9px, #7a1626 9px 16px, #4a0c16 16px 23px); box-shadow: 0 0 30px rgba(0,0,0,.6); }
+  .curtain.l { left: 0; border-right: 3px solid #2a060c; }
+  .curtain.r { right: 0; border-left: 3px solid #2a060c; }
+  .valance { position: fixed; top: 0; left: 0; right: 0; height: 18px; z-index: 1; pointer-events: none;
+    background: radial-gradient(circle at 18px -6px, #7a1626 16px, transparent 17px) 0 0 / 36px 18px repeat-x, #5a0f1a; box-shadow: 0 4px 14px rgba(0,0,0,.5); }
+  .content { position: relative; z-index: 2; }
+
+  /* Marquee header */
+  .marquee { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; padding: 52px 0 28px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 10px; color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+  .eyebrow .onair { display: inline-block; padding: 2px 8px; border: 1.5px solid var(--hot); border-radius: 4px; color: #ffb3b5; letter-spacing: .12em; }
+  h1 { margin: 0; font: 700 44px/1.08 var(--serif); letter-spacing: -.01em; text-shadow: 0 2px 24px rgba(245, 196, 81, .25); }
+  h1 .lib { color: var(--gold); }
+  .meta { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+  .meta a { color: var(--ink2); }
+  .opener { margin: 18px 0 0; max-width: 640px; color: var(--ink2); font: italic 18px/1.5 var(--serif); }
+  .opener::before { content: "\201C"; color: var(--gold); font-size: 30px; line-height: 0; vertical-align: -10px; margin-right: 4px; }
+
+  /* Roast-o-meter */
+  .meter { width: 250px; padding: 18px 18px 14px; background: linear-gradient(180deg, #2a2136, #1d1727); border: 1px solid var(--card-line); border-radius: 18px; text-align: center; box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05); }
+  .meter .label { display: block; color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .gauge { position: relative; width: 200px; height: 100px; margin: 12px auto 6px; overflow: hidden; }
+  .gauge .arc { position: absolute; inset: 0 0 -100px 0; border-radius: 50%;
+    background: conic-gradient(from 270deg, #6cc070 0deg, var(--mild) 55deg, var(--spicy) 110deg, var(--hot) 160deg, #b0172a 180deg, transparent 180deg);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 62px, #000 63px); mask: radial-gradient(circle at 50% 50%, transparent 62px, #000 63px); }
+  .gauge .needle { position: absolute; left: 50%; bottom: 0; width: 4px; height: 88px; margin-left: -2px; border-radius: 4px; background: var(--ink); transform-origin: 50% 100%; transform: rotate(calc(var(--score, 0) * 1.8deg - 90deg)); box-shadow: 0 0 10px rgba(255,255,255,.35); }
+  .gauge .hub { position: absolute; left: 50%; bottom: -9px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--gold); }
+  .meter-value { display: block; font: 700 46px/1 var(--serif); color: var(--ink); }
+  .meter-value::after { content: "/100"; font: 600 13px var(--font); color: var(--muted); margin-left: 2px; }
+  .meter .band { display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 999px; background: rgba(229, 72, 77, .16); color: #ffc9c0; font-weight: 700; font-size: 13px; }
+  .meter .band.none { background: rgba(108, 192, 112, .18); color: #bfe8c1; }
+  .meter .band.light { background: rgba(233, 185, 73, .18); color: #ffe3a3; }
+  .meter .band.medium { background: rgba(240, 138, 60, .18); color: #ffd0a8; }
+  .meter .note { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
+
+  /* Roast cards */
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 8px; }
+  .cards > .roast-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .roast-card { position: relative; display: flex; flex-direction: column; background: linear-gradient(180deg, var(--card), #1b1525); border: 1px solid var(--card-line); border-radius: 16px; padding: 18px 20px 16px; box-shadow: 0 10px 30px rgba(0,0,0,.35); overflow: hidden; }
+  .roast-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--sev); }
+  .roast-card.sev-high { --sev: var(--hot); }
+  .roast-card.sev-medium { --sev: var(--spicy); }
+  .roast-card.sev-low { --sev: var(--mild); }
+  .roast-card > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .roast-card .finding { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink2); }
+  .sev { display: inline-flex; align-items: center; gap: 3px; padding: 3px 10px 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--sev); background: color-mix(in srgb, var(--sev) 16%, transparent); white-space: nowrap; }
+  .sev i { display: inline-block; width: 8px; height: 8px; margin: 3px 2px 0 1px; border-radius: 50% 0 50% 50%; background: radial-gradient(circle at 65% 65%, #ffe08a 0 25%, var(--sev) 70%); transform: rotate(-45deg); }
+  .sev i:last-of-type { margin-right: 6px; }
+  .joke { flex: 1; margin: 14px 0 16px; font: 19px/1.45 var(--serif); color: var(--ink); }
+  .joke code.file { font-size: 15px; }
+  .evidence { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: rgba(0,0,0,.28); border: 1px dashed var(--card-line); }
+  .ev-count { flex: none; min-width: 52px; font: 700 34px/1 var(--serif); color: var(--sev); text-align: center; }
+  .ev-body { min-width: 0; }
+  .ev-label { display: block; color: var(--ink2); font-size: 13px; }
+  .ev-files { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  code.file { display: inline-block; max-width: 100%; padding: 1px 7px; border-radius: 6px; background: rgba(245, 196, 81, .10); border: 1px solid rgba(245, 196, 81, .25); color: #ffe3a3; font: 12.5px/1.6 var(--mono); overflow-wrap: anywhere; }
+  .ev-more { color: var(--muted); font-size: 12px; align-self: center; }
+
+  /* Nothing to roast */
+  .nothing { grid-column: 1 / -1; text-align: center; padding: 48px 24px; border: 1px dashed var(--card-line); border-radius: 18px; background: radial-gradient(ellipse at 50% 0%, rgba(245,196,81,.12), transparent 70%); }
+  .nothing .big { margin: 0; font: 700 30px/1.2 var(--serif); color: var(--gold); }
+  .nothing p { margin: 10px auto 0; max-width: 620px; color: var(--ink2); font: italic 18px/1.5 var(--serif); }
+  .nothing ul { display: inline-block; margin: 18px 0 0; padding: 0; list-style: none; text-align: left; color: var(--ink2); font-size: 14px; }
+  .nothing li::before { content: "\2713"; color: #6cc070; font-weight: 700; margin-right: 8px; }
+
+  /* The serious part: house lights up */
+  .serious { margin-top: 34px; background: var(--paper); color: var(--paper-ink); border-radius: 18px; padding: 26px 30px 24px; box-shadow: 0 20px 60px rgba(0,0,0,.5); border-top: 6px solid var(--brand); }
+  .serious h2 { margin: 0; font: 700 26px/1.2 var(--serif); }
+  .serious .intro { margin: 6px 0 18px; color: var(--paper-muted); }
+  .plan { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .step { position: relative; counter-increment: step; padding: 14px 0 14px 54px; border-top: 1px solid var(--paper-line); }
+  .step:first-child { border-top: 0; }
+  .step::before { content: counter(step); position: absolute; left: 0; top: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--brand); color: #fff; font: 700 16px/36px var(--font); text-align: center; }
+  .step-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .step h3 { margin: 0; font-size: 16px; }
+  .prio { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .step.now .prio { background: #fde7e9; color: #a4262c; }
+  .step.next .prio { background: #fff4e0; color: #8a5300; }
+  .step.later .prio { background: #eef3e8; color: #3b6b26; }
+  .step .why { margin: 4px 0 0; color: var(--paper-muted); font-size: 14px; }
+  .step .how { margin: 6px 0 0; font-size: 14px; }
+  .skill { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 6px; background: var(--colorBrandBackground2, #ebf3fc); color: var(--colorBrandForeground1, #0f548c); font: 600 12.5px/1.7 var(--mono); }
+  .skill.manual { background: #f0f0f0; color: #424242; font-family: var(--font); }
+  .serious code.file { background: #fff8e6; border-color: #f2d58a; color: #6b4a00; }
+  .warn { margin-top: 18px; padding: 16px 20px; border-radius: 14px; background: #2b1418; border: 1px solid #6b2630; color: #ffd6d9; }
+  .warn h2 { margin: 0 0 6px; font-size: 16px; }
+  .warn ul { margin: 0; padding-left: 20px; }
+  .fineprint { margin: 22px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+  .noscript { margin: 60px auto; max-width: 640px; padding: 20px 24px; border-radius: 14px; background: var(--card); border: 1px solid var(--card-line); color: var(--ink); }
+  .error { margin: 60px auto; max-width: 640px; padding: 20px 24px; border-radius: 14px; background: #2b1418; border: 1px solid #6b2630; color: #ffd6d9; }
+  footer { margin-top: 14px; color: var(--muted); font-size: 12px; text-align: center; }
+
+  @media (max-width: 900px) {
+    .stage { padding: 0 34px 40px; }
+    .curtain { width: 22px; }
+    .marquee { grid-template-columns: 1fr; }
+    .meter { margin: 0 auto; }
+    .cards { grid-template-columns: 1fr; }
+    h1 { font-size: 34px; }
+  }
+  @media (max-width: 600px) {
+    .stage { padding: 0 20px 32px; }
+    .curtain { width: 10px; }
+    h1 { font-size: 28px; }
+    .roast-card { padding: 16px; }
+    .roast-card > header { flex-wrap: wrap; }
+    .joke { font-size: 17px; }
+    .evidence { flex-direction: column; gap: 6px; }
+    .serious { padding: 20px 18px; }
+    .step { padding-left: 46px; }
+  }
+  @media print {
+    html, body { background: #fff; color: #000; }
+    .curtain, .valance { display: none; }
+    .stage { padding: 0 12px; }
+    h1, .opener, .joke, .meter-value { color: #000; text-shadow: none; }
+    .meter, .roast-card { background: #fff; box-shadow: none; border: 1px solid #bbb; }
+    .evidence { background: #fafafa; }
+    .ev-label, .meta, .fineprint, footer { color: #444; }
+    code.file { background: #fff8e6; color: #6b4a00; }
+    .roast-card, .step, .meter { break-inside: avoid; }
+    .serious { box-shadow: none; border: 1px solid #bbb; }
+  }
+</style>
+</head>
+<body>
+<div class="curtain l" aria-hidden="true"></div>
+<div class="curtain r" aria-hidden="true"></div>
+<div class="valance" aria-hidden="true"></div>
+<main class="stage" data-skill="library-roast">
+  <div class="content" id="app">
+    <noscript><div class="noscript">This library roast is drawn by a small script inside this file. Open the file in a browser with JavaScript enabled, or ask Copilot for the roast summary in chat.</div></noscript>
+  </div>
+</main>
+<script type="application/json" id="data">{{DATA_JSON}}</script>
+<script>
+(function () {
+  var app = document.getElementById('app');
+  function esc(v) {
+    return String(v === null || v === undefined ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  var D;
+  try { D = JSON.parse(document.getElementById('data').textContent); } catch (e) { D = null; }
+  if (!D || !D.library || !D.findings) {
+    app.innerHTML = '<div class="error"><b>The roast data is missing or damaged.</b> Run the library-roast skill again; this file contains no findings to show.</div>';
+    return;
+  }
+  var I = D.i18n || {};
+  var L = I.labels || {};
+  function t(key, def) { return (L[key] !== undefined && L[key] !== null && L[key] !== '') ? L[key] : def; }
+  var SEV = { High: ['high', t('scorching', 'Scorching'), 3], Medium: ['medium', t('spicy', 'Spicy'), 2], Low: ['low', t('mild', 'Mild'), 1] };
+  var PRIO = { Now: ['now', t('now', 'Now')], Next: ['next', t('next', 'Next')], Later: ['later', t('later', 'Later')] };
+  var FI = I.findings || {};
+  var PI = I.plan || {};
+  var lang = D.lang || 'en';
+  document.documentElement.lang = lang;
+  var libTitle = D.library.title || '';
+  document.title = t('title', 'Library roast') + ': ' + libTitle;
+  function n(v) { return Number(v) || 0; }
+  function when(iso) {
+    try {
+      var o = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      if (D.site && D.site.timeZone) o.timeZone = D.site.timeZone;
+      return new Date(iso).toLocaleString(lang, o);
+    } catch (e) { return String(iso || '').replace('T', ' ').slice(0, 16) + ' UTC'; }
+  }
+  function count(num, one, many) { return num + ' ' + (num === 1 ? one : many); }
+  function code(name, kind) { return '<code class="' + (kind === 'folder' ? 'file folder' : 'file') + '">' + esc(name) + '</code>'; }
+  function highlight(text, examples) {
+    var out = esc(text);
+    var names = (examples || []).slice().sort(function (a, b) { return b.name.length - a.name.length; });
+    var tokens = [];
+    names.forEach(function (ex) {
+      var needle = esc(ex.name);
+      if (!needle || out.indexOf(needle) < 0) return;
+      tokens.push(code(ex.name, ex.kind));
+      out = out.split(needle).join('\u0000' + (tokens.length - 1) + '\u0001');
+    });
+    out = out.replace(/(&quot;|\u201C|\u2018|&#39;)\u0000(\d+)\u0001(&quot;|\u201D|\u2019|&#39;)/g, function (m, a, i) { return '\u0000' + i + '\u0001'; });
+    return out.replace(/\u0000(\d+)\u0001/g, function (m, i) { return tokens[+i]; });
+  }
+
+  var tot = D.totals || {};
+  var html = [];
+  // marquee
+  var note = [count(n(tot.findings), t('finding', 'finding'), t('findings', 'findings'))];
+  if (n(tot.high)) note.push(n(tot.high) + ' ' + t('scorchingLower', 'scorching'));
+  if (n(tot.medium)) note.push(n(tot.medium) + ' ' + t('spicyLower', 'spicy'));
+  if (n(tot.low)) note.push(n(tot.low) + ' ' + t('mildLower', 'mild'));
+  if (!n(tot.findings)) note = [t('noFindingsNote', '0 findings in 9 checks')];
+  var score = Math.max(0, Math.min(100, n(D.score)));
+  html.push('<header class="marquee"><div>');
+  html.push('<p class="eyebrow"><span class="onair">' + esc(t('live', 'Live')) + '</span>' + esc(t('eyebrow', 'Tonight on stage')) + '</p>');
+  html.push('<h1>' + esc(t('roasting', 'Roasting')) + ' <span class="lib">' + esc(libTitle) + '</span></h1>');
+  html.push('<p class="meta">' + esc(t('scanned', 'Scanned')) + ' ' + esc(when(D.generatedAt)) + (D.site && D.site.timeZone ? ' (' + esc(D.site.timeZone) + ')' : '') +
+    ' · ' + esc(count(n(tot.files), t('file', 'file'), t('files', 'files'))) + ' · ' + esc(count(n(tot.folders), t('folder', 'folder'), t('folders', 'folders'))) +
+    (/^https:\/\//i.test(D.library.url || '') ? ' · <a href="' + esc(D.library.url) + '">' + esc(libTitle) + '</a>' : '') + '</p>');
+  if (D.opener) html.push('<p class="opener">' + esc(D.opener) + '</p>');
+  html.push('</div><div class="meter" role="img" aria-label="' + esc(t('meter', 'Roast-o-meter')) + ': ' + score + '/100">');
+  html.push('<span class="label">' + esc(t('meter', 'Roast-o-meter')) + '</span>');
+  html.push('<div class="gauge" style="--score: ' + score + '"><div class="arc"></div><div class="needle"></div><div class="hub"></div></div>');
+  html.push('<span class="meter-value">' + score + '</span>');
+  html.push('<span class="band ' + esc(D.bandKey || '') + '">' + esc(t('band', D.band || '')) + '</span>');
+  html.push('<span class="note">' + esc(note.join(' · ')) + '</span></div></header>');
+
+  // cards
+  html.push('<section class="cards" aria-label="' + esc(t('eyebrow', 'Tonight on stage')) + '">');
+  if (!D.findings.length) {
+    html.push('<div class="nothing"><p class="big">' + esc(D.complete === false ? t('nothingPartialBig', 'Nothing found in what was read.') : t('nothingBig', 'Nothing to roast.')) + '</p>');
+    if (D.nothingLine) html.push('<p>' + esc(D.nothingLine) + '</p>');
+    var passed = I.passed || D.passed || [];
+    if (passed.length) html.push('<ul>' + passed.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>');
+    html.push('</div>');
+  }
+  D.findings.forEach(function (f) {
+    var sv = SEV[f.severity] || SEV.Low;
+    var tr = FI[f.key] || {};
+    var joke = (D.jokes && D.jokes[f.key]) || f.facts || '';
+    var flames = '';
+    for (var i = 0; i < sv[2]; i++) flames += '<i></i>';
+    var ex = (f.examples || []).slice(0, 4).map(function (e) { return code(e.name, e.kind); }).join('');
+    if (n(f.more) > 0) ex += '<span class="ev-more">+ ' + n(f.more) + ' ' + esc(t('more', 'more')) + '</span>';
+    html.push('<article class="roast-card sev-' + sv[0] + '"><header><h2 class="finding">' + esc(tr.name || f.name) + '</h2>' +
+      '<span class="sev">' + flames + esc(sv[1]) + '</span></header>' +
+      '<blockquote class="joke">' + highlight(joke, f.examples) + '</blockquote>' +
+      '<div class="evidence"><span class="ev-count">' + n(f.count) + '</span><div class="ev-body"><span class="ev-label">' + esc(tr.label || f.label) + '</span>' +
+      '<div class="ev-files">' + ex + '</div></div></div></article>');
+  });
+  html.push('</section>');
+
+  // not checked
+  var nc = D.notChecked || [];
+  if (nc.length) {
+    html.push('<section class="warn"><h2>' + esc(t('notChecked', 'Not checked')) + '</h2><ul>' + nc.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul></section>');
+  }
+
+  // the serious part
+  html.push('<section class="serious" aria-labelledby="serious-h"><h2 id="serious-h">' + esc(t('serious', 'The serious part')) + '</h2>');
+  html.push('<p class="intro">' + esc(D.findings.length ? t('seriousIntro', 'The jokes are over. Here\'s the cleanup plan, most urgent first. This roast didn\'t change anything in the library; the skills below each show a preview and ask before they change anything.')
+    : D.complete === false ? t('seriousIntroPartial', 'No cleanup found in what was read. See Not checked for what the roast couldn\'t cover. This roast didn\'t change anything in the library.')
+    : t('seriousIntroNone', 'No cleanup needed. This roast didn\'t change anything in the library.')) + '</p>');
+  html.push('<ol class="plan">');
+  (D.plan || []).forEach(function (s) {
+    var pr = PRIO[s.priority] || PRIO.Later;
+    var tr = PI[s.key] || {};
+    var skill = s.skill === 'Manual' ? '<span class="skill manual">' + esc(t('manual', 'Manual')) + '</span>' : '<span class="skill">' + esc(s.skill) + '</span>';
+    html.push('<li class="step ' + pr[0] + '"><div class="step-head"><span class="prio">' + esc(pr[1]) + '</span><h3>' + esc(tr.title || s.title) + '</h3></div>' +
+      '<p class="why">' + esc(tr.why || s.why) + '</p><p class="how">' + skill + esc(tr.how || s.how) + '</p></li>');
+  });
+  html.push('</ol></section>');
+
+  html.push('<p class="fineprint">' + esc(t('finePrint', 'How this was measured: version suffix = final, copy, v2, rev2, latest, backup or (1) in the name; untouched = not modified since ' + (D.cutoffText || D.cutoff || '') +
+    '; deep = 5 or more folder levels; giant = 50 MB or more; ancient = .doc, .xls, .ppt, .pps, .dot, .xlt, .pot. Only file and folder names, dates and sizes were read; no file contents and no people.')) + '</p>');
+  html.push('<footer>' + esc(t('generated', 'Generated by the library-roast skill on')) + ' ' + esc(when(D.generatedAt)) + (D.site && D.site.url ? ' · ' + esc(t('source', 'Source')) + ': ' + esc(D.site.url) : '') + '</footer>');
+  app.innerHTML = html.join('');
+})();
+</script>
+</body>
+</html>
