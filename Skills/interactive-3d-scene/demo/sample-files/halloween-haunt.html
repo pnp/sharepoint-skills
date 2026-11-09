@@ -353,6 +353,7 @@ var reduced=!!(mq&&mq.matches);
 var Q={};
 try{((location.search||'').replace(/^\?/,'')+'&'+(location.hash||'').replace(/^#/,'')).split(/[&;?]/).forEach(function(kv){if(!kv)return;var i=kv.indexOf('='),k=(i<0?kv:kv.slice(0,i)).toLowerCase(),v=i<0?'1':kv.slice(i+1);try{v=decodeURIComponent(v);}catch(e){}Q[k]=String(v).toLowerCase();});}catch(e){}
 var DEMO=Q.demo==='1'||Q.demo==='true'||Q.demo==='on';
+var FORCE2D=Q.mode==='2d';
 var D={caps:DEMO&&Q.captions==='1',step:DEMO&&Q.step==='1',portrait:DEMO&&(Q.aspect==='9x16'||Q.aspect==='9:16'||Q.aspect==='portrait'),fps:Math.max(10,Math.min(120,+Q.fps||30))};
 D.sound=DEMO&&Q.sound!=='0'&&(!D.step||Q.sound==='1');
 if(DEMO){
@@ -500,7 +501,7 @@ function run(key,fromUser,arg){var f=acts[key];if(!f)return;f(arg);say(key);if(f
 /* ---------- moving scene ---------- */
 function start3D(){
  var B=window.BABYLON;
- if(!B||!B.Engine||!B.MeshBuilder)return null;
+ if(FORCE2D||!B||!B.Engine||!B.MeshBuilder)return null;
  if(B.Engine.isSupported&&!B.Engine.isSupported())return null;
  if(B.Logger&&B.Logger.WarningLogLevel!==void 0)B.Logger.LogLevels=B.Logger.WarningLogLevel|B.Logger.ErrorLogLevel;
  stage.classList.add('is-3d');
