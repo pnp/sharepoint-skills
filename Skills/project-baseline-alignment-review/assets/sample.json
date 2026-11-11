@@ -18,11 +18,11 @@
     ],
     "metadata": [
       {
-        "name": "SAMPLE-TYPE",
+        "key": "SAMPLE-TYPE",
         "value": "SharePoint-AI-Skill"
       },
       {
-        "name": "SKILL-CATEGORY",
+        "key": "SKILL-CATEGORY",
         "value": "Project Management"
       }
     ],
@@ -42,7 +42,11 @@
       }
     ],
     "references": [
-      "https://agentskills.io/specification"
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
     ]
   }
 ]
