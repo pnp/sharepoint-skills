@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What changed</title>
+<style>
+  :root {
+    --brand: var(--colorBrandBackground, #0f6cbd);
+    --brand-soft: var(--colorBrandBackground2, #ebf3fc);
+    --ink: var(--colorNeutralForeground1, #242424);
+    --muted: var(--colorNeutralForeground2, #616161);
+    --line: var(--colorNeutralStroke1, #e0e0e0);
+    --bg: var(--colorNeutralBackground1, #ffffff);
+    --bg2: var(--colorNeutralBackground2, #fafafa);
+    --new: #0e7a0d;
+    --new-soft: #e7f4e4;
+    --edit: #8a5300;
+    --edit-soft: #fdf3e1;
+    --font: var(--fontFamily, "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg2); color: var(--ink); font: 15px/1.5 var(--font); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 48px; }
+  header { background: var(--bg); border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 10px; padding: 24px 28px; }
+  .eyebrow { margin: 0; color: var(--brand); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { margin: 4px 0 6px; font-size: 26px; line-height: 1.25; }
+  .window { margin: 0; color: var(--muted); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0 0; }
+  .kpi { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .kpi .n { display: block; font-size: 30px; font-weight: 700; color: var(--brand); line-height: 1.1; }
+  .kpi .l { color: var(--muted); font-size: 13px; }
+  section { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; margin-top: 16px; }
+  h2 { margin: 0 0 12px; font-size: 18px; }
+  h2 .count { color: var(--muted); font-weight: 400; font-size: 14px; margin-left: 6px; }
+  ul.highlights { margin: 0; padding-left: 20px; }
+  ul.highlights li { margin: 4px 0; }
+  .days { display: grid; grid-template-columns: repeat(var(--days, 7), 1fr); gap: 8px; align-items: end; height: 150px; }
+  .day { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .day .bar { width: 100%; max-width: 48px; background: var(--brand); border-radius: 4px 4px 0 0; min-height: 2px; }
+  .day .v { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .day .d { font-size: 11px; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); border-bottom: 2px solid var(--line); padding: 8px 10px; }
+  td { border-bottom: 1px solid var(--line); padding: 9px 10px; vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td a { color: var(--brand); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .tag.new { background: var(--new-soft); color: var(--new); }
+  .tag.edited { background: var(--edit-soft); color: var(--edit); }
+  .more { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+  .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .person { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+  .person b { display: block; }
+  .person span { color: var(--muted); font-size: 13px; }
+  .warn { border-left: 4px solid #c50f1f; }
+  .note { color: var(--muted); font-size: 13px; }
+  footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 20px; }
+  @media print { body { background: #fff; } section, header, .kpi { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">What changed digest</p>
+    <h1 id="title">What changed</h1>
+    <p class="window" id="window"></p>
+    <div class="kpis" id="kpis"></div>
+  </header>
+  <div id="data-error"></div>
+  <noscript><section class="warn"><h2>Scripts are turned off</h2><p>A script inside this file draws the digest. Open it in a browser with scripts allowed.</p></section></noscript>
+
+  <section>
+    <h2>Highlights</h2>
+    <ul class="highlights" id="highlights"></ul>
+  </section>
+
+  <section>
+    <h2>Activity per day</h2>
+    <div class="days" id="days"></div>
+  </section>
+
+  <div id="containers"></div>
+
+  <section>
+    <h2>People<span class="count" id="people-count"></span></h2>
+    <div class="people" id="people"></div>
+  </section>
+
+  <div id="not-checked"></div>
+
+  <section>
+    <h2>Not covered by this digest</h2>
+    <p class="note">Deleted items, moves and renames (shown as edits at most), folders, permission changes, and changes in excluded, hidden, or system libraries aren't visible to this digest. Every number comes from the site's own Created and Modified values. Times use the site's current UTC offset, so around a daylight saving change they can be off by an hour.</p>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script type="application/json" id="data">{{DATA_JSON}}</script>
+
+<script id="engine">
+/* Pure model: no DOM. Uses Intl when available, otherwise window.utcOffsetMinutes.
+   The skill also runs this function in its write plan for the chat summary. */
+function digestModel(data) {
+  var WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function arr(v) { return Array.isArray(v) ? v : []; }
+  function str(v) { return v === null || v === undefined ? '' : String(v); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+  function list(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+  function cmp(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  var win = data.window || {}, tz = str(win.timeZone) || 'UTC';
+  function parts(iso) {
+    var d = new Date(str(iso));
+    if (isNaN(d)) return null;
+    try {
+      var p = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })
+        .formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+      var y = +p.year, m = +p.month, dd = +p.day;
+      return { y: y, m: m, d: dd, hm: (p.hour === '24' ? '00' : p.hour) + ':' + p.minute, wd: new Date(Date.UTC(y, m - 1, dd)).getUTCDay(), tz: tz };
+    } catch (e) {
+      var off = typeof win.utcOffsetMinutes === 'number' ? win.utcOffsetMinutes : null;
+      if (off === null) tz = 'UTC';
+      d = new Date(d.getTime() + (off || 0) * 60000);
+      return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), hm: ('0' + d.getUTCHours()).slice(-2) + ':' + ('0' + d.getUTCMinutes()).slice(-2), wd: d.getUTCDay(), tz: tz };
+    }
+  }
+  function key(p) { return p.y * 10000 + p.m * 100 + p.d; }
+  function dayLabel(p) { return WD[p.wd] + ' ' + p.d + ' ' + MO[p.m - 1]; }
+  function stamp(p) { return p ? p.d + ' ' + MO[p.m - 1] + ' ' + p.y + ', ' + p.hm : 'unknown time'; }
+
+  var people = arr(data.P).map(str), cont = arr(data.C);
+  var C = cont.map(function (c, i) {
+    var u = str(c.u).replace(/\/+$/, '');
+    return { i: i, title: str(c.t), url: u, kind: c.k === 'page' || c.k === 'list' ? c.k : 'doc', sampled: !!c.s, failed: c.f === 1 || c.f === true, reason: str(c.x), rows: [] };
+  });
+  var rows = [];
+  arr(data.R).forEach(function (r) {
+    var c = C[r[0]]; if (!c || !Array.isArray(r)) return;
+    var path = str(r[1]), id = r[2], isNew = r[3] === 1 || r[3] === true, p = parts(r[4]);
+    var base = path.slice(path.lastIndexOf('/') + 1), name, url;
+    if (c.kind === 'list') { name = path; url = c.url + '/DispForm.aspx?ID=' + id; }
+    else {
+      name = c.kind === 'page' ? (str(r[7]) || base.replace(/\.aspx$/i, '')) : base;
+      url = c.url + '/' + path.split('/').map(encodeURIComponent).join('/');
+    }
+    var row = { container: c.title, kind: c.kind, name: name, url: url, isNew: isNew, modified: str(r[4]), when: p, person: people[r[5]] || 'Unknown', version: c.kind === 'list' ? '' : str(r[6]) };
+    c.rows.push(row); rows.push(row);
+  });
+  C.forEach(function (c) { c.rows.sort(function (a, b) { return cmp(b.modified, a.modified); }); });
+
+  var k = { newDocs: 0, editedDocs: 0, pages: 0, listItems: 0, people: 0 };
+  rows.forEach(function (r) {
+    if (r.kind === 'doc') { if (r.isNew) k.newDocs++; else k.editedDocs++; }
+    else if (r.kind === 'page') k.pages++; else k.listItems++;
+  });
+  var byPerson = {};
+  rows.forEach(function (r) {
+    var x = byPerson[r.person] || (byPerson[r.person] = { name: r.person, count: 0, containers: [] });
+    x.count++; if (x.containers.indexOf(r.container) < 0) x.containers.push(r.container);
+  });
+  var P = Object.keys(byPerson).map(function (n) { return byPerson[n]; })
+    .sort(function (a, b) { return b.count - a.count || cmp(a.name, b.name); });
+  k.people = P.length;
+
+  var changed = C.filter(function (c) { return c.rows.length; })
+    .sort(function (a, b) { return b.rows.length - a.rows.length || cmp(a.title, b.title); });
+  var sampled = C.filter(function (c) { return c.sampled; });
+  var notChecked = C.filter(function (c) { return c.reason; });
+  // Coverage: 'full' = every container was read cleanly; 'partial' = some failed or had unreadable dates;
+  // 'none' = nothing could be read, so the digest can't say whether anything changed.
+  var failed = C.filter(function (c) { return c.failed; });
+  var coverage = !C.length || failed.length === C.length ? 'none' : notChecked.length ? 'partial' : 'full';
+  var gaps = plural(notChecked.length, 'library or list', 'libraries and lists');
+
+  var days = [], s = parts(win.start), e = parts(win.end);
+  if (s && e) {
+    var cur = Date.UTC(s.y, s.m - 1, s.d), last = Date.UTC(e.y, e.m - 1, e.d);
+    for (var g = 0; cur <= last && g < 400; g++, cur += 86400000) {
+      var dt = new Date(cur), dp = { y: dt.getUTCFullYear(), m: dt.getUTCMonth() + 1, d: dt.getUTCDate(), wd: dt.getUTCDay() };
+      days.push({ key: key(dp), label: dayLabel(dp), count: 0 });
+    }
+  }
+  rows.forEach(function (r) { if (!r.when) return; var kk = key(r.when); days.forEach(function (d) { if (d.key === kk) d.count++; }); });
+  var maxDay = days.reduce(function (m, d) { return Math.max(m, d.count); }, 0);
+  days.forEach(function (d) { d.pct = maxDay ? Math.max(2, Math.round(d.count / maxDay * 100)) : 2; });
+
+  var hl = [];
+  if (sampled.length) hl.push('Sampled digest: counts cover the included changes only. Pick a shorter window or specific libraries for a full count.');
+  if (coverage === 'none') hl.push(C.length ? 'Unable to determine what changed: none of the ' + plural(C.length, 'library or list', 'libraries and lists') + ' could be read. See Not checked.'
+    : 'Unable to determine what changed: no libraries or lists were checked.');
+  else if (!rows.length && coverage === 'partial') hl.push('No changes found in the libraries and lists that could be checked, but ' + gaps + (notChecked.length === 1 ? ' wasn’t' : ' weren’t') + ' fully checked, so this isn’t a confirmed zero. See Not checked.');
+  else if (!rows.length) hl.push('No changes in this window.');
+  else {
+    if (coverage === 'partial') hl.push('Incomplete digest: ' + gaps + (notChecked.length === 1 ? ' wasn’t' : ' weren’t') + ' fully checked, so the counts cover only what could be read. See Not checked.');
+    hl.push(plural(rows.length, 'change') + ' across ' + plural(changed.length, 'library or list', 'libraries and lists') + '.');
+    var top = changed.filter(function (c) { return c.rows.length === changed[0].rows.length; });
+    if (changed.length > 1) hl.push((top.length > 1 ? 'Busiest: ' + list(top.map(function (c) { return c.title; })) + ' (' + plural(top[0].rows.length, 'change') + ' each).'
+      : 'Busiest: ' + top[0].title + ' (' + plural(top[0].rows.length, 'change') + ').'));
+    var newPages = rows.filter(function (r) { return r.kind === 'page' && r.isNew; }).map(function (r) { return r.name; });
+    if (newPages.length) hl.push((newPages.length === 1 ? 'New page: ' : 'New pages: ') + list(newPages) + '.');
+    hl.push('Most active: ' + P.slice(0, 3).map(function (x) { return x.name + ' (' + plural(x.count, 'change') + ')'; }).join(', ') + '.');
+    var busy = days.filter(function (d) { return d.count === maxDay && maxDay > 0; });
+    if (busy.length === 1 && hl.length < 5) hl.push('Busiest day: ' + busy[0].label + ' (' + plural(maxDay, 'change') + ').');
+  }
+
+  if (coverage === 'none') { k = { newDocs: null, editedDocs: null, pages: null, listItems: null, people: null }; days = []; }
+  var peopleEmpty = coverage === 'none' ? 'Unknown: no library or list could be read.'
+    : coverage === 'partial' ? 'Nobody changed anything in the libraries and lists that could be checked.'
+    : 'Nobody changed anything in this window.';
+
+  var notes = notChecked.map(function (c) { return c.title + ': ' + c.reason; })
+    .concat(sampled.map(function (c) { return c.title + ': sampled; ' + c.rows.length + ' of the changes in the window are included, the rest weren’t counted'; }));
+
+  return {
+    title: 'What changed on ' + (str(data.site && data.site.title) || 'this site'),
+    window: stamp(s) + ' – ' + stamp(e) + ' (' + tz + ')',
+    timeZone: tz,
+    coverage: coverage, kpis: k, total: coverage === 'none' ? null : rows.length, highlights: hl.slice(0, 5), days: days,
+    containers: changed.map(function (c) {
+      return { title: c.title, count: c.rows.length, sampled: c.sampled, rows: c.rows.map(function (r) {
+        return { name: r.name, url: r.url, change: r.isNew ? 'New' : 'Edited', modified: r.when ? WD[r.when.wd] + ' ' + r.when.d + ' ' + MO[r.when.m - 1] + ', ' + r.when.hm : r.modified, person: r.person, version: r.version || '–' };
+      }) };
+    }),
+    people: P, peopleEmpty: peopleEmpty, notes: notes,
+    footer: 'Generated by the what-changed-digest skill on ' + stamp(parts(data.generatedAt || win.end)) + ' · Source: ' + str(data.site && data.site.url),
+    plural: plural
+  };
+}
+</script>
+
+<script id="render">
+(function () {
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function set(id, html) { document.getElementById(id).innerHTML = html; }
+  function link(url, text) { var u = String(url || ''); return /^(https?:\/\/|\/(?!\/))/i.test(u) ? '<a href="' + esc(u) + '">' + esc(text) + '</a>' : esc(text); }
+  var data;
+  try { data = JSON.parse(document.getElementById('data').textContent.trim()); }
+  catch (e) { set('data-error', '<section class="warn"><h2>No data</h2><p>The digest data is missing or isn’t valid JSON. Run the skill again.</p></section>'); return; }
+  var m = digestModel(data), pl = m.plural;
+  document.title = m.title;
+  document.getElementById('title').textContent = m.title;
+  document.getElementById('window').textContent = m.window;
+  set('kpis', [['newDocs', 'New documents'], ['editedDocs', 'Edited documents'], ['pages', 'Pages'], ['listItems', 'List items'], ['people', 'People']]
+    .map(function (x) { return '<div class="kpi"><span class="n">' + (m.kpis[x[0]] === null ? '–' : m.kpis[x[0]]) + '</span><span class="l">' + x[1] + '</span></div>'; }).join(''));
+  set('highlights', m.highlights.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join(''));
+  var days = document.getElementById('days');
+  days.style.setProperty('--days', m.days.length || 1);
+  days.innerHTML = m.days.map(function (d) {
+    return '<div class="day"><span class="v">' + d.count + '</span><div class="bar" style="height:' + d.pct + '%"></div><span class="d">' + esc(d.label) + '</span></div>';
+  }).join('') || '<p class="note">' + (m.coverage === 'none' ? 'Unknown: no library or list could be read.' : 'No days in the window.') + '</p>';
+  set('containers', m.containers.map(function (c) {
+    return '<section><h2>' + esc(c.title) + '<span class="count">' + pl(c.count, 'change') + (c.sampled ? ', sampled' : '') + '</span></h2>' +
+      '<table><thead><tr><th>Item</th><th>Change</th><th>Modified</th><th>By</th><th>Version</th></tr></thead><tbody>' +
+      c.rows.map(function (r) {
+        return '<tr><td>' + link(r.url, r.name) + '</td><td><span class="tag ' + r.change.toLowerCase() + '">' + r.change +
+          '</span></td><td>' + esc(r.modified) + '</td><td>' + esc(r.person) + '</td><td>' + esc(r.version) + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      (c.sampled ? '<p class="more">Some changes in this window weren’t included (row cap).</p>' : '') + '</section>';
+  }).join(''));
+  document.getElementById('people-count').textContent = m.people.length ? pl(m.people.length, 'person', 'people') : '';
+  set('people', m.people.map(function (p) {
+    return '<div class="person"><b>' + esc(p.name) + '</b><span>' + pl(p.count, 'change') + ' · ' + esc(p.containers.join(', ')) + '</span></div>';
+  }).join('') || '<p class="note">' + esc(m.peopleEmpty) + '</p>');
+  if (m.notes.length) set('not-checked', '<section class="warn"><h2>Not checked</h2><ul>' + m.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') + '</ul></section>');
+  document.getElementById('footer').textContent = m.footer;
+})();
+</script>
+</body>
+</html>
