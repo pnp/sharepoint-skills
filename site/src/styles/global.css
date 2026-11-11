@@ -277,6 +277,10 @@ select {
 	color: var(--blue-dark);
 }
 
+.desktop-nav .nav-community {
+	padding-inline: 10px;
+}
+
 .theme-toggle {
 	position: relative;
 	display: grid;
@@ -1852,16 +1856,7 @@ select {
 	}
 }
 
-@media (max-width: 880px) {
-	.container {
-		width: min(100% - 32px, 720px);
-	}
-
-	.video-guide__grid {
-		grid-template-columns: 1fr;
-		gap: 30px;
-	}
-
+@media (max-width: 980px) {
 	.desktop-nav {
 		display: none;
 	}
@@ -1888,6 +1883,17 @@ select {
 		border-radius: 4px;
 		color: var(--ink);
 		text-decoration: none;
+	}
+}
+
+@media (max-width: 880px) {
+	.container {
+		width: min(100% - 32px, 720px);
+	}
+
+	.video-guide__grid {
+		grid-template-columns: 1fr;
+		gap: 30px;
 	}
 
 	.catalog-intro {

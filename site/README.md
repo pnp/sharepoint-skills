@@ -2,6 +2,10 @@
 
 Static Astro gallery published at `https://pnp.github.io/sharepoint-skills/`.
 
+Desktop and mobile navigation start with a **Community** link to [Community Home](https://aka.ms/community/home), using the same 12px northeast arrow as the [Copilot Prompt Gallery](https://pnp.github.io/copilot-prompts/). The link opens in the current tab; the Skills gallery remains the next navigation item.
+
+Navigation switches to the mobile menu at 980px to keep the complete link set accessible at tablet widths.
+
 ## Data flow
 
 `npm run generate` reads each `Skills/<slug>/assets/sample.json`, outer `README.md`, preview, and inner package. It validates the metadata schemas, sanitizes authored Markdown, generates responsive previews, and creates deterministic ZIP downloads with SHA-256 checksums.
