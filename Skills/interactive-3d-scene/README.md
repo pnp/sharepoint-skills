@@ -1,6 +1,6 @@
 # Interactive 3D Scene
 
-Builds a playful, clickable 3D scene as one self-contained HTML file for the SharePoint HTML viewer. Self-contained means the scene, its script, its styles and its drawn assets live in that file. Babylon.js is requested with the viewer's supported manifest, `<script type="application/json" class="ka-lib-manifest">["babylon"]</script>`. When `window.BABYLON` is available and WebGL works, the page is true 3D and the camera can orbit within the scene's limits. A flat SVG with the same click and tap reactions is the fallback when the library is missing or WebGL fails, and `?mode=2d` still forces that drawing. Reduced motion, keyboard access, optional procedural sound and a recording-ready demo mode stay as they are. Works for seasonal greetings, team celebrations, product launches and event teasers.
+Builds a playful, clickable 3D scene as one self-contained HTML file for the SharePoint HTML viewer. Self-contained means the scene, its script, its styles and its drawn assets live in that file. Babylon.js is requested with the viewer's supported manifest, `<script type="application/json" class="ka-lib-manifest">["babylon"]</script>`. When `window.BABYLON` is available and WebGL works, the page is true 3D and the camera can orbit within the scene's limits. A flat SVG with the same click and tap reactions is the fallback when the library is missing or WebGL fails, and `?mode=2d` forces that drawing when the file is opened directly. Inside SharePoint the page runs in an inner frame that does not see URL flags, so there the drawing appears only when the host does not supply Babylon.js or WebGL fails. Reduced motion, keyboard access, optional procedural sound and a recording-ready demo mode stay as they are. Works for seasonal greetings, team celebrations, product launches and event teasers.
 
 ![preview](./assets/preview.png)
 
@@ -10,7 +10,7 @@ Builds a playful, clickable 3D scene as one self-contained HTML file for the Sha
 - 3 to 6 tappable objects with reactions (glow, bounce, shake, spin, flash, sparks) and short status lines
 - The same reactions from buttons and number keys, announced in a live status line
 - True 3D, including camera orbit within the scene's limits, when the supported library and WebGL are available
-- A finished SVG drawing as the fallback when the host library or WebGL is missing, and when `?mode=2d` is set
+- A finished SVG drawing as the fallback when the host library or WebGL is missing, and when `?mode=2d` is set on a directly opened file
 - Sound that stays off until the viewer turns it on, synthesized with Web Audio
 - `prefers-reduced-motion` support and a layout that works from phone to desktop
 - A demo mode (`?demo=1`, optional `aspect=9x16`) that plays every reaction on a fixed timeline for screen recordings

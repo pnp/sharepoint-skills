@@ -17,7 +17,7 @@ Do not use it for data dashboards, reports or documents. Use `sharepoint-safe-ht
 ## Output
 - One UTF-8 `.html` file (with BOM), ideally under 150 KB, saved where the user asks, by default the site **Site Assets** or **Documents** library.
 - The page shows true 3D when `window.BABYLON` is available and WebGL works, with the template's camera orbit. It shows the same scene as a flat SVG drawing when the library is missing, WebGL fails, or `mode=2d` is set.
-- Every reaction can be triggered by a tap in the scene, by a button, and by a number key.
+- Every reaction can be triggered by a tap in the scene and by a button. The first nine buttons also answer to number keys 1 to 9.
 
 ## Steps
 1. **Start from the template.** Copy [`templates/starter-scene.html`](templates/starter-scene.html). It already passes the host rules and contains the sandbox contract, fallback, sound, keyboard, reduced motion and demo mode. Change content, not plumbing.
@@ -39,7 +39,7 @@ Do not use it for data dashboards, reports or documents. Use `sharepoint-safe-ht
 ## Self-check
 - Search the file for `<script src`, `<link`, `http://`, `https://`, `@import`, `fetch(`, `XMLHttpRequest`, `WebSocket`, `localStorage`, `sessionStorage`, `<form`, `alert(`, `confirm(`. None may appear, except inside comments that you then remove.
 - Every `act` id appears in the `SCENE.objects` list and in exactly one SVG group.
-- Opening the file with `?mode=2d` shows the drawing, and every button still reacts.
+- Opening the file directly with `?mode=2d` shows the drawing, and every button still reacts. SharePoint ignores URL flags, so check the fallback there with a test copy that has no `ka-lib-manifest` line.
 - Nothing from the template's sample theme, or from another theme you used as an example, is left in the text, colours or aria labels.
 - The SharePoint file still contains the `ka-lib-manifest` line for `babylon` and does not contain a bundled or inlined Babylon.js build.
 

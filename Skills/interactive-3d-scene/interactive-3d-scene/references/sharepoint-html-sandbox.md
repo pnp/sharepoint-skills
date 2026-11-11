@@ -18,7 +18,7 @@ The SharePoint HTML viewer can supply a short list of libraries. For this skill,
 - Other names on the list include `chart.js`, `mermaid`, `react` and `fluentui`. This skill only needs `babylon`.
 - The host limits how many libraries a page can request and how large they can be. Ask for one library only.
 - Let errors show while you test. Do not wrap calls in an empty `catch(e){}`, because a broken scene then just goes blank with nothing in the console. The template logs a `[3D scene]` warning instead, including why it fell back to 2D.
-- Treat the library as optional. If it is missing, if those constructors are missing, or if WebGL is unavailable, the page must still work with the SVG fallback. `mode=2d` forces that drawing even when the library is present. See [fallback-and-performance.md](fallback-and-performance.md).
+- Treat the library as optional. If it is missing, if those constructors are missing, or if WebGL is unavailable, the page must still work with the SVG fallback. `mode=2d` forces that drawing even when the library is present, but only when the file is opened directly. Inside SharePoint the page runs in an inner frame that does not see the page address, so `mode=2d` and `demo=1` are ignored there. To see the fallback inside SharePoint, upload a test copy without the `ka-lib-manifest` line. See [fallback-and-performance.md](fallback-and-performance.md).
 - On 6 November 2026, I tested the original HTML scenes in SharePoint with Babylon.js loaded through ka-lib-manifest. They rendered in true 3D, with camera pan and orbit, without bundling the library into the HTML file.
 - The starter and sample files keep a limited orbit with target panning disabled; that is a scene choice, not a SharePoint restriction.
 
@@ -79,5 +79,5 @@ The supported check is the unmodified file in the SharePoint HTML viewer. To pre
 1. Serve the file with the policy above as a `Content-Security-Policy` header.
 2. For that local preview only, you may insert a Babylon.js build in a `<script>` right after the manifest line so `window.BABYLON` exists. Do this only in the test copy, never in the file you deliver. That local script is a preview aid. It is not the SharePoint loader.
 3. Load the page inside `<iframe sandbox="allow-scripts">` to reproduce the missing same-origin rights.
-4. Load it once more without the library, and once with `?mode=2d`, to see the fallback.
+4. Load it once more without the library, and once with `?mode=2d`, to see the fallback. This local check is where `mode=2d` works; SharePoint ignores URL flags.
 5. Watch the console. A single CSP violation or uncaught error is a failure.

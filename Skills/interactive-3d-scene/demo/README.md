@@ -8,7 +8,7 @@ Finished sample output for the [interactive-3d-scene](../) skill. These files ar
 - `sample-files/product-launch.html`: a launch stage with a spotlight, a rocket, a big screen, a confetti cannon and a trophy, with rising sparkles. Built from the same template.
 - `sample-files/halloween-haunt.html`: a larger, hand-tuned example with a moonlit yard, many tappable objects, a camera cruise and a demo mode. It shows how far the pattern can go. It is an example only, not a template.
 
-Each file requests Babylon.js with `<script type="application/json" class="ka-lib-manifest">["babylon"]</script>` and does not embed the library. In the SharePoint HTML viewer, a present `window.BABYLON` and working WebGL show true 3D and the scene's camera orbit. Opened straight from disk or GitHub, there is no host library, so you see the flat SVG with the same click and tap reactions. `?mode=2d` forces that drawing even when 3D is available. Reduced motion still turns movement into a glow.
+Each file requests Babylon.js with `<script type="application/json" class="ka-lib-manifest">["babylon"]</script>` and does not embed the library. In the SharePoint HTML viewer, a present `window.BABYLON` and working WebGL show true 3D and the scene's camera orbit. Opened straight from disk or GitHub, there is no host library, so you see the flat SVG with the same click and tap reactions. `?mode=2d` forces that drawing even when 3D is available, but only when the file is opened directly. Inside SharePoint the scene runs in an inner frame that does not see URL flags. Reduced motion still turns movement into a glow.
 
 On 6 November 2026, I tested the original HTML scenes in SharePoint with Babylon.js loaded through ka-lib-manifest. They rendered in true 3D, with camera pan and orbit, without bundling the library into the HTML file.
 
@@ -36,7 +36,7 @@ Halloween Haunt in the SharePoint HTML viewer, rendering in 3D.
 
 Add these to the file URL:
 
-- `?mode=2d` shows the drawing even when 3D is available.
+- `?mode=2d` shows the drawing even when 3D is available. This and `?demo=1` work when the file is opened directly, not inside SharePoint.
 - `?demo=1` plays every reaction on a timeline with the page chrome hidden. Add `&aspect=9x16` for a vertical frame and `&sound=0` for silence.
 
 ## What to expect

@@ -21,6 +21,8 @@ scene.html?demo=1&aspect=9x16
 scene.html#demo=1&sound=0&mode=2d
 ```
 
+URL flags such as `mode=2d` and `demo=1` work only when the file is opened directly (local preview, public hosting or a recording). SharePoint runs the page in an inner frame that does not see the page address, so there the flags are ignored and the 2D view appears only when the host does not supply Babylon.js or WebGL fails.
+
 ## What changes in demo mode
 - `body.demo` (and `body.portrait` for 9:16) hide every `.chrome` element and the cursor.
 - The stage is fixed in the centre of the window at exactly 16:9 or 9:16 and as large as fits. Size the browser window to the same ratio for a clean capture, for example 1280×720 or 720×1280.

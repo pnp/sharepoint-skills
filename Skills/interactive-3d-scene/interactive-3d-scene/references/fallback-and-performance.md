@@ -4,7 +4,7 @@ When the supported Babylon.js library is available and WebGL works, the page is 
 
 ## When the fallback shows
 The SVG is visible until 3D starts, so a failed startup never leaves a blank stage. The script switches to 3D only when all of these are true:
-1. `mode=2d` is not in the URL. `mode=2d` remains a deliberate forced fallback, including when the library loaded.
+1. `mode=2d` is not in the URL. `mode=2d` remains a deliberate forced fallback, including when the library loaded. URL flags such as `mode=2d` and `demo=1` work only when the file is opened directly (local preview, public hosting or a recording). SharePoint runs the page in an inner frame that does not see the page address, so there the flags are ignored and the 2D view appears only when the host does not supply Babylon.js or WebGL fails.
 2. `window.BABYLON` exists and has `Engine` and `MeshBuilder`.
 3. `BABYLON.Engine.isSupported()` reports WebGL.
 4. Creating the engine and scene does not throw.

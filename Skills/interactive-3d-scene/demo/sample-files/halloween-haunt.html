@@ -332,7 +332,7 @@ noscript p{color:var(--muted);font-size:14px}
 </div>
 <div class="bar">
  <div>
-  <p class="caption">Tap anything in the scene or use the buttons. Keyboard: Tab to a button, then Enter or Space. <b>C</b> toggles the cruise, <b>M</b> toggles sound.</p>
+  <p class="caption">Tap anything in the scene or use the buttons. Keyboard: number keys <b>1</b> to <b>9</b> trigger the first nine reactions in button order, or Tab to a button, then Enter or Space. <b>C</b> toggles the cruise, <b>M</b> toggles sound.</p>
   <p class="status" id="status" role="status" aria-live="polite"></p>
   <p class="mode" id="mode">Still view.</p>
  </div>
@@ -1027,7 +1027,7 @@ function toggleSound(){soundOn=!soundOn;if(soundOn&&!ctx()){soundOn=false;say('s
 cruiseBtn.addEventListener('click',toggleCruise);
 soundBtn.hidden=false;soundBtn.addEventListener('click',toggleSound);
 document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey||e.repeat)return;var tg=e.target&&e.target.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT'||(e.target&&e.target.isContentEditable))return;
- var k=(e.key||'').toLowerCase();if(k==='c'){e.preventDefault();toggleCruise();}else if(k==='m'){e.preventDefault();toggleSound();}});
+ var k=(e.key||'').toLowerCase();if(k==='c'){e.preventDefault();toggleCruise();}else if(k==='m'){e.preventDefault();toggleSound();}else{var n=parseInt(k,10),bs=document.querySelectorAll('button.btn[data-act]');if(n>=1&&n<=9&&n<=bs.length){e.preventDefault();bs[n-1].click();}}});
 })();
 
 </script>
