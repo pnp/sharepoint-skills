@@ -12,9 +12,12 @@ The SharePoint HTML viewer can supply a short list of libraries. For this skill,
 - This manifest is the default loader for the SharePoint file. A stripped-down, bundled or inlined Babylon.js runtime is not required in that file.
 - Self-contained means the HTML file holds the scene, the script, the styles and the drawn assets. Babylon.js stays outside the file on this path.
 - Do not add a version or a URL. The SharePoint file does not choose the build.
+- The host picks the version, and Microsoft can change it at any time. Community tests in November 2026 measured Babylon.js 8.56.2, one major release behind the current one. Read `BABYLON.Engine.Version` at runtime if you need to know.
+- Use core APIs only: `MeshBuilder`, `StandardMaterial`, lights, `GlowLayer`, `ParticleSystem` and animations. Do not rely on model loaders, the GUI package or anything else that needs an extra Babylon.js package.
 - When the page's own script starts 3D, use `window.BABYLON` only if it exists and has `Engine` and `MeshBuilder`. Check WebGL with `BABYLON.Engine.isSupported()` when that function exists. Do not assume a library version, and do not assume when the host assigns `window.BABYLON`.
 - Other names on the list include `chart.js`, `mermaid`, `react` and `fluentui`. This skill only needs `babylon`.
 - The host limits how many libraries a page can request and how large they can be. Ask for one library only.
+- Let errors show while you test. Do not wrap calls in an empty `catch(e){}`, because a broken scene then just goes blank with nothing in the console. The template logs a `[3D scene]` warning instead, including why it fell back to 2D.
 - Treat the library as optional. If it is missing, if those constructors are missing, or if WebGL is unavailable, the page must still work with the SVG fallback. `mode=2d` forces that drawing even when the library is present. See [fallback-and-performance.md](fallback-and-performance.md).
 - On 6 November 2026, I tested the original HTML scenes in SharePoint with Babylon.js loaded through ka-lib-manifest. They rendered in true 3D, with camera pan and orbit, without bundling the library into the HTML file.
 - The starter and sample files keep a limited orbit with target panning disabled; that is a scene choice, not a SharePoint restriction.

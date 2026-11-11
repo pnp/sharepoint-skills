@@ -103,6 +103,7 @@ body.demo .stage canvas,body.demo [data-act]{cursor:none}
 <script>
 (function(){
 'use strict';
+function warn(msg,err){if(window.console&&console.warn){if(err!==void 0)console.warn('[3D scene] '+msg,err);else console.warn('[3D scene] '+msg);}}
 /* ====================== SCENE CONFIG: edit this block for a new theme ======================
  act:    id shared by the 3D meshes, the SVG group (data-act) and the button
  react:  glow | bounce | shake | spin | flash | burst  (combine with spaces, e.g. "glow burst")
@@ -174,10 +175,10 @@ var SFX={
  boom:function(c){var t=c.currentTime;hiss(c,'highpass',1800,0,0,t,.003,.5,.2);hiss(c,'lowpass',700,60,1,t+.05,.06,.6,2.2);},
  rustle:function(c){var t=c.currentTime;for(var i=0;i<5;i++)hiss(c,'bandpass',2500+rnd()*2500,0,3,t+i*.09,.01,.12,.18);}
 };
-function play(name){if(!soundOn||!name||name==='none'||!SFX[name])return;var c=ctx();if(!c)return;try{SFX[name](c);}catch(e){}}
+function play(name){if(!soundOn||!name||name==='none'||!SFX[name])return;var c=ctx();if(!c)return;try{SFX[name](c);}catch(e){warn('A step failed and was skipped.',e);}}
 function padOn(){var c=ctx();if(!c||pad)return;try{var g=c.createGain();g.gain.value=0;g.gain.linearRampToValueAtTime(.06,c.currentTime+2);g.connect(master);
  var o1=c.createOscillator(),o2=c.createOscillator();o1.frequency.value=196;o2.frequency.value=196*1.498;o1.type=o2.type='sine';o1.detune.value=-6;o2.detune.value=5;o1.connect(g);o2.connect(g);o1.start();o2.start();pad={g:g,o:[o1,o2]};}catch(e){pad=null;}}
-function padOff(){if(!pad||!actx)return;var p=pad;pad=null;try{p.g.gain.linearRampToValueAtTime(0,actx.currentTime+.6);setTimeout(function(){p.o.forEach(function(o){try{o.stop();}catch(e){}});},800);}catch(e){}}
+function padOff(){if(!pad||!actx)return;var p=pad;pad=null;try{p.g.gain.linearRampToValueAtTime(0,actx.currentTime+.6);setTimeout(function(){p.o.forEach(function(o){try{o.stop();}catch(e){warn('A step failed and was skipped.',e);}});},800);}catch(e){warn('A step failed and was skipped.',e);}}
 function setSound(on,quiet){if(on&&!ctx()){soundOn=false;if(!quiet)say(SCENE.sounds.none);}else{soundOn=on;if(!quiet)say(on?SCENE.sounds.on:SCENE.sounds.off);}
  if(soundOn)padOn();else padOff();soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.textContent='Sound: '+(soundOn?'on':'off');}
 
@@ -194,8 +195,9 @@ function run(act,fromUser){var o=byAct[act];if(!o||!acts[act])return;acts[act]()
 /* ---------- 3D scene (progressive enhancement) ---------- */
 function start3D(){
  var B=window.BABYLON;
- if(FORCE2D||!B||!B.Engine||!B.MeshBuilder)return null;
- if(B.Engine.isSupported&&!B.Engine.isSupported())return null;
+ if(FORCE2D)return null;
+ if(!B||!B.Engine||!B.MeshBuilder){warn('Babylon.js was not found. Check the ka-lib-manifest line. Showing the 2D version.');return null;}
+ if(B.Engine.isSupported&&!B.Engine.isSupported()){warn('WebGL is not available. Showing the 2D version.');return null;}
  var engine=new B.Engine(canvas,true,{antialias:true,audioEngine:false,preserveDrawingBuffer:DEMO,powerPreference:'default'},false);
  stage.classList.add('is-3d');
  var scene=new B.Scene(engine);
@@ -305,7 +307,7 @@ function start3D(){
 }
 
 var live=null;
-try{live=start3D();}catch(e){live=null;stage.classList.remove('is-3d');}
+try{live=start3D();}catch(e){warn('The 3D scene failed to start. Showing the 2D version.',e);live=null;stage.classList.remove('is-3d');}
 if(live){acts=live.acts;modeEl.textContent=SCENE.modes.live;}
 else{modeEl.textContent=SCENE.modes.still;
  var svg=stage.querySelector('svg');
@@ -336,7 +338,7 @@ if(DEMO){
  events.forEach(function(ev){   /* camera drifts for 0.9 s, the effect fires exactly at ev.t */
   if(live)setTimeout(function(){live.focus(ev.act);},Math.max(0,ev.t-.9)*1000);
   setTimeout(function(){run(ev.act,false);},ev.t*1000);});
- setTimeout(function(){window.__demoDone=true;window.__demoElapsed=(performance.now()-t0)/1000;try{window.dispatchEvent(new CustomEvent('demo:done',{detail:window.__demoTimeline}));}catch(e){}},total*1000);
+ setTimeout(function(){window.__demoDone=true;window.__demoElapsed=(performance.now()-t0)/1000;try{window.dispatchEvent(new CustomEvent('demo:done',{detail:window.__demoTimeline}));}catch(e){warn('A step failed and was skipped.',e);}},total*1000);
 }
 })();
 </script>

@@ -344,6 +344,7 @@ noscript p{color:var(--muted);font-size:14px}
 <script>
 (function(){
 'use strict';
+function warn(msg,err){if(window.console&&console.warn){if(err!==void 0)console.warn('[3D scene] '+msg,err);else console.warn('[3D scene] '+msg);}}
 var $=function(id){return document.getElementById(id);};
 var stage=$('stage'), canvas=$('scene3d'), statusEl=$('status'), modeEl=$('mode'), flashEl=$('flash'), hint=$('hint'), soundBtn=$('sound'), cruiseBtn=$('cruise'), toastEl=$('toast');
 var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
@@ -351,7 +352,7 @@ var reduced=!!(mq&&mq.matches);
 
 /* ---------- auto-play demo: ?demo=1 (or #demo=1). Without the flag nothing below changes the page. ---------- */
 var Q={};
-try{((location.search||'').replace(/^\?/,'')+'&'+(location.hash||'').replace(/^#/,'')).split(/[&;?]/).forEach(function(kv){if(!kv)return;var i=kv.indexOf('='),k=(i<0?kv:kv.slice(0,i)).toLowerCase(),v=i<0?'1':kv.slice(i+1);try{v=decodeURIComponent(v);}catch(e){}Q[k]=String(v).toLowerCase();});}catch(e){}
+try{((location.search||'').replace(/^\?/,'')+'&'+(location.hash||'').replace(/^#/,'')).split(/[&;?]/).forEach(function(kv){if(!kv)return;var i=kv.indexOf('='),k=(i<0?kv:kv.slice(0,i)).toLowerCase(),v=i<0?'1':kv.slice(i+1);try{v=decodeURIComponent(v);}catch(e){warn('A step failed and was skipped.',e);}Q[k]=String(v).toLowerCase();});}catch(e){warn('A step failed and was skipped.',e);}
 var DEMO=Q.demo==='1'||Q.demo==='true'||Q.demo==='on';
 var FORCE2D=Q.mode==='2d';
 var D={caps:DEMO&&Q.captions==='1',step:DEMO&&Q.step==='1',portrait:DEMO&&(Q.aspect==='9x16'||Q.aspect==='9:16'||Q.aspect==='portrait'),fps:Math.max(10,Math.min(120,+Q.fps||30))};
@@ -455,7 +456,7 @@ var sfx={
  car:function(c){var t=c.currentTime,out=bus(c,.3);[0,.28].forEach(function(o){[330,415].forEach(function(f){var a=osc(c,'square',f),b=filt(c,'lowpass',1400),g=c.createGain();env(g,t+o,.01,.12,.22);a.connect(b);b.connect(g);g.connect(out);a.start(t+o);a.stop(t+o+.24);});});}
 };
 sfx.cruiseOn=sfx.car;
-function sound(key){var c=audio();if(c&&sfx[key]){try{sfx[key](c);}catch(e){}}}
+function sound(key){var c=audio();if(c&&sfx[key]){try{sfx[key](c);}catch(e){warn('A step failed and was skipped.',e);}}}
 function windOn(){var c=audio();if(!c||wind)return;
  try{var t=c.currentTime,n=noise(c);n.loop=true;var bp=filt(c,'bandpass',420,.8),lp=filt(c,'lowpass',1500),g=c.createGain();
   var l1=osc(c,'sine',.11),l1g=c.createGain();l1g.gain.value=260;l1.connect(l1g);l1g.connect(bp.frequency);
@@ -464,7 +465,7 @@ function windOn(){var c=audio();if(!c||wind)return;
   n.connect(bp);bp.connect(lp);lp.connect(g);n.connect(wh);wh.connect(wg);wg.connect(g);g.connect(master);
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.085,t+1.6);n.start(t);l1.start(t);l2.start(t);l3.start(t);wind={g:g,nodes:[n,l1,l2,l3]};}catch(e){wind=null;}}
 function windOff(){if(!wind||!actx)return;var w=wind;wind=null;try{var t=actx.currentTime;w.g.gain.cancelScheduledValues(t);w.g.gain.setValueAtTime(w.g.gain.value,t);w.g.gain.linearRampToValueAtTime(0,t+.6);
- w.nodes.forEach(function(n){n.stop(t+.7);});}catch(e){}}
+ w.nodes.forEach(function(n){n.stop(t+.7);});}catch(e){warn('A step failed and was skipped.',e);}}
 
 /* ---------- screen flash ---------- */
 function screenFlash(){
@@ -501,8 +502,9 @@ function run(key,fromUser,arg){var f=acts[key];if(!f)return;f(arg);say(key);if(f
 /* ---------- moving scene ---------- */
 function start3D(){
  var B=window.BABYLON;
- if(FORCE2D||!B||!B.Engine||!B.MeshBuilder)return null;
- if(B.Engine.isSupported&&!B.Engine.isSupported())return null;
+ if(FORCE2D)return null;
+ if(!B||!B.Engine||!B.MeshBuilder){warn('Babylon.js was not found. Check the ka-lib-manifest line. Showing the 2D version.');return null;}
+ if(B.Engine.isSupported&&!B.Engine.isSupported()){warn('WebGL is not available. Showing the 2D version.');return null;}
  if(B.Logger&&B.Logger.WarningLogLevel!==void 0)B.Logger.LogLevels=B.Logger.WarningLogLevel|B.Logger.ErrorLogLevel;
  stage.classList.add('is-3d');
  var engine=new B.Engine(canvas,true,{stencil:true,antialias:true,audioEngine:false,disableWebGL2Support:false,powerPreference:'default'},false);
@@ -988,19 +990,19 @@ var demoNext=0;
 if(DEMO){window.__demoTimeline=DEMO_TL.map(function(r){return {name:r[0],startMs:r[1],endMs:r[2]};});window.__demoDone=false;window.__demoMs=0;}
 var FLASHK=[[0,0],[.06,.55],[.16,0],[.28,.35],[.42,0],[1,0]];
 function demoTick(dms){demoMs+=dms;window.__demoMs=demoMs;
- while(demoNext<DEMO_EV.length&&DEMO_EV[demoNext][0]<=demoMs){var ev=DEMO_EV[demoNext++];try{ev[1]();}catch(e){}}
- if(demoQ.length){var due=demoQ.filter(function(q){return q.at<=demoMs;});if(due.length){demoQ=demoQ.filter(function(q){return q.at>demoMs;});due.forEach(function(q){try{q.fn();}catch(e){}});}}
+ while(demoNext<DEMO_EV.length&&DEMO_EV[demoNext][0]<=demoMs){var ev=DEMO_EV[demoNext++];try{ev[1]();}catch(e){warn('A step failed and was skipped.',e);}}
+ if(demoQ.length){var due=demoQ.filter(function(q){return q.at<=demoMs;});if(due.length){demoQ=demoQ.filter(function(q){return q.at>demoMs;});due.forEach(function(q){try{q.fn();}catch(e){warn('A step failed and was skipped.',e);}});}}
  var f=(demoMs-demoFlash)/1300,o=0;if(f>=0&&f<=1){for(var i=1;i<FLASHK.length;i++){if(f<=FLASHK[i][0]){var a=FLASHK[i-1],b=FLASHK[i];o=a[1]+(b[1]-a[1])*(f-a[0])/(b[0]-a[0]);break;}}}
  flashEl.style.opacity=o?String(o):'0';}
 function demoStart(){if(demoLive)return;
  if(D.sound){soundOn=true;if(!ctx())soundOn=false;else{windOn();var wake=function(){ctx();};window.addEventListener('pointerdown',wake,{once:true});window.addEventListener('keydown',wake,{once:true});}
   soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.textContent='Sound: '+(soundOn?'on':'off');}
  demoLive=true;window.__demoStarted=true;}
-function demoEnd(){if(window.__demoDone)return;window.__demoDone=true;try{window.dispatchEvent(new CustomEvent('demo:done',{detail:{timeline:window.__demoTimeline,totalMs:DEMO_TL[DEMO_TL.length-1][2]}}));}catch(e){}}
+function demoEnd(){if(window.__demoDone)return;window.__demoDone=true;try{window.dispatchEvent(new CustomEvent('demo:done',{detail:{timeline:window.__demoTimeline,totalMs:DEMO_TL[DEMO_TL.length-1][2]}}));}catch(e){warn('A step failed and was skipped.',e);}}
 
 function hideHint(){if(!hint.hidden)hint.classList.add('gone');}
 var live=null;
-try{live=start3D();}catch(e){live=null;stage.classList.remove('is-3d');}
+try{live=start3D();}catch(e){warn('The 3D scene failed to start. Showing the 2D version.',e);live=null;stage.classList.remove('is-3d');}
 if(live){
  acts=live.acts;
  modeEl.textContent='Moving scene. Drag to look around, pinch or scroll to zoom, tap anything.';hint.hidden=false;setTimeout(hideHint,6000);
@@ -1018,7 +1020,7 @@ if(DEMO&&!live){
 var btns=document.querySelectorAll('.controls [data-act]');
 for(var i=0;i<btns.length;i++){btns[i].addEventListener('click',function(){run(this.getAttribute('data-act'),true);});}
 var cruiseOn=false;
-function toggleCruise(){cruiseOn=!cruiseOn;try{acts.cruise(cruiseOn);}catch(e){}cruiseBtn.setAttribute('aria-pressed',String(cruiseOn));cruiseBtn.textContent='Cruise: '+(cruiseOn?'on':'off');
+function toggleCruise(){cruiseOn=!cruiseOn;try{acts.cruise(cruiseOn);}catch(e){warn('A step failed and was skipped.',e);}cruiseBtn.setAttribute('aria-pressed',String(cruiseOn));cruiseBtn.textContent='Cruise: '+(cruiseOn?'on':'off');
  say(cruiseOn?'cruiseOn':'cruiseOff');if(cruiseOn)sound('cruiseOn');}
 function toggleSound(){soundOn=!soundOn;if(soundOn&&!ctx()){soundOn=false;say('soundNo');}else{say(soundOn?'soundOn':'soundOff');}
  if(soundOn)windOn();else windOff();soundBtn.setAttribute('aria-pressed',String(soundOn));soundBtn.textContent='Sound: '+(soundOn?'on':'off');}
