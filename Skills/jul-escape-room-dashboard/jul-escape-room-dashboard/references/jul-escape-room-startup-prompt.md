@@ -83,7 +83,7 @@ Create these columns. Store structured values as JSON text, and parse them into 
 
 - **Title:** puzzle name.
 - **PuzzleId:** stable unique ID.
-- **Room**, **RoomTitle**, **RoomDescription:** the room and its player-facing text.
+- **Room**, **RoomTitle**, **RoomDescription:** the room and its player-facing text. Room is exactly one of Entrance Hall, Kitchen, Workshop, Library, Attic or Final Door, with one active row per room. RoomTitle is the name players see, such as Greta's Kitchen.
 - **RoomRequiresItemIds (JSON):** items needed to enter the room. An empty array means open from the start.
 - **RoomNpcName**, **RoomNpcGreeting**, **RoomNpcItemLine:** the room's character and its lines.
 - **ObjectLabel:** the visible puzzle object.
@@ -93,11 +93,12 @@ Create these columns. Store structured values as JSON text, and parse them into 
 - **AcceptedAnswers (JSON):** accepted option IDs or typed answers.
 - **Hint**, **NudgeText**, **RetryText**, **SuccessText:** help, gentle nudge, wrong-answer feedback and the story beat after solving.
 - **RequiresItemIds (JSON):** items needed to attempt the puzzle.
+- **LockedText:** what the character says when the player tries the room or puzzle without the items it needs. Fill it in on every row whose RoomRequiresItemIds or RequiresItemIds isn't empty, and leave it empty on the others.
 - **RewardItemId**, **RewardItemName**, **RewardItemDescription:** the item awarded on the first solve.
 - **RewardExtraItems (JSON):** extra items awarded on the first solve, such as a digit note. Use `[]` when there are none.
-- **PointsValue**, **SortOrder**, **IsFinalPuzzle**, **IsActive.**
+- **PointsValue** (a number greater than 0), **SortOrder**, **IsFinalPuzzle**, **IsActive.**
 
-Check choice answers by option ID, never by position. For typed answers, trim spaces and ignore case, and accept only the listed answers.
+Every column needs a value. The only exceptions are the reward columns on the final puzzle and LockedText on rows that need no items. Write `[]` in a JSON column that has no values, never leave it blank. Check choice answers by option ID, never by position. For typed answers, trim spaces and ignore case, and accept only the listed answers.
 
 ### 8\. The six puzzles
 
@@ -131,6 +132,7 @@ Use this content exactly. Item IDs: JUL\_BRASS\_KEY, JUL\_FRAGMENT\_1, JUL\_ATTI
 **4\. Uggla's Library: the starred books** (text, 100 points)
 
 - **Room requires:** JUL\_BRASS\_KEY.
+- **Locked line (Uggla, LockedText):** "The library door is locked. Its keyhole needs a brass key."
 - **Clue:** a shelf of seven books, left to right: Snowfall (gold star), Lingonberry, Tinsel (gold star), Candlelight, Aurora (gold star), Reindeer (gold star), Gingerbread. Titles and stars are readable in the picture and in the screen-reader text.
 - **Question:** "Uggla says the starred books hide a word. What is it?" Accepted: STAR.
 - **Reward:** JUL\_FRAGMENT\_2. SuccessText ends with "The second digit is 4."
@@ -139,7 +141,7 @@ Use this content exactly. Item IDs: JUL\_BRASS\_KEY, JUL\_FRAGMENT\_1, JUL\_ATTI
 **5\. Mira's Attic: the ornament box** (text, 100 points)
 
 - **Room requires:** JUL\_ATTIC\_KEY. **Puzzle requires:** JUL\_FRAGMENT\_2.
-- **Locked line (Mira):** "This box only opens for someone who has read Uggla's starred books." The player can enter the attic before the library, then come back.
+- **Locked line (Mira, LockedText):** "This box only opens for someone who has read Uggla's starred books." The player can enter the attic before the library, then come back.
 - **Item line (Mira, with JUL\_FRAGMENT\_2):** "The starred word from the library opens this lock. Go on, the counting is the hard part."
 - **Clue:** the box holds 13 ornaments: red baubles, gold bells and pine cones. There are twice as many red baubles as gold bells, and one more pine cone than gold bells.
 - **Drawing:** before solving, show the box with a note, not 13 countable ornaments, or the picture gives the answer away.
@@ -149,7 +151,8 @@ Use this content exactly. Item IDs: JUL\_BRASS\_KEY, JUL\_FRAGMENT\_1, JUL\_ATTI
 
 **6\. Final Door** (text, 200 points, IsFinalPuzzle)
 
-- **Puzzle requires:** JUL\_FRAGMENT\_1, JUL\_FRAGMENT\_2, JUL\_FRAGMENT\_3.
+- **Room requires:** nothing. The door can be visited from the start, but its dial stays locked. **Puzzle requires:** JUL\_FRAGMENT\_1, JUL\_FRAGMENT\_2, JUL\_FRAGMENT\_3.
+- **Locked line (knocker, LockedText):** "The door needs all three Jul key fragments before the code can be tried." The knocker adds which fragments are still missing.
 - **Clue:** the door and its knocker are visible from the start with a blank three-digit dial. The code is never shown anywhere before it is solved.
 - **Question:** "Enter the three digits in the order you found them in the kitchen, the library and the attic." Accepted: 246\.
 - **After solving:** the dial shows 246, the ending plays, and the certificate opens.
@@ -214,7 +217,7 @@ Before you report back, play each copy from a fresh start and confirm each check
 - Pause stops the clock, and the certificate leaves out paused time and prints on its own.
 - Restart asks once, then returns to a clean start screen. After restarting, the inventory, journal, points, timer and solved drawings are all reset, and the Library and Attic are locked again.
 - Keyboard only, a narrow screen, and reduced motion all work.
-- Emptying one required field shows a clear message, not a broken game or a false win.
+- Emptying one required field, including a JSON or PointsValue cell, shows a clear message that names the row and the field, not a broken game or a false win.
 - The browser console shows no script errors in either copy.
 
 Keep the first build small and easy to extend with new rooms, characters and puzzles. Don't add leaderboards, analytics, outside services or unrequested frameworks.
@@ -223,28 +226,42 @@ Keep the first build small and easy to extend with new rooms, characters and puz
 
 The game reads its puzzles from the Jul Escape Room Content list. If that list isn't right, the game stops before play and shows a red box saying what is wrong. It never quietly swaps in the sample puzzles. Check these points first:
 
-- **Exactly six active rows.** IsActive must be Yes on all six. Five or seven active rows stop the game.
-- **Every column filled in and included in the view.** The view behind the game must include every column the game reads: Title, PuzzleId, Room, RoomTitle, RoomDescription, RoomRequiresItemIds, RoomNpcName, RoomNpcGreeting, RoomNpcItemLine, ObjectLabel, PuzzleType, Question, Choices, AcceptedAnswers, Hint, NudgeText, SuccessText, RetryText, RequiresItemIds, RewardItemId, RewardItemName, RewardItemDescription, RewardExtraItems, PointsValue, SortOrder, IsFinalPuzzle and IsActive. The reward columns can be empty only on the final puzzle.
-- **Valid JSON in the five JSON columns.** RoomRequiresItemIds, Choices, AcceptedAnswers, RequiresItemIds and RewardExtraItems must each hold a JSON array, even when it's empty: `[]`. A missing bracket or quote stops the game.
-- **Answers that match.** For a choice puzzle, every value in AcceptedAnswers must be one of the `id` values in Choices, such as `["env2"]`.
+- **Exactly six active rows.** IsActive must be Yes on all six. Five or seven active rows stop the game. Rows set to No are ignored.
+- **Every column filled in and included in the view.** The view behind the game must include every column the game reads: Title, PuzzleId, Room, RoomTitle, RoomDescription, RoomRequiresItemIds, RoomNpcName, RoomNpcGreeting, RoomNpcItemLine, ObjectLabel, PuzzleType, Question, Choices, AcceptedAnswers, Hint, NudgeText, RetryText, SuccessText, RequiresItemIds, LockedText, RewardItemId, RewardItemName, RewardItemDescription, RewardExtraItems, PointsValue, SortOrder, IsFinalPuzzle and IsActive. There are only two exceptions: the reward columns RewardItemId, RewardItemName and RewardItemDescription can be empty on the final puzzle, and LockedText can be empty on a row whose RoomRequiresItemIds and RequiresItemIds are both `[]`.
+- **Blank isn't a default.** An empty cell is an error, even in a JSON or number column. A blank JSON cell doesn't count as `[]`, and a blank PointsValue doesn't count as 0.
+- **Valid JSON in the five JSON columns.** RoomRequiresItemIds, Choices, AcceptedAnswers, RequiresItemIds and RewardExtraItems must each hold a JSON array, written out even when it's empty: `[]`. A missing bracket or quote stops the game.
+- **Points above zero.** PointsValue must be a number greater than 0, and SortOrder must be a number.
+- **The six room names.** Room must be exactly one of Entrance Hall, Kitchen, Workshop, Library, Attic or Final Door, with one active row for each. Put the name players see, such as Greta's Kitchen, in RoomTitle.
+- **Puzzle types.** PuzzleType is choice or text.
+- **Answers that match.** For a choice puzzle, every value in AcceptedAnswers must be one of the `id` values in Choices, such as `["env-3"]`.
 - **One final puzzle.** IsFinalPuzzle is Yes on exactly one row.
 - **Items that exist.** Every item ID in RoomRequiresItemIds or RequiresItemIds must be the RewardItemId of another row, or a room can never be opened.
-- **Unique IDs.** No two rows share a PuzzleId.
+- **Unique IDs.** No two rows share a PuzzleId or a RewardItemId.
 
 Text in the list is always shown as plain text, so `<b>` or other markup in a choice or answer appears as typed, not as formatting.
 
 #### What the messages mean
 
+Row numbers count every row in the list from the top, and the PuzzleId in brackets tells you which row it is.
+
 | Message | What to fix |
 | --- | --- |
-| The puzzle list has 5 rows; the game needs 6. | Add or reactivate rows until exactly six have IsActive set to Yes. |
-| Row 3 is missing field Question. | Fill in that column, and make sure the view includes it. |
-| Row 2: Choices could not be parsed. | Fix the JSON in that cell, for example a missing `]` or `"`. |
-| Row 2: Choices must be a JSON array. | Wrap the value in `[ ]`. |
-| RECIPE has an accepted answer that is not a choice ID. | Make AcceptedAnswers use the `id` values from Choices. |
-| Exactly one active final puzzle is required. | Set IsFinalPuzzle to Yes on one row and No on the rest. |
-| BOOKS requires unknown item BRASS_KEY. | Check the spelling against the RewardItemId that hands out that item. |
-| BOOKS is unreachable from the initially open rooms. | Make sure the item that opens the room is a reward in a room the player can reach. |
-| Duplicate PuzzleId: BOOKS | Give each row its own PuzzleId. |
+| The puzzle list has 5 active rows; the game needs 6. | Add or reactivate rows until exactly six have IsActive set to Yes. |
+| Row 3 (PARCELS) is missing field Question. | Add that column to the list, and make sure the view includes it. |
+| Row 3 (PARCELS): Question is empty. | Fill in that cell. The same message appears for any other empty column, such as RoomNpcGreeting, Hint or RewardItemName. |
+| Row 2 (RECIPE): Choices is empty. It needs a JSON array, such as [] when there are no values. | Put a JSON array in the cell. Write `[]` when there are no values. |
+| Row 2 (RECIPE): Choices could not be parsed. | Fix the JSON in that cell, for example a missing `]` or `"`. |
+| Row 2 (RECIPE): Choices must be a JSON array. | Wrap the value in `[ ]`. |
+| Row 3 (PARCELS): PointsValue is empty. | Enter the puzzle's points, such as 100. |
+| Row 3 (PARCELS): PointsValue must be a positive number. | Enter a number greater than 0. |
+| Row 5 (ORNAMENTS): LockedText is empty. It's needed because this row requires an item. | Write what the character says when the player doesn't have the item yet. |
+| Row 2 (RECIPE): Room must be one of Entrance Hall, Kitchen, Workshop, Library, Attic, Final Door. | Use one of those six names in Room, and put the display name in RoomTitle. |
+| Row 2 (RECIPE): PuzzleType must be choice or text. | Change PuzzleType to choice or text. |
+| Row 2 (RECIPE): AcceptedAnswers has seq-x, which is not one of the Choices ids. | Make AcceptedAnswers use the `id` values from Choices. |
+| Exactly one active final puzzle is required; found 2. | Set IsFinalPuzzle to Yes on one row and No on the rest. |
+| No active puzzle for room Attic. | Make sure one active row has that Room value. |
+| Row 4 (BOOKS): RoomRequiresItemIds names unknown item BRASS_KEY. | Check the spelling against the RewardItemId that hands out that item. |
+| Row 4 (BOOKS) can't be reached from the rooms that are open at the start. Check for a missing or circular requirement. | Make sure the item that opens the room or puzzle is a reward the player can reach first. |
+| Row 4 (BOOKS): Duplicate PuzzleId BOOKS. | Give each row its own PuzzleId. |
 
 The diagnostics panel shows where the puzzles came from. "Live list rows loaded: 6." means the game is reading your list. "Bundled sample data (standalone copy; list not connected here)." means the list couldn't be reached, for example in a downloaded copy of the file, so the built-in sample is being played instead.
