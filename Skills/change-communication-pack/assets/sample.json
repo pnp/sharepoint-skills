@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-change-communication-pack",
+    "source": "pnp",
+    "title": "Change Communication Pack",
+    "shortDescription": "Turns a Message Center post or roadmap item into a user announcement, service desk FAQ, SharePoint news draft and admin checklist.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/change-communication-pack",
+    "longDescription": [
+      "Reads a Message Center post, roadmap item or release note and extracts a confirmed fact sheet: what changes, who is affected, the timeline and admin actions.",
+      "Writes a consistent communication pack based only on the source: a user announcement, a service desk FAQ, a SharePoint news draft, an admin checklist and a list of open questions. Saves everything as one HTML file in the current site."
+    ],
+    "creationDateTime": "2026-11-16",
+    "updateDateTime": "2026-11-16",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Communication"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/change-communication-pack/assets/preview.png",
+        "alt": "Change Communication Pack skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "knutrelbemoe",
+        "pictureUrl": "https://github.com/knutrelbemoe.png",
+        "name": "Knut Relbe-Moe"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
