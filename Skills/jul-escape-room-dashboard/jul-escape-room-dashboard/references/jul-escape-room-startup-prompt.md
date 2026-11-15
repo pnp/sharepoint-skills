@@ -42,7 +42,7 @@ The player is inside a festive Swedish house getting ready for Jul. The final do
 - **You are here:** mark the current room on the map and show its name in a header.
 - **Room scenes:** each room has a flat illustrated backdrop with its puzzle object drawn as a large, labeled hotspot. No tiny invisible click targets.
 - **Map states:** show which rooms are available, locked, current and completed. A locked room explains what's missing without giving away the solution.
-- **Locks that look like locks:** a keyhole on the library door, a padlock on the attic hatch, and a blank three-digit dial on the final door.
+- **Locks that look like locks:** a keyhole on the library door, a padlock on the attic hatch, and a three-digit dial on the final door.
 - **Moving between rooms:** a short fade, or a static change when reduced motion is on.
 
 Keep the style warm, readable and playful, and put clear interactions ahead of decoration.
@@ -153,7 +153,7 @@ Use this content exactly. Item IDs: JUL\_BRASS\_KEY, JUL\_FRAGMENT\_1, JUL\_ATTI
 
 - **Room requires:** nothing. The door can be visited from the start, but its dial stays locked. **Puzzle requires:** JUL\_FRAGMENT\_1, JUL\_FRAGMENT\_2, JUL\_FRAGMENT\_3.
 - **Locked line (knocker, LockedText):** "The door needs all three Jul key fragments before the code can be tried." The knocker adds which fragments are still missing.
-- **Clue:** the door and its knocker are visible from the start with a blank three-digit dial. The code is never shown anywhere before it is solved.
+- **Clue:** the door and its knocker are visible from the start with a three-digit dial. The code is never shown anywhere before it is solved.
 - **Question:** "Enter the three digits in the order you found them in the kitchen, the library and the attic." Accepted: 246\.
 - **After solving:** the dial shows 246, the ending plays, and the certificate opens.
 
@@ -171,7 +171,7 @@ Write complete greetings, hints, nudges, retry texts and success texts for every
 
 ### 10\. Completion certificate
 
-After the door opens, show a printable certificate with the player or team name (editable before printing), the date, elapsed time without paused time, points, hints used, rooms unlocked (3 of 3), puzzles solved (6 of 6\) and a closing line from Nisse. Print only the certificate, and make it look good as a screenshot so players can share it in Teams themselves.
+After the door opens, show a certificate with the player or team name, the date, elapsed time without paused time, points, hints used, rooms unlocked (3 of 3), puzzles solved (6 of 6\) and a closing line from Nisse. Don't add a print button, because SharePoint's HTML view blocks printing from the page. Make the certificate look good as a screenshot so players can share it in Teams themselves.
 
 ### 11\. Accessibility
 
@@ -214,7 +214,7 @@ Before you report back, play each copy from a fresh start and confirm each check
 - Each solved puzzle redraws its solved state and keeps it on return.
 - Replaying a solved puzzle adds no points or items.
 - The final door refuses missing fragments and wrong codes, and opens with all three fragments and 246\.
-- Pause stops the clock, and the certificate leaves out paused time and prints on its own.
+- Pause stops the clock, and the certificate leaves out paused time.
 - Restart asks once, then returns to a clean start screen. After restarting, the inventory, journal, points, timer and solved drawings are all reset, and the Library and Attic are locked again.
 - Keyboard only, a narrow screen, and reduced motion all work.
 - Emptying one required field, including a JSON or PointsValue cell, shows a clear message that names the row and the field, not a broken game or a false win.
