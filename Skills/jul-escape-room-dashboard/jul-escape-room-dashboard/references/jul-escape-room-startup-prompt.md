@@ -177,7 +177,7 @@ Keyboard controls with visible focus, readable contrast, text labels next to eve
 
 ### 12\. Data safety and validation
 
-Treat list content as untrusted text: render it safely and never run code or formulas from list fields. Before play, validate duplicate IDs, unknown item IDs, unreachable rooms, circular requirements, invalid accepted option IDs, missing points and a missing or duplicate final puzzle. Show a clear message for bad data, and never let a data error count as a win. This is a fun game, not secure answer checking: answers are readable in the list and the page.
+Treat list content as untrusted text: render every list value as text, never as HTML, and never run code or formulas from list fields. Before play, validate duplicate IDs, unknown item IDs, unreachable rooms, circular requirements, invalid accepted option IDs, missing points and a missing or duplicate final puzzle. Show a clear message for bad data, and never let a data error count as a win. This is a fun game, not secure answer checking: answers are readable in the list and the page.
 
 ### 13\. Rules from the first build
 
@@ -187,7 +187,7 @@ These are mistakes Copilot made the first time. Avoid each one.
 2. **SVG must draw:** never insert SVG as escaped text. If the markup shows up on screen as text, it's broken.
 3. **Labels must be visible:** if the text says a jar or tag is labeled, the label has to be drawn in the picture. Don't use decorative shapes as clues.
 4. **Nothing gives an answer away:** check every room description, question, picture and hint. No picture or text may show the answer or the order, and the code never appears before the door is solved.
-5. **The view must supply every column:** make sure the dashboard view includes every column the game reads. Use the built-in copy of the content only when the list can't be read, show a small notice when that happens, and update that copy whenever list content changes.
+5. **The view must supply every column:** make sure the dashboard view includes every column the game reads. Use the built-in copy of the content only when the list can't be read, show a small notice when that happens, and update that copy whenever list content changes. If the list is read but the rows are invalid, show a blocking error that names the problem (for example the wrong number of rows or a missing field) and do not use the built-in copy.
 6. **No undefined names:** run the finished script and check for errors such as a variable that was never declared, in both copies.
 7. **Don't hide errors:** no empty try/catch blocks. Let real errors show during testing.
 8. **Both copies, every time:** after each change, confirm that the list view and the standalone dashboard file in the document library both have it.
