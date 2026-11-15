@@ -13,6 +13,12 @@ Builds or repairs the Jul Escape Room SharePoint list game from a saved HTML tem
 - Safe data-binding rules so list values are rendered as text, player progress is never written back to SharePoint, and both game copies stay synchronized
 - Preflight and honest test-reporting rules for template fidelity, script checks, and browser behavior
 
+## Video walkthrough
+
+[![How I Built an Escape Room Game from a SharePoint List with Copilot](https://img.youtube.com/vi/6c3yeMb44wY/maxresdefault.jpg)](https://youtu.be/6c3yeMb44wY)
+
+[Part 1: How I Built an Escape Room Game from a SharePoint List with Copilot](https://youtu.be/6c3yeMb44wY)
+
 ## How to use
 
 1. Upload only the inner `jul-escape-room-dashboard/` package folder (the one that contains `SKILL.md`, `references/`, and `templates/`) to a SharePoint location your agents can read, such as the site's Agent Assets › Skills folder. The uploaded folder name must match the `name` in `SKILL.md`.
