@@ -19,6 +19,10 @@ Builds or repairs the Jul Escape Room SharePoint list game from a saved HTML tem
 
 [Part 1: How I Built an Escape Room Game from a SharePoint List with Copilot](https://youtu.be/6c3yeMb44wY)
 
+[![Copilot in SharePoint Prompt to Build an Escape Room Game](https://img.youtube.com/vi/ihUqhvoDoqs/maxresdefault.jpg)](https://youtu.be/ihUqhvoDoqs)
+
+[Part 2: Copilot in SharePoint Prompt to Build an Escape Room Game](https://youtu.be/ihUqhvoDoqs) · [Listen on Spotify](https://open.spotify.com/episode/49NBCVhUM9xwX0FgLCuxC8)
+
 ## How to use
 
 1. Upload only the inner `jul-escape-room-dashboard/` package folder (the one that contains `SKILL.md`, `references/`, and `templates/`) to a SharePoint location your agents can read, such as the site's Agent Assets › Skills folder. The uploaded folder name must match the `name` in `SKILL.md`.
