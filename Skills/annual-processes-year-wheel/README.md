@@ -24,6 +24,8 @@ Builds an animated D3.js year wheel dashboard that reads a SharePoint list of an
 
 A live demo with the fictional sample data is at [https://anandragav.github.io/copilot-html-dashboards/annual-processes-year-wheel/](https://anandragav.github.io/copilot-html-dashboards/annual-processes-year-wheel/).
 
+Watch the walkthrough video on YouTube: [https://youtu.be/VRtjFYBzsl4](https://youtu.be/VRtjFYBzsl4).
+
 ## About D3
 
 The live dashboard loads D3 v7 through the page's library manifest. The template file in `references/` also works offline as a standalone sample: it tries the D3 v7 CDN first and otherwise falls back to bundled official D3 modules (ISC license) and a small selection, transition, and drag layer. The skill tells the agent not to copy the sample data, sample banner, or offline fallback code into live pages.
