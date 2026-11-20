@@ -4,7 +4,7 @@ The goal of the playback is that the user sees their own flow described back to 
 
 ## Order
 
-Turn 1 (one message): trigger, actions in run order (containers with inner steps indented), inferred goal and audience, guardrails spotted. End with: "Is anything wrong or missing? Correct any part by number."
+Turn 1 (one message): trigger, actions in run order (containers with inner steps as an indented sub-list numbered 5a, 5b), inferred goal and audience, guardrails spotted. End with: "Is anything wrong or missing? Correct any part by number."
 
 Turn 2 (one message): masking table, then the gaps (whys, gotchas, quiz focus, test evidence). End with: "Approve the table and answer what you can; I'll use my drafts for anything you skip."
 
@@ -30,8 +30,14 @@ Turn 3: a one-line summary of what you will build, then generate.
 
 For containers, say what repeats or branches, then list the inner steps underneath:
 
-> - **Step 5, Apply to each request** (Control): runs the next 8 steps once per request.
->   - **Step 6, Is approved?** YES: steps 7 to 11. NO: steps 12 and 13.
+> - **Step 5, Apply to each request** (Control): runs the steps below once per request.
+>   - **5a, Get request details** (SharePoint): ...
+>   - **5b, Is approved?** (Condition)
+>     - **YES 5b-1, Create site** ...
+>     - **NO 5b-2, Send rejection** ...
+> - **Step 6, Send summary** (Outlook): runs after the loop.
+
+Inner steps always go on their own indented lines and take the container's number plus a letter (5a, 5b). Never write them inline on the container's line, and never reuse the outer list's numbers for them.
 
 **Goal and audience**
 

@@ -48,7 +48,7 @@ Ask for the zip (or the step graph). In Copilot in SharePoint, the chat may not 
 After reading the export, tell the user what you think the flow does in a single message that covers all four parts below. Do not stop after the trigger or after any single part. Number the actions so the user can correct one by number:
 
 1. **The trigger** in plain words: what starts it, how often it checks, and any Split On, conditions, or concurrency settings.
-2. **Each action** in plain words, in run order, one line each: what it does and which earlier output it uses. Group steps inside loops, conditions, and scopes under their container.
+2. **Each action** in plain words, in run order, one line each: what it does and which earlier output it uses. Put steps inside loops, conditions, and scopes in an indented sub-list under their container, numbered from the container's number (8a, 8b, 8c; for a condition, 6a-yes, 6b-yes, 6a-no). Never number inner steps on the same line as the container or with the outer list's numbers, so "correct by number" is never ambiguous.
 3. **The inferred goal and audience.** Say it as one sentence ("Every new episode lands as a clean list item in SharePoint") and a guess at who the page is for. Ask if that is right.
 4. **The guardrails you spotted.** Point at the settings that usually cause trouble, for example: polling frequency and duplicates, Split On (one run per item), conditions and empty arms, Do until exit conditions and limits, Apply to each concurrency, run-after settings that create error paths, parallel branches, HTTP actions, hard-coded IDs. See `references/guardrail-patterns.md`.
 
