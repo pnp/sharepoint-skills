@@ -1,0 +1,596 @@
+{
+  "schema": "flow-step-graph/1",
+  "source": {
+    "format": "solution",
+    "flowPath": "Workflows/Weeklysiterequestintake-00000000-0000-4000-8000-000000000001.json"
+  },
+  "flow": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "displayName": "Weekly site request intake",
+    "packageName": "SiteRequestIntake",
+    "description": "Each week, provision approved site requests and flag urgent ones."
+  },
+  "connections": [
+    {
+      "key": "shared_sharepointonline",
+      "apiName": "sharepointonline",
+      "apiDisplayName": "SharePoint",
+      "connectionName": "connection-1",
+      "connectionDisplayName": "SharePoint (requests)",
+      "source": "embedded"
+    },
+    {
+      "key": "shared_office365",
+      "apiName": "office365",
+      "apiDisplayName": "Office 365 Outlook",
+      "connectionName": "connection-2",
+      "connectionDisplayName": "Outlook (requests)",
+      "source": "embedded"
+    },
+    {
+      "key": "shared_teams",
+      "apiName": "teams",
+      "apiDisplayName": "Microsoft Teams",
+      "connectionName": "connection-3",
+      "connectionDisplayName": "Teams (requests)",
+      "source": "embedded"
+    }
+  ],
+  "topLevel": [
+    "Initialize_state",
+    "Get_requests",
+    "Log_count",
+    "Apply_to_each_request",
+    "Notify_on_failure"
+  ],
+  "steps": [
+    {
+      "id": "Every_Monday",
+      "label": "Every Monday",
+      "type": "Recurrence",
+      "kind": "trigger",
+      "parent": null,
+      "branch": null,
+      "depth": 0,
+      "connector": null,
+      "group": "Schedule",
+      "operation": "Recurrence",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {},
+      "expressions": [],
+      "settings": {
+        "recurrence": {
+          "frequency": "Week",
+          "interval": 1,
+          "schedule": {
+            "weekDays": [
+              "Monday"
+            ],
+            "hours": [
+              "7"
+            ]
+          }
+        }
+      },
+      "children": {},
+      "parallelWith": [],
+      "order": 0
+    },
+    {
+      "id": "Initialize_state",
+      "label": "Initialize state",
+      "type": "InitializeVariable",
+      "kind": "action",
+      "parent": null,
+      "branch": null,
+      "depth": 1,
+      "connector": null,
+      "group": "Variables",
+      "operation": "Initialize variable",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {
+        "variables[0]/name": "state",
+        "variables[0]/type": "string",
+        "variables[0]/value": "Pending"
+      },
+      "expressions": [],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 1
+    },
+    {
+      "id": "Get_requests",
+      "label": "Get requests",
+      "type": "OpenApiConnection",
+      "kind": "action",
+      "parent": null,
+      "branch": null,
+      "depth": 1,
+      "connector": {
+        "key": "shared_sharepointonline",
+        "apiName": "sharepointonline",
+        "displayName": "SharePoint",
+        "operationId": "GetItems"
+      },
+      "group": "SharePoint",
+      "operation": "Get items",
+      "runAfter": {
+        "Initialize_state": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Initialize_state"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {
+        "dataset": "https://contoso.sharepoint.com/sites/team-site-1",
+        "table": "00000000-0000-4000-8000-000000000002",
+        "$filter": "Status ne 'Done'"
+      },
+      "expressions": [],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 2
+    },
+    {
+      "id": "Log_count",
+      "label": "Log count",
+      "type": "Compose",
+      "kind": "action",
+      "parent": null,
+      "branch": null,
+      "depth": 1,
+      "connector": null,
+      "group": "Data operation",
+      "operation": "Compose",
+      "runAfter": {
+        "Get_requests": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Get_requests"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {
+        "value": "@length(body('Get_requests')?['value'])"
+      },
+      "expressions": [
+        "length(body('Get_requests')?['value'])"
+      ],
+      "settings": {},
+      "children": {},
+      "parallelWith": [
+        "Apply_to_each_request"
+      ],
+      "order": 3
+    },
+    {
+      "id": "Apply_to_each_request",
+      "label": "Apply to each request",
+      "type": "Foreach",
+      "kind": "foreach",
+      "parent": null,
+      "branch": null,
+      "depth": 1,
+      "connector": null,
+      "group": "Control",
+      "operation": "Apply to each",
+      "runAfter": {
+        "Get_requests": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Get_requests"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {},
+      "expressions": [
+        "outputs('Get_requests')?['body/value']"
+      ],
+      "settings": {
+        "foreach": "@outputs('Get_requests')?['body/value']"
+      },
+      "children": {
+        "actions": [
+          "Is_approved"
+        ]
+      },
+      "parallelWith": [
+        "Log_count"
+      ],
+      "order": 4
+    },
+    {
+      "id": "Is_approved",
+      "label": "Is approved",
+      "type": "If",
+      "kind": "condition",
+      "parent": "Apply_to_each_request",
+      "branch": "actions",
+      "depth": 2,
+      "connector": null,
+      "group": "Control",
+      "operation": "Condition",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {},
+      "expressions": [
+        "items('Apply_to_each_request')?['Status/Value']",
+        "items('Apply_to_each_request')?['Owner/Email']"
+      ],
+      "settings": {
+        "expression": {
+          "and": [
+            {
+              "equals": [
+                "@items('Apply_to_each_request')?['Status/Value']",
+                "Approved"
+              ]
+            },
+            {
+              "not": {
+                "equals": [
+                  "@items('Apply_to_each_request')?['Owner/Email']",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        "expressionText": "items('Apply_to_each_request')?['Status/Value'] is equal to \"Approved\" AND NOT (items('Apply_to_each_request')?['Owner/Email'] is equal to \"\")"
+      },
+      "children": {
+        "actions": [
+          "Wait_until_ready",
+          "Email_the_owner"
+        ],
+        "else": [
+          "By_priority"
+        ]
+      },
+      "parallelWith": [],
+      "order": 5
+    },
+    {
+      "id": "Wait_until_ready",
+      "label": "Wait until ready",
+      "type": "Until",
+      "kind": "until",
+      "parent": "Is_approved",
+      "branch": "actions",
+      "depth": 3,
+      "connector": null,
+      "group": "Control",
+      "operation": "Do until",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {},
+      "expressions": [
+        "equals(variables('state'), 'Ready')"
+      ],
+      "settings": {
+        "limit": {
+          "count": 10,
+          "timeout": "PT1H"
+        },
+        "expression": "@equals(variables('state'), 'Ready')",
+        "expressionText": "equals(variables('state'), 'Ready')"
+      },
+      "children": {
+        "actions": [
+          "Delay",
+          "Check_provisioning",
+          "Set_state"
+        ]
+      },
+      "parallelWith": [],
+      "order": 6
+    },
+    {
+      "id": "Delay",
+      "label": "Delay",
+      "type": "Wait",
+      "kind": "action",
+      "parent": "Wait_until_ready",
+      "branch": "actions",
+      "depth": 4,
+      "connector": null,
+      "group": "Schedule",
+      "operation": "Delay",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {
+        "interval/count": "30",
+        "interval/unit": "Second"
+      },
+      "expressions": [],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 7
+    },
+    {
+      "id": "Check_provisioning",
+      "label": "Check provisioning",
+      "type": "Http",
+      "kind": "action",
+      "parent": "Wait_until_ready",
+      "branch": "actions",
+      "depth": 4,
+      "connector": null,
+      "group": "HTTP",
+      "operation": "HTTP",
+      "runAfter": {
+        "Delay": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Delay"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {
+        "method": "GET",
+        "uri": "https://example.com/redacted",
+        "headers/Authorization": "[REDACTED]",
+        "headers/x-api-key": "[REDACTED]"
+      },
+      "expressions": [],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 8
+    },
+    {
+      "id": "Set_state",
+      "label": "Set state",
+      "type": "SetVariable",
+      "kind": "action",
+      "parent": "Wait_until_ready",
+      "branch": "actions",
+      "depth": 4,
+      "connector": null,
+      "group": "Variables",
+      "operation": "Set variable",
+      "runAfter": {
+        "Check_provisioning": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Check_provisioning"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {
+        "name": "state",
+        "value": "@body('Check_provisioning')?['state']"
+      },
+      "expressions": [
+        "body('Check_provisioning')?['state']"
+      ],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 9
+    },
+    {
+      "id": "Email_the_owner",
+      "label": "Email the owner",
+      "type": "OpenApiConnection",
+      "kind": "action",
+      "parent": "Is_approved",
+      "branch": "actions",
+      "depth": 3,
+      "connector": {
+        "key": "shared_office365",
+        "apiName": "office365",
+        "displayName": "Office 365 Outlook",
+        "operationId": "SendEmailV2"
+      },
+      "group": "Office 365 Outlook",
+      "operation": "Send an email (V2)",
+      "runAfter": {
+        "Wait_until_ready": [
+          "Succeeded"
+        ]
+      },
+      "after": [
+        "Wait_until_ready"
+      ],
+      "onFailure": false,
+      "runAfterStatuses": [
+        "Succeeded"
+      ],
+      "inputs": {
+        "emailMessage/To": "@items('Apply_to_each_request')?['Owner/Email']",
+        "emailMessage/Cc": "alex@contoso.com",
+        "emailMessage/Subject": "Your site is ready"
+      },
+      "expressions": [
+        "items('Apply_to_each_request')?['Owner/Email']"
+      ],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 10
+    },
+    {
+      "id": "By_priority",
+      "label": "By priority",
+      "type": "Switch",
+      "kind": "switch",
+      "parent": "Is_approved",
+      "branch": "else",
+      "depth": 3,
+      "connector": null,
+      "group": "Control",
+      "operation": "Switch",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {},
+      "expressions": [
+        "items('Apply_to_each_request')?['Priority/Value']"
+      ],
+      "settings": {
+        "expression": "@items('Apply_to_each_request')?['Priority/Value']",
+        "expressionText": "items('Apply_to_each_request')?['Priority/Value']",
+        "cases": {
+          "Case_high": "High"
+        }
+      },
+      "children": {
+        "case:Case_high": [
+          "Post_to_triage"
+        ],
+        "default": []
+      },
+      "parallelWith": [],
+      "order": 11
+    },
+    {
+      "id": "Post_to_triage",
+      "label": "Post to triage",
+      "type": "OpenApiConnection",
+      "kind": "action",
+      "parent": "By_priority",
+      "branch": "case:Case_high",
+      "depth": 4,
+      "connector": {
+        "key": "shared_teams",
+        "apiName": "teams",
+        "displayName": "Microsoft Teams",
+        "operationId": "PostMessageToConversation"
+      },
+      "group": "Microsoft Teams",
+      "operation": "Post message in a chat or channel",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {
+        "poster": "Flow bot",
+        "location": "Channel",
+        "body/messageBody": "Urgent request: @{items('Apply_to_each_request')?['Title']}"
+      },
+      "expressions": [
+        "items('Apply_to_each_request')?['Title']"
+      ],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 12
+    },
+    {
+      "id": "Notify_on_failure",
+      "label": "Notify on failure",
+      "type": "Scope",
+      "kind": "scope",
+      "parent": null,
+      "branch": null,
+      "depth": 1,
+      "connector": null,
+      "group": "Control",
+      "operation": "Scope",
+      "runAfter": {
+        "Apply_to_each_request": [
+          "Failed",
+          "TimedOut"
+        ]
+      },
+      "after": [
+        "Apply_to_each_request"
+      ],
+      "onFailure": true,
+      "runAfterStatuses": [
+        "Failed",
+        "TimedOut"
+      ],
+      "inputs": {},
+      "expressions": [],
+      "settings": {},
+      "children": {
+        "actions": [
+          "Failure_note"
+        ]
+      },
+      "parallelWith": [],
+      "order": 13
+    },
+    {
+      "id": "Failure_note",
+      "label": "Failure note",
+      "type": "Compose",
+      "kind": "action",
+      "parent": "Notify_on_failure",
+      "branch": "actions",
+      "depth": 2,
+      "connector": null,
+      "group": "Data operation",
+      "operation": "Compose",
+      "runAfter": {},
+      "after": [],
+      "onFailure": false,
+      "runAfterStatuses": [],
+      "inputs": {
+        "value": "Run failed: @{workflow()?['run']?['name']}"
+      },
+      "expressions": [
+        "workflow()?['run']?['name']"
+      ],
+      "settings": {},
+      "children": {},
+      "parallelWith": [],
+      "order": 14
+    }
+  ],
+  "counts": {
+    "steps": 15,
+    "containers": 5,
+    "maxDepth": 4
+  },
+  "metadataDropped": [],
+  "warnings": [
+    "Log_count: runs in parallel with Apply_to_each_request. v1 draws parallel branches one after another.",
+    "Apply_to_each_request: runs in parallel with Log_count. v1 draws parallel branches one after another.",
+    "Notify_on_failure: runs after Apply_to_each_request with status Failed, TimedOut (error handling)."
+  ],
+  "masking": {
+    "map": "site-request-intake.masking-map.json",
+    "entries": 10,
+    "approvedBy": "fictional sample"
+  }
+}

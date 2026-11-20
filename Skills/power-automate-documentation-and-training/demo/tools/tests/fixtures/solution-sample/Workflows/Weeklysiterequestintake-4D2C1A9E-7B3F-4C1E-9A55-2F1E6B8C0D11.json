@@ -1,0 +1,111 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {"runtimeSource": "embedded", "connection": {"connectionReferenceLogicalName": "nw_sharedsharepointonline_7f3a1"}, "api": {"name": "shared_sharepointonline"}},
+      "shared_office365": {"runtimeSource": "embedded", "connection": {"connectionReferenceLogicalName": "nw_sharedoffice365_2b9c4"}, "api": {"name": "shared_office365"}},
+      "shared_teams": {"runtimeSource": "embedded", "connection": {"connectionReferenceLogicalName": "nw_sharedteams_9d1e0"}, "api": {"name": "shared_teams"}}
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {"$connections": {"defaultValue": {}, "type": "Object"}, "$authentication": {"defaultValue": {}, "type": "SecureObject"}},
+      "triggers": {
+        "Every_Monday": {"type": "Recurrence", "recurrence": {"frequency": "Week", "interval": 1, "schedule": {"weekDays": ["Monday"], "hours": ["7"]}}}
+      },
+      "actions": {
+        "Get_requests": {
+          "runAfter": {"Initialize_state": ["Succeeded"]},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {"connectionName": "shared_sharepointonline", "operationId": "GetItems", "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},
+            "parameters": {"dataset": "https://northwind.sharepoint.com/sites/IT-Requests", "table": "5b1f3c2a-9e84-4d6b-a1c7-3e2d9f0b8a64", "$filter": "Status ne 'Done'"},
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_state": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {"variables": [{"name": "state", "type": "string", "value": "Pending"}]}
+        },
+        "Log_count": {
+          "runAfter": {"Get_requests": ["Succeeded"]},
+          "type": "Compose",
+          "inputs": "@length(body('Get_requests')?['value'])"
+        },
+        "Apply_to_each_request": {
+          "runAfter": {"Get_requests": ["Succeeded"]},
+          "type": "Foreach",
+          "foreach": "@outputs('Get_requests')?['body/value']",
+          "actions": {
+            "Is_approved": {
+              "runAfter": {},
+              "type": "If",
+              "expression": {"and": [{"equals": ["@items('Apply_to_each_request')?['Status/Value']", "Approved"]}, {"not": {"equals": ["@items('Apply_to_each_request')?['Owner/Email']", ""]}}]},
+              "actions": {
+                "Wait_until_ready": {
+                  "runAfter": {},
+                  "type": "Until",
+                  "expression": "@equals(variables('state'), 'Ready')",
+                  "limit": {"count": 10, "timeout": "PT1H"},
+                  "actions": {
+                    "Delay": {"runAfter": {}, "type": "Wait", "inputs": {"interval": {"count": 30, "unit": "Second"}}},
+                    "Check_provisioning": {
+                      "runAfter": {"Delay": ["Succeeded"]},
+                      "type": "Http",
+                      "inputs": {
+                        "method": "GET",
+                        "uri": "https://prov.northwind-it.net/api/status?code=Zx9QwErTy7UiOp3AsDfGhJkL",
+                        "headers": {"Authorization": "Bearer abcDEF1234567890ghiJKLmnoPQRstu", "x-api-key": "k9F2mQ7vX3bN8cL1"}
+                      }
+                    },
+                    "Set_state": {"runAfter": {"Check_provisioning": ["Succeeded"]}, "type": "SetVariable", "inputs": {"name": "state", "value": "@body('Check_provisioning')?['state']"}}
+                  }
+                },
+                "Email_the_owner": {
+                  "runAfter": {"Wait_until_ready": ["Succeeded"]},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {"connectionName": "shared_office365", "operationId": "SendEmailV2", "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"},
+                    "parameters": {"emailMessage/To": "@items('Apply_to_each_request')?['Owner/Email']", "emailMessage/Cc": "it-desk@northwind.example", "emailMessage/Subject": "Your site is ready"}
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "By_priority": {
+                    "runAfter": {},
+                    "type": "Switch",
+                    "expression": "@items('Apply_to_each_request')?['Priority/Value']",
+                    "cases": {
+                      "Case_high": {
+                        "case": "High",
+                        "actions": {
+                          "Post_to_triage": {
+                            "runAfter": {},
+                            "type": "OpenApiConnection",
+                            "inputs": {"host": {"connectionName": "shared_teams", "operationId": "PostMessageToConversation", "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"},
+                                       "parameters": {"poster": "Flow bot", "location": "Channel", "body/messageBody": "Urgent request: @{items('Apply_to_each_request')?['Title']}"}}
+                          }
+                        }
+                      }
+                    },
+                    "default": {"actions": {}}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Notify_on_failure": {
+          "runAfter": {"Apply_to_each_request": ["Failed", "TimedOut"]},
+          "type": "Scope",
+          "actions": {
+            "Failure_note": {"runAfter": {}, "type": "Compose", "inputs": "Run failed: @{workflow()?['run']?['name']}"}
+          }
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

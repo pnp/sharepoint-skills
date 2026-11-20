@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Workflows>
+    <Workflow WorkflowId="{4d2c1a9e-7b3f-4c1e-9a55-2f1e6b8c0d11}" Name="Weekly site request intake">
+      <JsonFileName>/Workflows/Weeklysiterequestintake-4D2C1A9E-7B3F-4C1E-9A55-2F1E6B8C0D11.json</JsonFileName>
+      <Type>1</Type>
+      <Category>5</Category>
+      <Description>Each week, provision approved site requests and flag urgent ones.</Description>
+    </Workflow>
+  </Workflows>
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="nw_sharedsharepointonline_7f3a1">
+      <connectionreferencedisplayname>SharePoint (requests)</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_sharepointonline</connectorid>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="nw_sharedoffice365_2b9c4">
+      <connectionreferencedisplayname>Outlook (requests)</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_office365</connectorid>
+    </connectionreference>
+    <connectionreference connectionreferencelogicalname="nw_sharedteams_9d1e0">
+      <connectionreferencedisplayname>Teams (requests)</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_teams</connectorid>
+    </connectionreference>
+  </connectionreferences>
+</ImportExportXml>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2" SolutionPackageVersion="9.2" languagecode="1033">
+  <SolutionManifest>
+    <UniqueName>SiteRequestIntake</UniqueName>
+    <LocalizedNames><LocalizedName description="Site request intake" languagecode="1033" /></LocalizedNames>
+    <Version>1.0.0.0</Version>
+    <Managed>0</Managed>
+  </SolutionManifest>
+</ImportExportXml>
