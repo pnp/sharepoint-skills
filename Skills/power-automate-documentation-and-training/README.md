@@ -32,10 +32,6 @@ The upload-ready package is `power-automate-documentation-and-training/`:
 - `templates/flow-training-template.html`: the page engine with a small sample data block
 - `references/`: export formats, the chat playback and an example dialog, guardrail patterns, masking rules, card writing, the handoff file, the data block, sandbox rules, and the optional public copy
 
-## Local tools
-
-Parser, page builder, tests, and the fictional sample export live in a companion repo: COMPANION_REPO_URL
-
 ## SharePoint Skill
 
 | Solution | Author(s) |
