@@ -1,6 +1,6 @@
 # The DATA block
 
-The template reads one object, `var DATA={...};`, placed between `/*FLOW_DATA_BEGIN*/` and `/*FLOW_DATA_END*/`. `build_page.py` writes it from the step graph and the handoff file. When Copilot fills the template by hand, it writes the same object. Keep it ASCII: write `\u00b7` for a middle dot and `\u2713` for a check mark, and never write `</` inside a string (write `<\/`).
+The template reads one object, `var DATA={...};`, placed between `/*FLOW_DATA_BEGIN*/` and `/*FLOW_DATA_END*/`. Fill this object by hand from the export and the confirmed chat answers. Keep it ASCII: write `\u00b7` for a middle dot and `\u2713` for a check mark, and never write `</` inside a string (write `<\/`).
 
 ```js
 var DATA={

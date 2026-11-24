@@ -29,4 +29,4 @@ Show a table with a short ID, what the value is, where it appears, a **redacted*
 - Same real value, same replacement, everywhere in the page.
 - Keep public names the user says are public (for example their own show name). Ask; do not assume.
 - After generating, search the page for the tenant name, the user's name, `@`, `sharepoint.com`, and long hex strings.
-- `parse_flow.py` writes the table with `--report-md`, a map to approve with `--map-out`, and refuses to write a graph until the map says `"approved": true`. The map stores a fingerprint of each real value, not the value itself. `build_page.py --map` runs the same scan over the final page data and stops if anything new appears.
+- Do not write the page until the user has approved the table. If the finished page still contains a real value, or a sensitive value that was not in the table, stop and add it to the table before handing the page over.

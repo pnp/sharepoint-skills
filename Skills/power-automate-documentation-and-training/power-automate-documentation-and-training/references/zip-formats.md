@@ -52,4 +52,4 @@ Either the whole flow JSON (`properties.definition`) or a bare `{ "triggers": ..
 4. For each action, note the connector (`inputs.host.connectionName` or `apiId`), the operation (`inputs.host.operationId`), the parameters (`inputs.parameters`), and every expression (strings that start with `@` or contain `@{...}`).
 5. Flag these as you go: a `runAfter` status other than `Succeeded` (error handling), two siblings with the same `runAfter` (parallel branch), a `splitOn`, a `recurrence` under 5 minutes, a missing `limit` on `Until`, hard-coded IDs, and HTTP actions with headers.
 
-`scripts/parse_flow.py` does all of this and writes the result as a step graph (`flow-step-graph/1`). See `data-schema.md` for how the graph maps to the page.
+Walk the definition this way, then map the steps into the `DATA` block as described in `data-schema.md`.

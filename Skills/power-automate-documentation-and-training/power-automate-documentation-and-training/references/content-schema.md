@@ -1,6 +1,6 @@
 # The handoff file (content YAML or JSON)
 
-The chat writes this file once the user has confirmed the playback, the masking table, and the gaps. The user never fills it in. `build_page.py --content` reads it; Copilot can also use it as its own checklist before filling the `DATA` block.
+The chat writes this file once the user has confirmed the playback, the masking table, and the gaps. The user never fills it in. Use it as your own checklist before filling the `DATA` block.
 
 Step keys are the action names from the export (`Create_item`, not "Create item"). A key that is not in the export is an error, so the file can reword steps but never add them.
 
@@ -58,4 +58,4 @@ checks:                      # the finish-screen checklist and doughnut
     - {text: The trigger checks the feed every minute, done: true}
 ```
 
-Text fields accept `**bold**` and `` `code` ``. Non-ASCII characters are fine in this file; the builder escapes them.
+Text fields accept `**bold**` and `` `code` ``. Non-ASCII characters are fine in this file; escape them when writing the `DATA` block (see `data-schema.md`).

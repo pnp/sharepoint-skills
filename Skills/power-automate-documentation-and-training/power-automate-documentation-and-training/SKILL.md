@@ -10,7 +10,6 @@ Turn someone's own cloud flow into a lesson, not a spec. The structure comes fro
 ## When to use
 
 - The user attaches a flow export (`.zip` from Export > Package, a solution `.zip`, or a `definition.json`) and asks to document it, explain it, train people on it, or turn it into a practice lab.
-- The user attaches a step-graph JSON made by `parse_flow.py` (the best input; see "Two input paths").
 
 ## When not to use
 
@@ -28,12 +27,9 @@ Turn someone's own cloud flow into a lesson, not a spec. The structure comes fro
 6. **SharePoint sandbox:** one file, inline style and script only, `ka-lib-manifest` `["d3","chart.js"]`, no `fetch`, no storage, no remote `src` or `href`, no state except the `#step=N` hash (SharePoint's sandboxed frame may ignore it), pure ASCII (escape anything else). See `references/sharepoint-html-sandbox.md`.
 7. Plain American English. No em dashes. No tool, vendor, or AI credits in the page.
 
-## Two input paths
+## Reading the export
 
-- **Quality path (recommended).** The user (or a coding agent) runs `parse_flow.py` locally and attaches the masked step graph JSON. The graph already has every step in order, with nesting, branches, inputs, expressions, and connection labels. Copilot only does the playback, the questions, and the page.
-- **Fallback.** The user attaches the zip or the definition JSON. Do the inventory yourself with `references/zip-formats.md`: find the definition, walk `triggers`, then every `actions` object recursively (including `else.actions`, `cases.*.actions`, and `default.actions`), and order siblings by `runAfter`. Count the steps and say the count out loud in the playback so the user can check it. If you cannot open the zip from the library link, ask the user to unzip it and attach `definition.json` (legacy: `Microsoft.Flow/flows/<id>/definition.json`; solution: `Workflows/<Name>-<GUID>.json`).
-
-Do not claim you ran Python. The scripts are for local use and verification.
+The user attaches the zip or the definition JSON. Do the inventory yourself with `references/zip-formats.md`: find the definition, walk `triggers`, then every `actions` object recursively (including `else.actions`, `cases.*.actions`, and `default.actions`), and order siblings by `runAfter`. Count the steps and say the count out loud in the playback so the user can check it. If you cannot open the zip from the library link, ask the user to unzip it and attach `definition.json` (legacy: `Microsoft.Flow/flows/<id>/definition.json`; solution: `Workflows/<Name>-<GUID>.json`).
 
 ## The conversation
 
@@ -41,7 +37,7 @@ This is a chat, not a form. Work through it in this order and keep each message 
 
 ### 1. Ask for the export
 
-Ask for the zip (or the step graph). In Copilot in SharePoint, the chat may not accept a .zip attachment: ask the user to upload the export zip to a document library on the site and paste its link into the chat, then read the zip from that link. Say which export types work, and that nothing is run.
+Ask for the zip or the definition JSON. In Copilot in SharePoint, the chat may not accept a .zip attachment: ask the user to upload the export zip to a document library on the site and paste its link into the chat, then read the zip from that link. Say which export types work, and that nothing is run.
 
 ### 2. Play back your understanding in one message
 
@@ -79,16 +75,14 @@ For every step, in this order (see `references/writing-cards.md`):
 
 ### 6. Generate (copy the template; do not design)
 
-Write the internal handoff file (`references/content-schema.md`). It holds the confirmed answers and the card copy. The user never fills it in. Then either:
+Write the internal handoff file (`references/content-schema.md`). It holds the confirmed answers and the card copy. The user never fills it in. Then fill the template yourself, following these rules exactly:
 
-- run `build_page.py --graph graph.json --map masking-map.json --content content.yaml -o page.html` (local path), or
-- fill the template yourself, following these rules exactly:
-  1. Open `templates/flow-training-template.html` and keep all of its own content unchanged and in order: every rule in the `<style>` block, the markup, and the `<script>` engine. SharePoint's page-authoring wrapper (extra head styles, theme variables, metadata) may be added around it when the page is saved; that is fine.
-  2. Replace only the text between `/*FLOW_DATA_BEGIN*/` and `/*FLOW_DATA_END*/` with one `var DATA={...};` that follows `references/data-schema.md`. Keep both marker comments.
-  3. Set the `<title>`, `#ft-eyebrow`, `#ft-title`, and `#ft-lede` text to match `DATA.meta`. Change nothing else.
-  4. Never write your own HTML, CSS, or JavaScript, never add or remove sections, never restyle the page, and never call it or build it as a "dashboard". The template draws the steps, cards, quick checks, and the finish doughnut by itself from `DATA`; never add coordinates.
-  5. If you cannot include the template's complete markup, styles, and script (for example it is too long for one reply), say exactly that and stop. Do not hand over a shorter or different page.
-  6. Once the user has approved the playback and the masking table, create the page and save it as an `.html` file in the site's Documents library right away (not the Site Pages HTML writer, which cannot hold the full template). Do not wait for another prompt, do not ask whether to save it, and do not stop to explain the template rule; just save the file.
+1. Open `templates/flow-training-template.html` and keep all of its own content unchanged and in order: every rule in the `<style>` block, the markup, and the `<script>` engine. SharePoint's page-authoring wrapper (extra head styles, theme variables, metadata) may be added around it when the page is saved; that is fine.
+2. Replace only the text between `/*FLOW_DATA_BEGIN*/` and `/*FLOW_DATA_END*/` with one `var DATA={...};` that follows `references/data-schema.md`. Keep both marker comments.
+3. Set the `<title>`, `#ft-eyebrow`, `#ft-title`, and `#ft-lede` text to match `DATA.meta`. Change nothing else.
+4. Never write your own HTML, CSS, or JavaScript, never add or remove sections, never restyle the page, and never call it or build it as a "dashboard". The template draws the steps, cards, quick checks, and the finish doughnut by itself from `DATA`; never add coordinates.
+5. If you cannot include the template's complete markup, styles, and script (for example it is too long for one reply), say exactly that and stop. Do not hand over a shorter or different page.
+6. Once the user has approved the playback and the masking table, create the page and save it as an `.html` file in the site's Documents library right away (not the Site Pages HTML writer, which cannot hold the full template). Do not wait for another prompt, do not ask whether to save it, and do not stop to explain the template rule; just save the file.
 
 ### 7. Check before you hand it over
 

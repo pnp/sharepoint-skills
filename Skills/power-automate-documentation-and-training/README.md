@@ -18,7 +18,7 @@ Turns a Power Automate cloud flow export into one interactive, hand-drawn traini
 
 ## How it works
 
-1. Export the flow: **My flows > Export > Package (.zip)**, a solution `.zip`, or a `definition.json`. In Copilot in SharePoint, upload the zip to a document library on the site and paste its link into the chat. For the best result, run `demo/tools/parse_flow.py` locally first and attach the masked step graph it writes.
+1. Export the flow: **My flows > Export > Package (.zip)**, a solution `.zip`, or a `definition.json`. In Copilot in SharePoint, upload the zip to a document library on the site and paste its link into the chat. Copilot reads the export, masks sensitive values, and fills the bundled template.
 2. Copilot plays back the whole flow in one message: the trigger, each action in plain words, the goal and audience it inferred, and the guardrails it spotted. Correct anything by number in one reply.
 3. Copilot shows the masking table in the same chat. Approve it or edit it.
 4. Copilot asks only for what the export cannot tell it: the reasons behind key steps, gotchas, which guardrails to quiz, and any test evidence.
@@ -32,9 +32,9 @@ The upload-ready package is `power-automate-documentation-and-training/`:
 - `templates/flow-training-template.html`: the page engine with a small sample data block
 - `references/`: export formats, the chat playback and an example dialog, guardrail patterns, masking rules, card writing, the handoff file, the data block, sandbox rules, and the optional public copy
 
-## Demo content
+## Local tools
 
-[`demo/`](./demo/) has a fictional solution export ("Weekly site request intake") with nested loops, a condition, a switch, and an error path, plus its masking table, step graph, handoff file, and generated page. The local parser, page builder, and tests are in [`demo/tools/`](./demo/tools/). Do not upload `demo/` with the skill package.
+Parser, page builder, tests, and the fictional sample export live in a companion repo: COMPANION_REPO_URL
 
 ## SharePoint Skill
 
