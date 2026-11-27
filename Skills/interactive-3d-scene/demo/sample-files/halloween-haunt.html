@@ -349,6 +349,7 @@ var $=function(id){return document.getElementById(id);};
 var stage=$('stage'), canvas=$('scene3d'), statusEl=$('status'), modeEl=$('mode'), flashEl=$('flash'), hint=$('hint'), soundBtn=$('sound'), cruiseBtn=$('cruise'), toastEl=$('toast');
 var mq=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
 var reduced=!!(mq&&mq.matches);
+if(mq){var syncMotion=function(){reduced=mq.matches;};if(mq.addEventListener)mq.addEventListener('change',syncMotion);else if(mq.addListener)mq.addListener(syncMotion);}
 
 /* ---------- auto-play demo: ?demo=1 (or #demo=1). Without the flag nothing below changes the page. ---------- */
 var Q={};
@@ -359,7 +360,6 @@ var D={caps:DEMO&&Q.captions==='1',step:DEMO&&Q.step==='1',portrait:DEMO&&(Q.asp
 D.sound=DEMO&&Q.sound!=='0'&&(!D.step||Q.sound==='1');
 if(DEMO){
  var dseed=20261031;Math.random=function(){dseed=(dseed*16807)%2147483647;return (dseed-1)/2147483646;};
- reduced=false;
  var rootEl=document.documentElement;rootEl.classList.add('demo',D.portrait?'demo-9x16':'demo-16x9');if(D.caps)rootEl.classList.add('demo-caps');
 }
 var demoMs=0,demoQ=[],demoLive=false,demoCam=null,demoFlash=-1e9;
@@ -938,7 +938,7 @@ function start3D(){
    for(i=0;i<mists.length;i++){var mm=mists[i].m;mm.position.x+=mists[i].v*dt;if(mm.position.x>24)mm.position.x=-24;if(mm.position.x<-24)mm.position.x=24;}
    if(T>nextWitch){nextWitch=T+40;if(!witchBusy)flyWitch();}
   }
- if(DEMO&&demoLive&&demoCam)demoCam(demoMs);
+ if(DEMO&&demoLive&&demoCam&&!reduced)demoCam(demoMs);
  });
 
  /* reduced motion: stop ambient movement */
@@ -967,7 +967,7 @@ function start3D(){
    spider:[-6.2,5.2,-5.2,-.4,1.22,11],cauldron:[4.4,1.1,-3.1,.35,1,9.5],tree:[10.5,4.5,9,.5,1.22,16],grave:[-8,1.4,-2,-.35,1.12,10],hand:[-4.3,0,-4.8,.1,.98,4.4],
    cruise:[0,1,-6,-.95,1.2,17],end:[0,2.8,1,.05,1.2,26]};
   var PR=D.portrait?1.08:1,PY=D.portrait?.5:0;
-  demoCam=function(t){var k=0;while(k<DEMO_TL.length-1&&t>=DEMO_TL[k+1][1])k++;var seg=DEMO_TL[k],cur=SH[seg[0]],prev=SH[k?DEMO_TL[k-1][0]:'intro'];
+  demoCam=function(t){if(reduced)return;var k=0;while(k<DEMO_TL.length-1&&t>=DEMO_TL[k+1][1])k++;var seg=DEMO_TL[k],cur=SH[seg[0]],prev=SH[k?DEMO_TL[k-1][0]:'intro'];
    var e=ease(Math.max(0,Math.min(1,(t-seg[1])/1800))),pr=Math.max(0,Math.min(1,(t-seg[1])/(seg[2]-seg[1])));
    var L=function(j){return prev[j]+(cur[j]-prev[j])*e;};
    cam.target.copyFromFloats(L(0),L(1)+PY,L(2));cam.alpha=BASE_A+L(3)+Math.sin(t/4200)*.025;cam.beta=L(4);cam.radius=L(5)*PR*(1-.05*pr);};
@@ -992,7 +992,7 @@ var FLASHK=[[0,0],[.06,.55],[.16,0],[.28,.35],[.42,0],[1,0]];
 function demoTick(dms){demoMs+=dms;window.__demoMs=demoMs;
  while(demoNext<DEMO_EV.length&&DEMO_EV[demoNext][0]<=demoMs){var ev=DEMO_EV[demoNext++];try{ev[1]();}catch(e){warn('A step failed and was skipped.',e);}}
  if(demoQ.length){var due=demoQ.filter(function(q){return q.at<=demoMs;});if(due.length){demoQ=demoQ.filter(function(q){return q.at>demoMs;});due.forEach(function(q){try{q.fn();}catch(e){warn('A step failed and was skipped.',e);}});}}
- var f=(demoMs-demoFlash)/1300,o=0;if(f>=0&&f<=1){for(var i=1;i<FLASHK.length;i++){if(f<=FLASHK[i][0]){var a=FLASHK[i-1],b=FLASHK[i];o=a[1]+(b[1]-a[1])*(f-a[0])/(b[0]-a[0]);break;}}}
+ var f=(demoMs-demoFlash)/(reduced?1400:1300),o=0;if(f>=0&&f<=1){if(reduced)o=Math.sin(f*Math.PI)*.14;else{for(var i=1;i<FLASHK.length;i++){if(f<=FLASHK[i][0]){var a=FLASHK[i-1],b=FLASHK[i];o=a[1]+(b[1]-a[1])*(f-a[0])/(b[0]-a[0]);break;}}}}
  flashEl.style.opacity=o?String(o):'0';}
 function demoStart(){if(demoLive)return;
  if(D.sound){soundOn=true;if(!ctx())soundOn=false;else{windOn();var wake=function(){ctx();};window.addEventListener('pointerdown',wake,{once:true});window.addEventListener('keydown',wake,{once:true});}

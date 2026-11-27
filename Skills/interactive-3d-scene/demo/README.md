@@ -41,4 +41,6 @@ Add these to the file URL:
 
 ## What to expect
 
+Halloween Haunt keeps the visitor's reduced-motion preference during automatic playback, including changes while the page is open. Its demo camera stops moving and its screen flash becomes a gentle fade; the timeline and status feedback continue in both 3D and the flat fallback. These paths have deterministic offline checks in `reduced-motion-checks.cjs`; they are not additional SharePoint runtime evidence.
+
 The skill writes one new self-contained HTML file for your theme. Self-contained means the scene, script, styles and drawn assets are in that file, and Babylon.js stays a host-manifest request. It should match the samples' structure: a scene with 3 to 6 tappable objects, buttons below it, a status line, a sound toggle and a flat SVG fallback. The objects, text and colours come from your theme, not from these samples.
