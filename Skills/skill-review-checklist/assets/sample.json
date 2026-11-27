@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-skill-review-checklist",
+    "source": "pnp",
+    "title": "Skill Review Checklist",
+    "shortDescription": "Reviews a skill package against a ten-point governance checklist and saves a review record with an approve, revise or reject recommendation.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/skill-review-checklist",
+    "longDescription": [
+      "Reads a SKILL.md and its supporting files and checks them against a ten-point checklist: purpose, triggers, data access, actions, external links, instruction safety, sensitive content, accuracy rules, files and ownership.",
+      "Saves a self-contained HTML review record with quotes for every finding and a clear recommendation, so skills can be reviewed consistently before they are shared more widely."
+    ],
+    "creationDateTime": "2026-11-16",
+    "updateDateTime": "2026-11-16",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Governance"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/skill-review-checklist/assets/preview.png",
+        "alt": "Skill Review Checklist skill in action"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "knutrelbemoe",
+        "pictureUrl": "https://github.com/knutrelbemoe.png",
+        "name": "Knut Relbe-Moe"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
