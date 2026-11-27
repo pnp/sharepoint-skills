@@ -1,10 +1,10 @@
-# Example: playback dialog for the Tech Ease RSS flow
+# Example: playback dialog for a three-step RSS flow
 
-A real three-step legacy package. "User" is the flow owner. Previews are shortened so this file carries no real values. The whole chat takes three turns.
+A fictional three-step legacy package. "User" is the flow owner. Previews are shortened so this file carries no real values. The whole chat takes three turns.
 
 ---
 
-**Copilot:** I read your export: a legacy package called "Tech Ease RSS" with one cloud flow, "Tech Ease". It has 3 steps: 1 trigger and 2 actions. Here is how I read it. Correct any part by number.
+**Copilot:** I read your export: a legacy package called "Harbor Cast RSS" with one cloud flow, "Harbor Cast". It has 3 steps: 1 trigger and 2 actions. Here is how I read it. Correct any part by number.
 
 **1. The trigger.** The flow starts when a new item is published on an RSS feed (`https://***/.../rss`). It checks the feed every minute and uses **Split On** on the feed items, so three new episodes start three separate runs.
 
@@ -12,7 +12,7 @@ A real three-step legacy package. "User" is the flow owner. Previews are shorten
 - **Step 2, Html to text** (Content Conversion): turns the episode's **Summary** from HTML into plain text.
 - **Step 3, Create item** (SharePoint): creates one list item on a personal OneDrive site, filling **Title**, **Link**, **Summary** (from step 2) and **PublishedDate**. The export only has the list's ID, so tell me the list name.
 
-**3. What I think it is for.** Goal: "Every new Tech Ease episode lands as a clean list item in SharePoint." Audience: makers who want to copy this for their own feed.
+**3. What I think it is for.** Goal: "Every new Harbor Cast episode lands as a clean list item in SharePoint." Audience: makers who want to copy this for their own feed.
 
 **4. Things that usually trip people up here.**
 1. **Polling and re-publishing.** A re-published episode can look new, and Create item has no duplicate check.
@@ -21,7 +21,7 @@ A real three-step legacy package. "User" is the flow owner. Previews are shorten
 
 Is anything wrong or missing? Correct any part by number, and tell me anything you learned the hard way.
 
-**User:** All right. The list is Tech Ease Episodes. The duplicate thing bit me once.
+**User:** All right. The list is Harbor Cast Episodes. The duplicate thing bit me once.
 
 **Copilot:** **5. What I will hide.**
 
@@ -34,7 +34,7 @@ Is anything wrong or missing? Correct any part by number, and tell me anything y
 | 3 connection IDs | `****...****` | `connection-1` to `connection-3` |
 | Flow and package IDs | `****...****` | fictional GUIDs |
 
-I'll keep the show name "Tech Ease".
+I'll keep the show name "Harbor Cast".
 
 **6. A few things the export can't tell me.**
 - Why the conversion sits before Create item. My draft: "The summary arrives as HTML, and the list should show plain text."

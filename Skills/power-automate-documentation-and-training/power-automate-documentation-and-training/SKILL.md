@@ -33,7 +33,7 @@ The user attaches the zip or the definition JSON. Do the inventory yourself with
 
 ## The conversation
 
-This is a chat, not a form. Work through it in this order and keep each message short. A worked example for a real three-step flow is in `references/playback-example-tech-ease.md`.
+This is a chat, not a form. Work through it in this order and keep each message short. A worked example for a three-step RSS flow is in `references/playback-example-rss-feed.md`.
 
 ### 1. Ask for the export
 
@@ -104,7 +104,7 @@ Run this self-check on the finished file and fix any failure before you hand it 
 - `templates/flow-training-template.html`: the page engine with a small sample `DATA` block.
 - `references/zip-formats.md`: where the definition lives in each export and how to walk it.
 - `references/chat-playback.md`: the playback and question patterns.
-- `references/playback-example-tech-ease.md`: a full example dialog for a three-step RSS flow.
+- `references/playback-example-rss-feed.md`: a full example dialog for a three-step RSS flow.
 - `references/guardrail-patterns.md`: settings that usually deserve a guardrail or a quick check.
 - `references/masking.md`: detection rules and replacement style.
 - `references/writing-cards.md`: how to write what / why / how and quick checks.
