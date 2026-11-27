@@ -1,0 +1,51 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-christmas-julfest-bingo",
+    "source": "pnp",
+    "title": "Christmas & JulFest Bingo",
+    "shortDescription": "Creates or repairs English Christmas Bingo and Swedish JulFest Bingo SharePoint lists and interactive game views from a bundled canonical template.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/christmas-julfest-bingo",
+    "longDescription": [
+      "Sets up a festive bingo game inside SharePoint lists. The skill creates or reuses an English Christmas Bingo Cards list and a Swedish JulFest Bingo list, seeds each with a 36-word themed word bank, and adds a non-default HTML game view built from a bundled view-formatting template.",
+      "Players get a shuffled 5x5 card with a free centre, a Caller/Player role switch, called-word history, undo, win patterns for lines, four corners, or full house, verified claims with a success banner and confetti, SharePoint theme-aware colors, a How to play drawer, and print support.",
+      "The game state is local to each browser. SharePoint does not sync it between devices: the Caller announces words and each Player logs them on their own device."
+    ],
+    "creationDateTime": "2026-11-13",
+    "updateDateTime": "2026-11-13",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "List Styling" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/christmas-julfest-bingo/assets/preview.png",
+        "alt": "Christmas Bingo game view open on two devices, a Caller drawing words and a Player logging them"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "SharePoint view formatting",
+        "description": "Microsoft documentation for formatting SharePoint list views.",
+        "url": "https://learn.microsoft.com/sharepoint/dev/declarative-customization/view-formatting"
+      }
+    ]
+  }
+]
