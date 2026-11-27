@@ -64,7 +64,7 @@ The template is the source of truth for layout, colors, animation and interactio
 ### 1b. Map an existing list (own-data mode)
 1. Read the list schema and the first 50 items.
 2. Map the list's columns to the template fields: Title, Department, Quarter, Start Month, End Month, Number of Months, Process Owner, About, Comments, More information. Use the internal column names in the page.
-3. Minimum required: Title and Start Month (a number 1–12). If Start Month is missing but a multi-choice Month column exists, the first ticked month may be used as the start and the count of ticked months as the length. Tell the user which mapping you used.
+3. Minimum required: Title and Start Month (a number 1–12). A differently named numeric start-month column can be mapped in the `col(...)` lookups. A multi-choice Month column alone is not supported by this template: report the missing numeric start-month field and stop before building, rather than guessing a continuous range from selected months or changing the user's list. Tell the user which mapping you used.
 4. Report data gaps before building: rows without Start Month, rows without Department (they go to an "Unassigned" ring), and rows where Number of Months disagrees with Start/End Month. Do not change the user's data unless asked.
 
 ### 2. Build the dashboard

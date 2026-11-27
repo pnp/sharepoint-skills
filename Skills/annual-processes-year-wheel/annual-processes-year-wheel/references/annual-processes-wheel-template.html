@@ -54,6 +54,23 @@
 <!-- OFFLINE FALLBACK ONLY (D3 modules, ISC licence). Do not copy into live SharePoint pages. -->
 <script>
 /* D3 v7 modules (ISC licence, Mike Bostock): internmap, array, color, interpolate, ease, timer, path, shape, format, time, time-format, scale */
+/*
+Copyright 2010-2026 Mike Bostock
+Copyright 2001 Robert Penner
+Individual module versions and copyright years are retained below.
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+*/
 // https://github.com/mbostock/internmap/ v2.0.3 Copyright 2021 Mike Bostock
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).internmap={})}(this,(function(e){"use strict";class InternMap extends Map{constructor(e,t=r){if(super(),Object.defineProperties(this,{_intern:{value:new Map},_key:{value:t}}),null!=e)for(const[t,n]of e)this.set(t,n)}get(e){return super.get(t(this,e))}has(e){return super.has(t(this,e))}set(e,t){return super.set(n(this,e),t)}delete(e){return super.delete(s(this,e))}}class InternSet extends Set{constructor(e,t=r){if(super(),Object.defineProperties(this,{_intern:{value:new Map},_key:{value:t}}),null!=e)for(const t of e)this.add(t)}has(e){return super.has(t(this,e))}add(e){return super.add(n(this,e))}delete(e){return super.delete(s(this,e))}}function t({_intern:e,_key:t},n){const s=t(n);return e.has(s)?e.get(s):n}function n({_intern:e,_key:t},n){const s=t(n);return e.has(s)?e.get(s):(e.set(s,n),n)}function s({_intern:e,_key:t},n){const s=t(n);return e.has(s)&&(n=e.get(s),e.delete(s)),n}function r(e){return null!==e&&"object"==typeof e?e.valueOf():e}e.InternMap=InternMap,e.InternSet=InternSet,Object.defineProperty(e,"__esModule",{value:!0})}));
 

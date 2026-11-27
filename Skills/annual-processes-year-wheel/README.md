@@ -11,7 +11,7 @@ Builds an animated D3.js year wheel dashboard that reads a SharePoint list of an
 - Filters for search, quarter, and department, plus month filtering from the wheel or the workload chart
 - KPI cards for active processes, processes starting in the next 30 days, and the busiest month, a "Next up" strip, and a details panel with owner, About, Comments, and link
 - A Manager workload bar chart showing how many processes run each month
-- Own-data mode that maps the columns of an existing list and reports data gaps instead of changing your data
+- Own-data mode that maps the columns of an existing list and reports data gaps instead of changing your data; Title and a numeric Start Month are required (a multi-choice Month column alone is not supported)
 - Demo mode that creates an `Annual Processes` list and seeds 30 fictional rows for the made-up company Northwind Outfitters
 - A canonical template (`references/annual-processes-wheel-template.html`) that the agent copies verbatim, so the layout, colors, and animations stay consistent
 
@@ -28,7 +28,7 @@ Watch the walkthrough video on YouTube: [https://youtu.be/VRtjFYBzsl4](https://y
 
 ## About D3
 
-The live dashboard loads D3 v7 through the page's library manifest. The template file in `references/` also works offline as a standalone sample: it tries the D3 v7 CDN first and otherwise falls back to bundled official D3 modules (ISC license) and a small selection, transition, and drag layer. The skill tells the agent not to copy the sample data, sample banner, or offline fallback code into live pages.
+The live dashboard loads D3 v7 through the page's library manifest. The template file in `references/` also works offline as a standalone sample: it tries the D3 v7 CDN first and otherwise falls back to bundled official D3 modules (ISC license) and a small selection, transition, and drag layer. The template retains the module version/copyright headers and full ISC permission notice. The skill tells the agent not to copy the sample data, sample banner, or offline fallback code into live pages.
 
 ## SharePoint Skill
 
