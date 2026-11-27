@@ -1,0 +1,50 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-power-automate-documentation-and-training",
+    "source": "pnp",
+    "title": "Power Automate documentation and training",
+    "shortDescription": "Turns a Power Automate cloud flow export into an interactive, hand-drawn training page where learners build the flow step by step with what, why and how cards and quick checks.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/power-automate-documentation-and-training",
+    "longDescription": [
+      "Reads a legacy flow package, a solution export or a definition JSON, plays the flow back to the owner in chat step by step, and masks tenant URLs, emails, IDs and keys with fictional values the owner approves.",
+      "The output is one SharePoint-ready HTML file that uses the D3 and Chart.js libraries SharePoint provides. Each step draws in on click, an anchored card explains what it does, why it is there and how to set it up, quick checks sit on the real guardrails, and a finish screen sums up the lessons."
+    ],
+    "creationDateTime": "2026-11-20",
+    "updateDateTime": "2026-11-20",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Learning & Training" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/power-automate-documentation-and-training/assets/preview.png",
+        "alt": "Flow training page with a hand-drawn Apply to each box, a condition with YES and NO arms, and an anchored card with a quick check"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Workflow Definition Language schema",
+        "description": "The schema behind Power Automate cloud flow definitions.",
+        "url": "https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-workflow-definition-language"
+      }
+    ]
+  }
+]
