@@ -1,0 +1,57 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-jul-escape-room-dashboard",
+    "source": "pnp",
+    "title": "Jul Escape Room Dashboard",
+    "shortDescription": "Builds or repairs the Jul Escape Room SharePoint list game from a saved HTML template, keeping the content list, live view, and standalone HTML file in sync.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/jul-escape-room-dashboard",
+    "longDescription": [
+      "Creates or repairs a festive, self-contained Jul Escape Room game for SharePoint. The skill uses a saved HTML template as the exact visual and interaction specification and a content list as the authority for live puzzle data.",
+      "It builds two synchronized copies of the same game: a playable HTML list view and a standalone HTML file (defaults: list Jul Escape Room Content, view Jul Escape Room, library Reports, file Jul Escape Room - Play.html). Shared puzzle content stays in the list; player progress is never written back to SharePoint.",
+      "The package includes the canonical template, a startup prompt for the initial six-puzzle build, and operating rules for template fidelity, safe data binding, preflight checks, and honest test reporting. The HTML uses inline CSS and SVG with system fonts only and no external assets."
+    ],
+    "creationDateTime": "2026-11-15",
+    "updateDateTime": "2026-11-15",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Learning & Training"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/jul-escape-room-dashboard/assets/preview.png",
+        "alt": "Jul Escape Room start screen with Solo and Team play options"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Jul Escape Room live demo",
+        "description": "A public playable demo of the Jul Escape Room game.",
+        "url": "https://anandragav.github.io/copilot-html-dashboards/jul-escape-room/"
+      }
+    ]
+  }
+]
