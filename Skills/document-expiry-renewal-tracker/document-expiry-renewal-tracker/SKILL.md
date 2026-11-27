@@ -1,6 +1,7 @@
 ---
 name: document-expiry-renewal-tracker
-description: Finds expiry, renewal, and notice-period dates in contracts, certificates, insurance documents, and policies stored in a SharePoint library, then reports what is due in the next 30, 60, and 90 days with the evidence for each date. Saves a self-contained HTML report. Use when the user says: - "what contracts are expiring" - "track document expiry dates" - "which renewals are coming up" - "find expiring certificates" - "check upcoming renewal and notice deadlines"
+description: >-
+  Finds expiry, renewal, and notice-period dates in contracts, certificates, insurance documents, and policies stored in a SharePoint library, then reports what is due in the next 30, 60, and 90 days with the evidence for each date. Saves a self-contained HTML report. Use when the user says: - "what contracts are expiring" - "track document expiry dates" - "which renewals are coming up" - "find expiring certificates" - "check upcoming renewal and notice deadlines"
 ---
 
 # Document Expiry & Renewal Tracker
@@ -27,7 +28,7 @@ Determine the scope from the user's request:
 - **Library (default)** — the current document library or folder.
 - **Named library or folder** — if the user names one, scope to that instead.
 - **Document types (default)** — contracts and agreements, certificates, insurance documents, and policies. If the user names other types (licenses, warranties, permits, leases), include those. Skip files that are clearly unrelated and note how many were skipped.
-- **Look-ahead window (optional)** — default is 90 days. Use a different window only if the user states one.
+- **Look-ahead window (optional)** — default is 90 days. Use a different positive whole number of days only if the user states one. If it is not a positive whole number, ask for clarification before generating the report.
 
 If the library holds more than about 200 documents, say in the report which folders were read fully and which were sampled rather than silently truncating results.
 
@@ -74,13 +75,18 @@ If a document contains several conflicting dates (for example an original term a
 
 Using today's date, place each document with a usable date into a band, based on the cancel-by date when one exists and otherwise on the expiry or renewal date:
 
+Let W be the confirmed look-ahead window and D be the whole calendar-day difference between today's date and the key date. Use the same date basis for every document. Each document belongs to exactly one band:
+
 | Band | Criteria |
 |---|---|
-| **Overdue** | The date has passed |
-| **Due in 30 days** | 0–30 days away |
-| **Due in 60 days** | 31–60 days away |
-| **Due in 90 days** | 61–90 days away |
-| **Later** | Beyond the look-ahead window |
+| **Overdue** | D < 0 |
+| **Due in 30 days** | 0 ≤ D ≤ min(30, W) |
+| **Due in 60 days** | 31 ≤ D ≤ min(60, W) |
+| **Due in 90 days** | 61 ≤ D ≤ min(90, W) |
+| **Due after 90 days within the window** | 91 ≤ D ≤ W; only when W > 90 |
+| **Later** | D > W |
+
+Omit bands whose range is empty. If W clips a band, label it with its actual upper bound and range (for example "Due in 45 days (days 31–45)"). Label the extra band "Due in W days (days 91–W)" using the actual number, not the letter W. Counts are exclusive, not cumulative; every dated document is counted once. For a 14-day window, day 14 is due within the window and day 15 is Later. For a 120-day window, days 91 and 120 are in the extra band and day 121 is Later. With the default 90-day window, the original three due bands remain unchanged.
 
 Documents marked No date found, Unreadable, or Review needed are reported in their own sections, not placed in a band.
 
@@ -89,9 +95,9 @@ Documents marked No date found, Unreadable, or Review needed are reported in the
 Draft a single self-contained HTML file:
 
 - No scripts. No external CSS, fonts, images, or other resources. Inline CSS only.
-- A **summary band** with the library, scope, date of report, total documents read, and counts per urgency band, plus counts of No date found, Unreadable, and Review needed.
-- A **due soon table**, sorted by earliest date first and covering Overdue through Due in 90 days, with columns for document (linked), type, key date, date type (expiry, renewal, or cancel-by), notice period, auto-renews (yes, no, or not stated), date source, confidence, and a short evidence line (the sentence the date came from, kept short).
-- Color-coded bands: red for Overdue, orange for 30 days, amber for 60 days, yellow for 90 days, gray for Later.
+- A **summary band** with the library, scope, date of report, confirmed look-ahead window, total documents read, and counts per non-empty urgency band, plus counts of No date found, Unreadable, and Review needed.
+- A **due soon table**, sorted by earliest date first and covering Overdue and every due band within W, including days 91–W when W > 90, with columns for document (linked), type, key date, date type (expiry, renewal, or cancel-by), notice period, auto-renews (yes, no, or not stated), date source, confidence, and a short evidence line (the sentence the date came from, kept short). List Later separately.
+- Color-coded bands: red for Overdue, orange for the first due band, amber for the second, yellow for the third and any extra within-window band, gray for Later.
 - A **needs attention** section listing Review needed, No date found, and Unreadable documents with the reason for each.
 - A **method and limitations** section explaining the date sources, the confidence levels, and that dates must be checked against the original document.
 
@@ -105,6 +111,8 @@ Save the HTML file to an **Expiry Reports** folder in the same library, or an ap
 ### Step 8 — Respond to the user
 
 After saving, reply with a compact Markdown summary and the report link:
+
+Use the same exclusive bands, actual labels and confirmed window as the HTML report. The example below is for the default 90-day window; omit empty ranges or include the extra within-window band for custom windows.
 
 ```
 # Expiry and renewal report complete

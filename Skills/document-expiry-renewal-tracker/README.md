@@ -12,7 +12,7 @@ Every date shows where it came from (metadata, stated in text, calculated, or fi
 
 - Expiry, renewal, and notice-period dates extracted from contracts, certificates, insurance documents, and policies
 - Cancel-by dates calculated for auto-renewing agreements from the stated notice period
-- Urgency bands: Overdue, Due in 30 days, Due in 60 days, Due in 90 days, and Later
+- Urgency bands: Overdue, Due in 30 days, Due in 60 days, Due in 90 days, and Later; custom windows clip those ranges or add a days 91-through-window band, without overlaps or gaps
 - The source of every date (metadata, stated in text, calculated, or filename), a High, Medium, or Low confidence level, and a short evidence line
 - A "Needs attention" section for documents with no date, unreadable files, and documents with conflicting dates
 - A self-contained HTML report saved to an Expiry Reports folder with a timestamped filename
@@ -47,6 +47,6 @@ Ask Copilot:
 
 ## Disclaimer
 
-THIS CODE IS PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+**THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 <img src="https://m365-visitor-stats.azurewebsites.net/sharepoint-skills/skills/document-expiry-renewal-tracker" />

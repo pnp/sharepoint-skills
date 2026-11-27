@@ -8,7 +8,7 @@
     "longDescription": [
       "Contracts, certificates, and insurance policies usually carry an expiry or renewal date buried in the text, and nobody notices until it has passed. The Document Expiry & Renewal Tracker reads the documents in a SharePoint library, extracts each document's expiry, renewal, and notice-period dates, and shows what needs attention first.",
       "Every date shows its source (metadata, stated in text, calculated, or filename), a confidence level, and a short evidence line so reviewers can check it against the original. For auto-renewing agreements the skill also calculates the cancel-by date from the notice period.",
-      "Documents are grouped into Overdue, Due in 30 days, Due in 60 days, Due in 90 days, and Later. Documents with no date, unreadable files, and documents with conflicting dates are listed separately for human review, because the skill never guesses.",
+      "Documents are grouped into Overdue, Due in 30 days, Due in 60 days, Due in 90 days, and Later. Custom look-ahead windows clip those ranges or add an extra within-window band after day 90, without overlaps or gaps. Documents with no date, unreadable files, and documents with conflicting dates are listed separately for human review, because the skill never guesses.",
       "The output is a fully self-contained HTML report with no scripts and no external assets, saved to an Expiry Reports folder with a timestamped filename. The skill is strictly read-only: it never modifies documents or metadata and never sends reminders."
     ],
     "creationDateTime": "2026-11-21",
