@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-interactive-3d-scene",
+    "source": "pnp",
+    "title": "Interactive 3D Scene",
+    "shortDescription": "Builds a self-contained, clickable 3D scene as one HTML file for the SharePoint HTML viewer. The file holds the scene and its assets, requests Babylon.js with the host manifest, and uses a flat SVG fallback when 3D is unavailable.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/interactive-3d-scene",
+    "longDescription": [
+      "Turns a theme or occasion, such as a team celebration, a seasonal greeting or a product launch, into a playful 3D scene with 3 to 6 tappable objects that glow, bounce, shake, spin, flash or burst into sparks.",
+      "Outputs a single self-contained HTML file that follows the SharePoint HTML viewer rules. Self-contained means the scene, script, styles and drawn assets are in the file. Babylon.js is requested through the host ka-lib-manifest. When window.BABYLON is available and WebGL works, the page is true 3D and the camera can orbit within the scene's limits. A finished SVG drawing with the same click and tap reactions is the fallback when the library or WebGL is unavailable, and when mode=2d is set.",
+      "Includes keyboard and button access, a live status line, reduced motion support, sound synthesized with Web Audio that stays off until the viewer turns it on, and a demo mode for 16:9 or 9:16 screen recordings. Ships with a starter template and reference guides so the pattern can be reused for any theme. On 6 November 2026, I tested the original HTML scenes in SharePoint with Babylon.js loaded through ka-lib-manifest. They rendered in true 3D, with camera pan and orbit, without bundling the library into the HTML file. The starter and sample files keep a limited orbit with target panning disabled; that is a scene choice, not a SharePoint restriction."
+    ],
+    "creationDateTime": "2026-10-31",
+    "updateDateTime": "2026-11-06",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Communication & Engagement" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/interactive-3d-scene/assets/preview.png",
+        "alt": "Interactive 3D Scene skill showing three clickable scenes: a winter office celebration, a product launch and a Halloween example"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]

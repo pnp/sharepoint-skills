@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-library-roast",
+    "source": "pnp",
+    "title": "Library Roast",
+    "shortDescription": "Writes a comedy roast of a document library from measured findings, followed by a cleanup plan in priority order.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/library-roast",
+    "longDescription": [
+      "Checks a SharePoint document library for version suffixes, duplicate-looking names, files untouched for years, deep folder nesting, empty folders, very large files, inconsistent naming, files at the root, and legacy Office formats. Each joke uses the real count and a real file name. The jokes are about files and folders; the skill doesn't read or mention people.",
+      "The HTML page has a Roast-o-meter score, one card per finding with its evidence and severity, and a section called \"The serious part\" with a cleanup plan in priority order. The plan points to skills such as library-cleanup, organize-library, rename-files-date-prefix, and metadata-completeness-auditor.",
+      "The skill is read-only and changes nothing in the library. It writes one file, the roast, by default to a Reports library."
+    ],
+    "creationDateTime": "2026-11-09",
+    "updateDateTime": "2026-11-09",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      { "key": "SAMPLE-TYPE", "value": "SharePoint-AI-Skill" },
+      { "key": "SKILL-CATEGORY", "value": "Document Management" }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/library-roast/assets/preview.png",
+        "alt": "Library Roast stage with the Roast-o-meter score and roast cards for a messy document library."
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "xenophobentx",
+        "pictureUrl": "https://github.com/xenophobentx.png",
+        "name": "Kornél Felföldi"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      }
+    ]
+  }
+]
