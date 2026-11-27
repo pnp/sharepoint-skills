@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guided Form</title>
+<style>
+:root{--fg:#183A35;--cr:#F2643D;--cm:#F7F5F1;--w:rgba(255,255,255,.8);--s:rgba(247,245,241,.45);--g:rgba(247,245,241,.06);--d:rgba(247,245,241,.28)}
+*{box-sizing:border-box}
+html,body,#gf-root,.shell{margin:0;height:100%;min-height:100vh}
+body{font:16px/1.4 "Segoe UI",system-ui,sans-serif;color:#fff;background:linear-gradient(135deg,#183A35 0%,#0F7F72 58%,#18233A 100%) 0 50%/200% 200%;animation:gfS 12s ease infinite}
+@keyframes gfS{50%{background-position:100% 50%}}
+@keyframes gfI{from{opacity:0;transform:translateY(24px)}}
+@keyframes gfO{to{opacity:0;transform:translateY(-24px)}}
+@keyframes gfB{40%{transform:scale(1.04)}}
+@keyframes gfK{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shell{display:flex;flex-direction:column;position:relative}
+.bar{position:fixed;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,.25);z-index:5}
+.bar.hide{opacity:0;pointer-events:none}
+.fill{height:100%;width:0;background:var(--cr);transition:width .4s}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:56px 24px 48px}
+.col{width:100%;max-width:640px}
+.in{animation:gfI .35s ease-out}
+.out{animation:gfO .25s ease-in forwards}
+.kicker{margin:0;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--w)}
+.meta,.help,.hint,.counter{color:var(--w)}
+.meta{margin:16px 0 0}
+.title{margin:12px 0 0;font-size:32px;font-weight:600;line-height:1.2}
+.help{margin:10px 0 0}
+.counter{margin:0 0 8px;font-size:14px;font-weight:600}
+.field{margin-top:28px}
+.inp,.area{width:100%;appearance:none;border:0;border-bottom:2px solid var(--s);background:0;color:#fff;font:400 24px/1.4 inherit;padding:8px 0;outline:0;resize:none}
+.area{min-height:2.8em;overflow:hidden}
+.inp::placeholder,.area::placeholder{color:rgba(255,255,255,.4)}
+.inp:focus,.area:focus{border-bottom-color:var(--cm);box-shadow:0 2px 0 var(--cm)}
+.opt:focus-visible,.rate:focus-visible,.pill:focus-visible,.back:focus-visible,.link:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.opts{display:flex;flex-direction:column;gap:10px;margin:24px 0 0}
+.opt,.rate{border:1px solid var(--d);background:var(--g);color:#fff;cursor:pointer;font:600 18px inherit}
+.opt{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;border-radius:14px;text-align:left}
+.opt.on,.rate.on{background:var(--cm);color:var(--fg);animation:gfB .15s ease}
+.ltr{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border-radius:999px;border:1px solid var(--s);font-size:13px;font-weight:700}
+.opt.on .ltr{border-color:var(--cr);color:var(--cr);box-shadow:0 0 0 2px var(--cr)}
+.chk{margin-left:auto;opacity:0}.opt.on .chk{opacity:1}
+.rates{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.rate{width:48px;height:48px;border-radius:8px}
+.rate.on{border-color:var(--cr);box-shadow:0 0 0 2px var(--cr)}
+.acts{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:36px}
+.end{display:flex;align-items:center;gap:12px;margin-left:auto}
+.pill{border:0;border-radius:999px;background:var(--cm);color:var(--fg);font:700 16px inherit;padding:12px 22px;cursor:pointer}
+.back,.link{border:0;background:0;color:#fff;font:600 16px inherit;text-decoration:underline;padding:8px;cursor:pointer}
+.hint{font-size:14px}
+.msg{display:flex;gap:10px;margin-top:14px;color:var(--cm);font-size:15px}
+.msg[hidden]{display:none}
+.dot{flex:0 0 8px;width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--cr)}
+.shake{animation:gfK .2s ease}
+.rlist{max-height:280px;overflow-y:scroll;margin:24px 0 0;padding:0 16px 8px 0;scrollbar-width:thin;scrollbar-color:rgba(247,245,241,.5) rgba(247,245,241,.1)}
+.rlist::-webkit-scrollbar{width:8px}
+.rlist::-webkit-scrollbar-thumb{background:rgba(247,245,241,.5);border-radius:999px}
+.rlist::-webkit-scrollbar-button{display:none}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px 16px;padding:12px 0;border-bottom:1px solid rgba(247,245,241,.18)}
+.rlab{margin:0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.rval{margin:4px 0 0;font-size:16px;overflow-wrap:anywhere}
+.empty{color:rgba(255,255,255,.55);font-style:italic}
+.done{text-align:center}
+.done .acts{justify-content:center}
+.mark{width:72px;height:72px;margin:0 auto 24px;border-radius:50%;background:var(--cm);color:var(--fg);box-shadow:0 0 0 4px var(--cr);display:grid;place-items:center;font-size:36px;font-weight:700}
+.live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(prefers-reduced-motion:reduce){body,.in,.out,.opt.on,.rate.on,.shake{animation:none}.fill{transition:none}}
+</style>
+</head>
+<body>
+<div id="gf-root"></div>
+<script>
+var FORM_SPEC={
+listTitle:"Event Feedback",
+formTitle:"Event Feedback",
+estimatedMinutes:2,
+listUrl:"",
+fields:[
+{internalName:"Title",displayName:"Title",title:"What should we call this feedback?",helper:"A short title helps the team recognize this response. Optional.",type:"text",required:false,placeholder:"A few words"},
+{internalName:"FullName",displayName:"Full name",title:"What should we call you?",helper:"Your name helps us understand who joined us.",type:"text",required:true,placeholder:"Your name"},
+{internalName:"Email",displayName:"Email",title:"Where can we reach you?",helper:"We will only use this about this event.",type:"text",format:"email",required:true,placeholder:"you@example.com"},
+{internalName:"Role",displayName:"Role",title:"Which best describes your role?",helper:"Choose one. Letter keys work too.",type:"choice",required:true,choices:["Developer","Designer","Manager","Other"]},
+{internalName:"Rating",displayName:"Rating",title:"How would you rate the event?",helper:"1 is low, 5 is high.",type:"rating",required:true,min:1,max:5},
+{internalName:"WouldRecommend",displayName:"Would recommend",title:"Would you recommend this event?",helper:"Choose one.",type:"yesno",required:true},
+{internalName:"Comments",displayName:"Comments",title:"Anything else to add?",helper:"Optional. Take as much space as you need.",type:"note",required:false,placeholder:"Your comments"}
+]
+};
+(function(W){
+var A="ABCDEFGHIJKLMNOPQRSTUVWXYZ",D=document;
+function h(t,a,c){var n=D.createElement(t),k,v;a=a||{};for(k in a){v=a[k];if(v==null||v===false)continue;if(k==="c")n.className=v;else if(k==="t")n.textContent=""+v;else if(k==="o")n.onclick=v;else if(k==="v")n.value=v;else if(k==="k")n.hidden=!!v;else n.setAttribute(k,v===true?k:""+v)}(c||[]).forEach(function(x){if(x)n.appendChild(x)});return n}
+function btn(c,t,o){var a={c:c,type:"button",o:o};if(t!=null)a.t=t;return h("button",a)}
+function okUrl(u){if(!u)return 0;try{var p=new URL(""+u,(W.location&&W.location.href)||"https://x.sharepoint.com/");return p.protocol==="https:"&&!p.username&&!p.password&&!/^(javascript|data|vbscript):/i.test((""+u).trim())}catch(e){return 0}}
+function sameTen(u){if(!okUrl(u))return 0;var s=(""+u).trim();if(/^\/(?!\/)/.test(s))return 1;try{var b=new URL(s).hostname.toLowerCase(),a=((W.location&&W.location.hostname)||"").toLowerCase(),t=function(h){return h.split(".")[0].replace(/-my$/,"")};if(a&&(a===b||b.endsWith("."+a)))return 1;return /\.sharepoint\.com$/.test(b)&&(!/\.sharepoint\.com$/.test(a)||t(a)===t(b))?1:0}catch(e){return 0}}
+function shown(v){return Array.isArray(v)?v.join(", "):v==null||v===""?"":""+v}
+function GF(r,s,o){this.root=r;this.spec=s||{};this.opt=o||{};this.fields=this.spec.fields||[];this.answers={};this.step="welcome";this.i=0;this.ret=0;this.busy=0;this.imm=!!this.opt.immediate;this.lock=!!(this.opt.lock||this.opt.demoLock);this.reduce=!!(W.matchMedia&&W.matchMedia("(prefers-reduced-motion: reduce)").matches);this.onKey=this.onKey.bind(this)}
+var P=GF.prototype;
+P.listTitle=function(){return this.spec.listTitle||"List"};
+P.formTitle=function(){return this.spec.formTitle||this.spec.listTitle||"Guided Form"};
+P.eyebrow=function(){var e=this.spec.eyebrow;return e===""?"":(e||"Guided Form")};
+P.minutes=function(){return this.spec.estimatedMinutes||Math.max(1,Math.round((this.fields.length||0)*2/7)||1)};
+P.mount=function(){if(W.__gfKey)D.removeEventListener("keydown",W.__gfKey);D.addEventListener("keydown",W.__gfKey=this.onKey);this.bar=h("div",{c:"bar",role:"progressbar"},[this.fill=h("div",{c:"fill"})]);this.stage=h("div",{c:"stage"});this.live=h("div",{c:"live","aria-live":"polite"});this.root.innerHTML="";this.root.appendChild(h("div",{c:"shell"},[this.bar,this.stage,this.live]));this.showWelcome();return this};
+P.prog=function(r){var p=Math.max(0,Math.min(100,Math.round(r*100)));this.fill.style.width=p+"%";this.bar.setAttribute("aria-valuenow",""+p);this.bar.classList.toggle("hide",r<=0||this.step==="finish")};
+P.say=function(t){this.live.textContent=t};
+P.swap=function(fn){var self=this,col=this.stage.firstElementChild,go=function(){self.stage.innerHTML="";var n=fn();n.classList.add("col");if(!self.imm)n.classList.add("in");self.stage.appendChild(n)};if(!col||this.reduce||this.imm){go();return}col.classList.remove("in");col.classList.add("out");setTimeout(go,250)};
+P.onKey=function(e){if(e.defaultPrevented)return;var t=e.target,tag=(t&&t.tagName||"").toLowerCase(),typ=tag==="input"||tag==="textarea";if(e.key==="Enter"){if(tag==="textarea"&&!(e.ctrlKey||e.metaKey))return;e.preventDefault();this.enter();return}if(typ||this.step!=="question")return;var x=A.indexOf(e.key.toUpperCase());if(x>=0){e.preventDefault();this.letter(x);return}if(/^[1-9]$/.test(e.key)){e.preventDefault();this.letter(+e.key-1)}};
+P.enter=function(){if(this.step==="welcome")this.showQuestion(0);else if(this.step==="question")this.ok()};
+P.letter=function(x){var b=this.stage.querySelector(".opts,.rates");if(b&&b.children[x])b.children[x].click()};
+P.acts=function(back,label,fn,hint){var a=h("div",{c:"acts"}),end=h("div",{c:"end"},[btn("pill",label,fn),hint&&h("span",{c:"hint",t:hint})]);if(back)a.appendChild(btn("back","Back",back));a.appendChild(end);return a};
+P.showWelcome=function(){var self=this,eb=this.eyebrow(),n=this.fields.length,meta=n+" question"+(n===1?"":"s")+" · about "+this.minutes()+" min";this.step="welcome";this.i=0;this.ret=0;this.prog(0);this.swap(function(){var b=btn("pill","Start",function(){self.showQuestion(0)}),w=h("div",0,[eb&&h("p",{c:"kicker",t:eb}),h("h1",{c:"title",t:self.formTitle()}),h("p",{c:"meta",t:meta}),h("div",{c:"acts"},[b])]);self.say(self.formTitle()+". "+meta);b.focus();return w})};
+P.showQuestion=function(i){var self=this,f=this.fields[i];this.step="question";this.i=i;this.prog((i+1)/Math.max(this.fields.length,1));this.swap(function(){return self.qView(f,i)})};
+P.qView=function(f,i){var self=this,t=f.type||"text",cur=this.answers[f.internalName],body=h("div",{c:"field"}),msg=h("div",{c:"msg",k:1},[h("span",{c:"dot"}),h("span")]),inp,g;if(t==="choice"||t==="yesno")body.appendChild(this.choices(f,t==="yesno"?["Yes","No"]:(f.choices||[]),0,cur));else if(t==="multiChoice")body.appendChild(this.choices(f,f.choices||[],1,cur));else if(t==="rating")body.appendChild(this.rating(f,(f.max===10||f.max===5)?f.max:5,cur));else{inp=h(t==="note"?"textarea":"input",{c:t==="note"?"area":"inp","aria-label":f.title||f.displayName||f.internalName,placeholder:f.placeholder||false,v:cur!=null&&cur!==""?""+cur:false});if(t!=="note")inp.type="text";if(t==="number")inp.inputMode="decimal";if(t==="note"){g=function(){inp.style.height="auto";inp.style.height=Math.max(44,inp.scrollHeight)+"px"};inp.oninput=g;setTimeout(g,0)}body.appendChild(inp);setTimeout(function(){inp.focus()},40)}var w=h("div",0,[h("p",{c:"counter",t:"Question "+(i+1)+" of "+this.fields.length}),h("h1",{c:"title",t:f.title||f.displayName||f.internalName}),f.helper&&h("p",{c:"help",t:f.helper}),body,msg,this.acts((i>0||this.ret)?function(){self.back()}:0,"OK",function(){self.ok()},"press Enter")]);this.say("Question "+(i+1)+" of "+this.fields.length+". "+(f.title||f.displayName||""));return w};
+P.choices=function(f,list,multi,cur){var self=this,box=h("div",{c:"opts",role:multi?"group":"radiogroup"}),sel=multi?(Array.isArray(cur)?cur.slice():[]):cur;function sync(){Array.prototype.forEach.call(box.children,function(b){var on=multi?sel.indexOf(b.getAttribute("data-v"))>=0:sel===b.getAttribute("data-v");b.classList.toggle("on",on);b.setAttribute(multi?"aria-pressed":"aria-checked",on?"true":"false")})}list.forEach(function(c,i){box.appendChild(h("button",{c:"opt",type:"button","data-v":c,o:function(){if(multi){var x=sel.indexOf(c);x<0?sel.push(c):sel.splice(x,1);self.answers[f.internalName]=sel.slice()}else{sel=c;self.answers[f.internalName]=c;if(!self.lock)setTimeout(function(){self.go()},400)}sync()}},[h("span",{c:"ltr",t:A[i]||""+(i+1)}),h("span",{t:c}),h("span",{c:"chk",t:"✓"})]))});sync();return box};
+P.rating=function(f,max,cur){var self=this,row=h("div",{c:"rates",role:"radiogroup"});for(var n=1;n<=max;n++)(function(v){var b=btn("rate"+(cur===v?" on":""),""+v,function(){Array.prototype.forEach.call(row.children,function(c,i){var on=i+1===v;c.classList.toggle("on",on);c.setAttribute("aria-checked",on?"true":"false")});self.answers[f.internalName]=v;if(!self.lock)setTimeout(function(){self.go()},400)});b.setAttribute("role","radio");b.setAttribute("aria-checked",cur===v?"true":"false");row.appendChild(b)})(n);return row};
+P.msg=function(text){var m=this.stage.querySelector(".msg"),tx=m&&m.querySelector("span:last-child"),fld=this.stage.querySelector(".field");if(!m)return;if(tx)tx.textContent=text||"";m.hidden=!text;if(text&&fld){fld.classList.remove("shake");void fld.offsetWidth;fld.classList.add("shake")}};
+P.err=function(f,v){v=(""+(v||"")).trim();if(f.required&&!v)return "This one needs an answer.";if(!v)return "";if(f.type==="number"&&!/^-?\d+(\.\d+)?$/.test(v))return "Enter a number.";if((f.format==="email"||/email/i.test(f.internalName||"")||/email/i.test(f.displayName||""))&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))return "Enter an email address.";if((f.format==="url"||f.type==="hyperlink")&&!okUrl(v))return "Enter an https link, with no sign-in details in the address.";if(f.maxLength&&v.length>f.maxLength)return v.length+" of "+f.maxLength+" characters, trim a little.";return ""};
+P.ok=function(){if(this.step!=="question")return;var f=this.fields[this.i],t=f.type||"text",p,inp,v,e;if(t==="choice"||t==="yesno"||t==="rating"){if(f.required&&(this.answers[f.internalName]==null||this.answers[f.internalName]==="")){this.msg("This one needs an answer.");return}this.go();return}if(t==="multiChoice"){p=this.answers[f.internalName];if(f.required&&(!p||!p.length)){this.msg("This one needs an answer.");return}this.go();return}inp=this.stage.querySelector(".inp,.area");v=inp?inp.value.trim():"";e=this.err(f,v);if(e){this.msg(e);if(inp)inp.focus();return}if(v==="")delete this.answers[f.internalName];else this.answers[f.internalName]=t==="number"?+v:v;this.go()};
+P.go=function(){if(this.ret){this.ret=0;this.showReview();return}if(this.i>=this.fields.length-1)this.showReview();else this.showQuestion(this.i+1)};
+P.back=function(){if(this.ret){this.ret=0;this.showReview();return}if(this.i>0)this.showQuestion(this.i-1);else this.showWelcome()};
+P.showReview=function(){var self=this;this.step="review";this.prog(1);this.swap(function(){var eb=self.eyebrow(),list=h("div",{c:"rlist"});self.fields.forEach(function(f,i){var s=shown(self.answers[f.internalName]);list.appendChild(h("div",{c:"row"},[h("div",0,[h("p",{c:"rlab",t:f.displayName||f.title||f.internalName}),h("p",{c:"rval"+(s?"":" empty"),t:s||"No answer"})]),btn("link","Edit",function(){self.ret=1;self.showQuestion(i)})]))});var w=h("div",0,[eb&&h("p",{c:"kicker",t:eb}),h("h1",{c:"title",t:"Review your answers"}),h("p",{c:"help",t:"Check everything before it is sent to Copilot."}),list,h("div",{c:"msg",k:1},[h("span",{c:"dot"}),h("span")]),self.acts(function(){self.showQuestion(self.fields.length-1)},"Submit",function(){self.submit()})]);self.say("Review your answers for "+self.listTitle());return w})};
+P.payload=function(){var d={},i,f,n,v;for(i=0;i<this.fields.length;i++){f=this.fields[i];n=f.internalName;v=shown(this.answers[n]);d[n]=v}return d};
+P.fail=function(t){this.busy=0;this.msg(t);this.say(t)};
+P.submit=function(){var i,f,e,url,form,d,n,add;if(this.busy)return;for(i=0;i<this.fields.length;i++){f=this.fields[i];e=this.err(f,shown(this.answers[f.internalName]));if(e){this.ret=1;this.showQuestion(i);return}}url=this.spec.listUrl||"";if(url&&(!okUrl(url)||!sameTen(url))){this.fail("The list address must be https on this tenant, with no sign-in details in the URL.");return}form=D.getElementById("gf-submit");if(!form||!form.requestSubmit){this.fail("The form could not be sent to Copilot.");return}d=this.payload();form.innerHTML="";add=function(n,v){form.appendChild(h("input",{type:"hidden",name:n,v:""+v}))};for(i=0;i<this.fields.length;i++){n=this.fields[i].internalName;add(n,d[n])}add("__payload",JSON.stringify(d));this.busy=1;try{if(!form.__gfBound){form.__gfBound=1;form.addEventListener("submit",function(ev){ev.preventDefault()})}form.requestSubmit();this.showFinish()}catch(err){this.fail("The form could not be sent to Copilot.")}};
+P.showFinish=function(){var self=this,parts=[],msg="Check the chat. If Copilot shows a Create item card, confirm it to save the item. If no card appears, the answers did not reach Copilot.";this.step="finish";this.prog(1);this.fields.forEach(function(f){var s=shown(self.answers[f.internalName]);if(s&&parts.length<2)parts.push(s)});this.swap(function(){var b=btn("pill","Submit another",function(){self.answers={};self.busy=0;self.showWelcome()}),w=h("div",{c:"done"},[h("div",{c:"mark",t:"✓"}),h("h1",{c:"title",t:"Check the chat"}),h("p",{c:"help",t:"If Copilot shows a Create item card, confirm it to save the item. If no card appears, the answers did not reach Copilot."}),parts.length&&h("p",{c:"help",t:parts.join(" · ")}),h("div",{c:"acts"},[b])]);self.say(msg);b.focus();return w})};
+W.GuidedForm=GF;
+})(typeof window!=="undefined"?window:this);
+window.__gf=new GuidedForm(document.getElementById("gf-root"),FORM_SPEC).mount();
+</script>
+<form id="gf-submit" class="live" method="post" data-ka-prompt="Create one item in the list you opened this form for, using these answers, after the user confirms the item card. Do not repeat the answers back."></form>
+</body>
+</html>
