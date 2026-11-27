@@ -1,0 +1,57 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-annual-processes-year-wheel",
+    "source": "pnp",
+    "title": "Annual Processes Year Wheel",
+    "shortDescription": "Builds an animated D3.js year wheel dashboard that reads a SharePoint list of annual processes live, showing what runs when, who owns it, and what is coming up next.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/annual-processes-year-wheel",
+    "longDescription": [
+      "Turns a SharePoint list of recurring annual processes into an interactive year wheel: one ring per department, one arc per process from start month to end month, a today line, filters, KPI cards, a Next up strip, a details panel, and a monthly workload chart.",
+      "Own-data mode maps the columns of an existing list and reports data gaps without changing the data. Demo mode creates an Annual Processes list and seeds 30 rows for a fictional company, Northwind Outfitters.",
+      "The package includes a canonical HTML template that the agent copies verbatim so the layout, colors, and animations stay consistent. Live pages load D3 v7 through the page's library manifest."
+    ],
+    "creationDateTime": "2026-11-17",
+    "updateDateTime": "2026-11-17",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Planning"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/annual-processes-year-wheel/assets/preview.png",
+        "alt": "Annual processes year wheel with one ring per department and a red today line"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Vijayaragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Annual Processes Year Wheel live demo",
+        "description": "A public demo of the year wheel with fictional sample data.",
+        "url": "https://anandragav.github.io/copilot-html-dashboards/annual-processes-year-wheel/"
+      }
+    ]
+  }
+]
