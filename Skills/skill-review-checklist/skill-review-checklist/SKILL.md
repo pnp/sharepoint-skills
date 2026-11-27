@@ -63,8 +63,8 @@ Evaluate all ten items. Quote the exact text that led to each result. Do not ass
 
 Give one overall recommendation:
 
-- **Approve** - no Fail, at most two Attention items
-- **Revise** - no Fail, but more than two Attention items, or one Attention on items 3, 4 or 5
+- **Approve** - no Fail, at most two Attention items, and no Attention on items 3, 4 or 5
+- **Revise** - no Fail, but more than two Attention items, or any Attention on items 3, 4 or 5
 - **Reject** - any Fail
 
 List the specific changes that would move the skill to Approve.

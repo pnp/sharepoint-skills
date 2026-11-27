@@ -10,7 +10,7 @@ Reviews a Copilot or SharePoint skill package before it is shared more widely. C
 - A ten-point checklist with **Pass**, **Attention** or **Fail** for each item, quoting the text that led to the result
 - Flags for broad trigger phrases that can make automatic use pick the skill too often
 - Flags for undeclared write actions, external links and instructions that try to override Copilot's behaviour
-- An overall recommendation, with the exact changes needed to reach **Approve**
+- An overall recommendation, with the exact changes needed to reach **Approve**; data access, actions or external-service concerns require revision even if they are the only Attention finding
 - A self-contained HTML review record saved next to the skill, with fields for owner and next review date
 - Strictly read-only behaviour: the reviewed skill is never changed, shared or deleted
 
