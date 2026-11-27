@@ -1,0 +1,61 @@
+[
+  {
+    "name": "pnp-sharepoint-skills-guided-list-form",
+    "source": "pnp",
+    "title": "Guided Form",
+    "shortDescription": "A conversational, one-question-at-a-time HTML form in Copilot's interactive preview that adds one new item to a SharePoint list.",
+    "url": "https://github.com/pnp/sharepoint-skills/tree/main/Skills/guided-list-form",
+    "longDescription": [
+      "Reads the current list's columns and opens a Guided Form in Copilot's interactive HTML preview: a welcome step, one question at a time, a review screen, and a finish screen after Submit.",
+      "The look is fixed by a mandatory skeleton in reference.html, in the Tech Ease palette. Copilot loads that file, copies it byte-for-byte, and fills in question data only. Submit sends the answers back to Copilot as a chat message. The submitted answers do not include the list address. The list item is created only after the person confirms the item card."
+    ],
+    "creationDateTime": "2026-11-23",
+    "updateDateTime": "2026-11-27",
+    "products": [
+      "SharePoint",
+      "Microsoft 365 Copilot"
+    ],
+    "metadata": [
+      {
+        "key": "SAMPLE-TYPE",
+        "value": "SharePoint-AI-Skill"
+      },
+      {
+        "key": "SKILL-CATEGORY",
+        "value": "Lists & Forms"
+      }
+    ],
+    "thumbnails": [
+      {
+        "type": "image",
+        "order": 100,
+        "url": "https://github.com/pnp/sharepoint-skills/raw/main/Skills/guided-list-form/assets/preview.png",
+        "alt": "Guided Form welcome step on a forest-green to teal gradient, with a padded question count and a cream Start pill"
+      }
+    ],
+    "authors": [
+      {
+        "gitHubAccount": "anandragav",
+        "pictureUrl": "https://github.com/anandragav.png",
+        "name": "Anand Ragavan"
+      }
+    ],
+    "references": [
+      {
+        "name": "agentskills.io specification",
+        "description": "The specification that SharePoint AI skills follow for installation and discovery.",
+        "url": "https://agentskills.io/specification"
+      },
+      {
+        "name": "Video walkthrough",
+        "description": "Tech Ease episode: How to Open a Guided Form for a SharePoint List from Your Homepage.",
+        "url": "https://www.youtube.com/watch?v=o2iKp5pMYXs"
+      },
+      {
+        "name": "Video walkthrough on Spotify",
+        "description": "The same Tech Ease episode on Spotify.",
+        "url": "https://open.spotify.com/episode/07cPhTwyIcsbOUoZOJq9X8"
+      }
+    ]
+  }
+]
